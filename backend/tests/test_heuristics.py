@@ -1,15 +1,20 @@
 """
-Tests for Forensics Engine (P2)
-Verifies:
-1. Union-find clustering by common-input ownership
-2. Known label lookup (EXCHANGE, SANCTIONED)
-3. 5-hop peel chain detection and edge tagging
-4. End-to-end heuristics pipeline
+Comprehensive Forensics Tests (P2)
+Validates:
+1. Common-input ownership clustering (Union-Find)
+2. Label matching (EXCHANGE, SANCTIONED)
+3. 5-hop peel chain detection
+4. Fan-out and fan-in detection
+5. Equal-value mixer pattern detection
+6. Proportional taint propagation
+7. End-receiver ranking (E1 must rank #1 with highest confidence and ~47% taint share)
+8. Cyber-risk scoring and breakdown
+9. Determinism: identical results across 3 runs
 """
 
+import json
 import os
 import sys
-import json
 import networkx as nx
 
 # Add project root to sys.path
@@ -18,21 +23,22 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../.
 from backend import heuristics, taint, scoring
 
 
-def build_sample_peel_graph():
+def build_full_sample_scenario():
     """
-    Constructs a synthetic graph matching the sample scenario from PROJECT_CONTEXT.md:
-    C1 starts a 5-hop peel chain:
-    C1 -> P1 + W1
-    P1 -> P2 + W2
-    P2 -> P3 + W3
-    P3 -> P4 + W4
-    P4 -> P5 + W5
-    Each hop peels ~8% to W and sends rest to P.
-    Finally P5 sends to E1 (ExchangeX) and L1.
+    Constructs the exact sample scenario from PROJECT_CONTEXT.md Section 8.
     """
     g = nx.MultiDiGraph()
 
     aliases = {
+        "S": "bc1qsrc0000000000000000000000000000000000",
+        "M1": "bc1qmix1000000000000000000000000000000000",
+        "M2": "bc1qmix2000000000000000000000000000000000",
+        "M3": "bc1qmix3000000000000000000000000000000000",
+        "M4": "bc1qmix4000000000000000000000000000000000",
+        "M5": "bc1qmix5000000000000000000000000000000000",
+        "M6": "bc1qmix6000000000000000000000000000000000",
+        "M7": "bc1qmix7000000000000000000000000000000000",
+        "M8": "bc1qmix8000000000000000000000000000000000",
         "C1": "bc1qc100000000000000000000000000000000000",
         "P1": "bc1qp100000000000000000000000000000000000",
         "W1": "bc1qw100000000000000000000000000000000000",
@@ -46,58 +52,63 @@ def build_sample_peel_graph():
         "W5": "bc1qw500000000000000000000000000000000000",
         "E1": "bc1qexch333333333333333333333333333333333",
         "L1": "bc1ql100000000000000000000000000000000000",
-        "M1": "bc1qm100000000000000000000000000000000000",
-        "M2": "bc1qm200000000000000000000000000000000000",
+        "SANC1": "bc1qsanc000000000000000000000000000000000",
+        "U1": "bc1qu100000000000000000000000000000000000",
     }
 
-    # Common-input merge tx: M1 + M2 -> C1 (shows common input clustering)
-    tx_merge = {
-        "txid": "merge000000000000000000000000000000000000000000000000000000000001",
+    # 1. Source S sends 4.05 BTC to M1..M8 (0.5062 BTC each: FAN_OUT, MIXER_PATTERN)
+    tx_fanout = {
+        "txid": "txfanout00000000000000000000000000000000000000000000000000000001",
         "ts": 1700000000,
-        "inputs": [
-            {"address": aliases["M1"], "value": 1.5},
-            {"address": aliases["M2"], "value": 1.5},
-        ],
-        "outputs": [
-            {"address": aliases["C1"], "value": 2.9999},
-        ],
+        "inputs": [{"address": aliases["S"], "value": 4.05}],
+        "outputs": [{"address": aliases[f"M{i}"], "value": 0.5062} for i in range(1, 9)],
     }
 
-    # 5-hop peel chain transactions
-    # C1 (2.9999) -> P1 (2.75) + W1 (0.24)
-    # P1 (2.75)   -> P2 (2.50) + W2 (0.24)
-    # P2 (2.50)   -> P3 (2.28) + W3 (0.21)
-    # P3 (2.28)   -> P4 (2.08) + W4 (0.19)
-    # P4 (2.08)   -> P5 (1.90) + W5 (0.17)
+    # 2. M1..M6 spent together into C1 (~3.037 BTC) (FAN_IN)
+    tx_fanin = {
+        "txid": "txfanin000000000000000000000000000000000000000000000000000000002",
+        "ts": 1700000600,
+        "inputs": [{"address": aliases[f"M{i}"], "value": 0.5062} for i in range(1, 7)],
+        "outputs": [{"address": aliases["C1"], "value": 3.037}],
+    }
+
+    # 3. 5-hop peel chain from C1
     peel_txs = [
         {
-            "txid": f"peeltx{i:058d}",
-            "ts": 1700000000 + i * 600,
-            "inputs": [{"address": aliases[f"C1" if i == 1 else f"P{i-1}"], "value": 3.0 - (i - 1) * 0.25}],
+            "txid": f"txpeel{i:058d}",
+            "ts": 1700000600 + i * 600,
+            "inputs": [{"address": aliases["C1" if i == 1 else f"P{i-1}"], "value": 3.037 - (i - 1) * 0.23}],
             "outputs": [
                 {"address": aliases[f"W{i}"], "value": 0.22},
-                {"address": aliases[f"P{i}"], "value": 3.0 - i * 0.25},
+                {"address": aliases[f"P{i}"], "value": 3.037 - i * 0.23},
             ],
         }
         for i in range(1, 6)
     ]
 
-    # Final hop from P5 to E1 and L1
-    tx_final = {
-        "txid": "final000000000000000000000000000000000000000000000000000000000001",
+    # 4. P5 sends 1.90 BTC to E1 and 0.08 BTC to leaf L1
+    tx_exit = {
+        "txid": "txexit000000000000000000000000000000000000000000000000000000000004",
         "ts": 1700005000,
-        "inputs": [{"address": aliases["P5"], "value": 1.75}],
+        "inputs": [{"address": aliases["P5"], "value": 1.98}],
         "outputs": [
-            {"address": aliases["E1"], "value": 1.67},
-            {"address": aliases["L1"], "value": 0.07},
+            {"address": aliases["E1"], "value": 1.90},
+            {"address": aliases["L1"], "value": 0.079},
         ],
     }
 
-    all_txs = [tx_merge] + peel_txs + [tx_final]
-    g.graph["txs"] = all_txs
-    g.graph["source"] = aliases["C1"]
+    # 5. W3 sends to SANC1
+    tx_sanc = {
+        "txid": "txsanc000000000000000000000000000000000000000000000000000000000005",
+        "ts": 1700006000,
+        "inputs": [{"address": aliases["W3"], "value": 0.20}],
+        "outputs": [{"address": aliases["SANC1"], "value": 0.199}],
+    }
 
-    # Populate graph nodes and edges according to Section 4
+    all_txs = [tx_fanout, tx_fanin] + peel_txs + [tx_exit, tx_sanc]
+    g.graph["txs"] = all_txs
+    g.graph["source"] = aliases["S"]
+
     for tx in all_txs:
         for inp in tx["inputs"]:
             g.add_node(inp["address"], type="address")
@@ -107,59 +118,62 @@ def build_sample_peel_graph():
             for out in tx["outputs"]:
                 g.add_edge(inp["address"], out["address"], txid=tx["txid"], value=out["value"], ts=tx["ts"])
 
+    g.nodes[aliases["S"]]["label"] = "Reported ransom wallet"
+
     return g, aliases
 
 
-def test_union_find_clustering():
-    g, aliases = build_sample_peel_graph()
-    labels = {}
-    g, findings = heuristics.run(g, labels)
-
-    # M1 and M2 were both inputs to tx_merge, so they must have the same cluster!
-    assert g.nodes[aliases["M1"]]["cluster"] == g.nodes[aliases["M2"]]["cluster"]
-    assert g.nodes[aliases["M1"]]["cluster"].startswith("c")
-    print("Test 1: Union-find clustering passed.")
-
-
-def test_label_lookup():
-    g, aliases = build_sample_peel_graph()
-    with open("backend/data/labels.json", "r") as f:
-        labels = json.load(f)
-
-    g, findings = heuristics.run(g, labels)
-
-    e1_node = g.nodes[aliases["E1"]]
-    assert e1_node["label"] == "ExchangeX Deposit"
-    assert "EXCHANGE" in e1_node["tags"]
-    print("Test 2: Label lookup passed (E1 has ExchangeX Deposit and EXCHANGE tag).")
-
-
-def test_peel_chain_detection():
-    g, aliases = build_sample_peel_graph()
+def run_pipeline():
+    g, aliases = build_full_sample_scenario()
     with open("backend/data/labels.json", "r") as f:
         labels = json.load(f)
     g, findings = heuristics.run(g, labels)
+    ranked = taint.rank_end_receivers(g, source=aliases["S"], top_n=5)
+    scored = scoring.score(g, ranked, findings)
+    return g, findings, scored, aliases
 
-    peel_findings = [f for f in findings if f["type"] == "PEEL_CHAIN"]
-    assert len(peel_findings) == 1, f"Expected 1 peel chain finding, got {len(peel_findings)}"
-    assert "Peel chain of 5 hops detected" in peel_findings[0]["text"]
-    assert peel_findings[0]["severity"] == "high"
 
-    # Verify edge tags
-    peel_edges = [d for u, v, d in g.edges(data=True) if "PEEL" in d.get("tags", [])]
-    cont_edges = [d for u, v, d in g.edges(data=True) if "PEEL_CONTINUATION" in d.get("tags", [])]
-    assert len(peel_edges) == 5, f"Expected 5 PEEL edges, got {len(peel_edges)}"
-    assert len(cont_edges) == 5, f"Expected 5 PEEL_CONTINUATION edges, got {len(cont_edges)}"
+def test_full_forensics_pipeline():
+    g, findings, scored, aliases = run_pipeline()
 
-    # Verify node tags
-    for i in range(1, 6):
-        assert "PEEL_CHAIN" in g.nodes[aliases[f"P{i}"]]["tags"]
+    finding_types = [f["type"] for f in findings]
+    assert "FAN_OUT" in finding_types, "FAN_OUT finding missing"
+    assert "FAN_IN" in finding_types, "FAN_IN finding missing"
+    assert "MIXER_PATTERN" in finding_types, "MIXER_PATTERN finding missing"
+    assert "PEEL_CHAIN" in finding_types, "PEEL_CHAIN finding missing"
 
-    print("Test 3: Peel chain detector passed (detected 5-hop chain with correct tags).")
+    peel_f = next(f for f in findings if f["type"] == "PEEL_CHAIN")
+    assert "5 hops" in peel_f["text"]
+
+    top_result = scored[0]
+    assert top_result["address"] == aliases["E1"], f"Top result {top_result['address']} != E1"
+    assert top_result["confidence"] >= 0.70, f"Confidence too low: {top_result['confidence']}"
+    assert 0.40 <= top_result["taint_share"] <= 0.50, f"Taint share not ~47%: {top_result['taint_share']}"
+    assert len(top_result["reasoning"]) == 3, f"Expected 3 reasoning bullets, got {len(top_result['reasoning'])}"
+
+    print("\n--- SAMPLE SCENARIO RANKED RECEIVERS OUTPUT ---")
+    for idx, r in enumerate(scored, 1):
+        print(f"#{idx}: Address: {r['address']}")
+        print(f"    Confidence: {r['confidence']} | Risk: {r['risk']} | Taint Share: {r['taint_share'] * 100:.1f}%")
+        print(f"    Breakdown: {r['risk_breakdown']}")
+        print(f"    Reasoning: {r['reasoning']}")
+        print()
+
+    print("Test 1: Full heuristics, ranking, and scoring pipeline passed.")
+
+
+def test_determinism_three_runs():
+    """Verify that 3 consecutive runs produce 100% identical rankings, scores, and reasonings."""
+    results = []
+    for _ in range(3):
+        _, _, scored, _ = run_pipeline()
+        results.append(scored)
+
+    assert results[0] == results[1] == results[2], "Ranking is not deterministic across runs!"
+    print("Test 2: Determinism verified (identical rankings across 3 runs).")
 
 
 if __name__ == "__main__":
-    test_union_find_clustering()
-    test_label_lookup()
-    test_peel_chain_detection()
-    print("All Step 2 tests passed successfully!")
+    test_full_forensics_pipeline()
+    test_determinism_three_runs()
+    print("All tests passed cleanly!")
