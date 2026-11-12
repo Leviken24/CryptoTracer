@@ -184,6 +184,24 @@ def execute_trace_pipeline(
         labels=KNOWN_LABELS,
     )
 
+    top_item = scored_ranked[0] if scored_ranked else {}
+    composite_risk = {
+        "risk_score": case_risk,
+        "risk_category": top_item.get("risk_category", "High" if case_risk >= 60 else "Medium"),
+        "formula": "Score = 100 × [30% Mixer + 30% Sanctions + 20% Ransomware + 10% Peel Depth + 10% Adversarial/Poisoning]",
+        "triggered_indicators": [
+            {
+                "indicator": ind.get("name", "Heuristic Trigger"),
+                "category": ind.get("severity", "Heuristic"),
+                "points": ind.get("score_contribution", 0),
+                "evidence": ind.get("description", ""),
+            }
+            for ind in top_item.get("triggered_indicators", [])
+        ],
+        "supporting_transactions": list({tx for ind in top_item.get("triggered_indicators", []) for tx in ind.get("supporting_txids", [])}) or list({e.get("txid") for e in serialized_graph["edges"] if e.get("txid")})[:6],
+        "disclaimer": top_item.get("disclaimer", "Heuristic risk scoring indicates behavioral similarity to known laundering topologies. It does NOT constitute scientific proof of criminal intent without off-chain corroborated evidence."),
+    }
+
     return {
         "graph": serialized_graph,
         "findings": all_findings,
@@ -194,6 +212,7 @@ def execute_trace_pipeline(
         "input_kind": input_kind,
         "ai_summary": ai_summary,
         "timeline": timeline,
+        "composite_risk": composite_risk,
     }
 
 
