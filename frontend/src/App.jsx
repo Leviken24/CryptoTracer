@@ -22,18 +22,29 @@ export default function App() {
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [activeTab, setActiveTab] = useState('ranked'); // 'ranked' | 'findings' | 'audit' | 'dossier'
   const [showReport, setShowReport] = useState(false);
+  const [scenarios, setScenarios] = useState([]);
+  const [selectedScenarioId, setSelectedScenarioId] = useState('SCENARIO_01');
 
-  // Load offline scenario on initial mount
+  // Load 75 scenarios list + initial offline scenario on mount
   useEffect(() => {
+    axios
+      .get('http://localhost:8000/scenarios', { timeout: 2000 })
+      .then((res) => {
+        if (Array.isArray(res.data)) {
+          setScenarios(res.data);
+        }
+      })
+      .catch(() => {});
     executeTrace(true, false);
   }, []);
 
-  const executeTrace = async (isInitial = false, isDemo = false) => {
+  const executeTrace = async (isInitial = false, isDemo = false, overrideInput = null) => {
     setLoading(true);
     setStatusMessage(null);
 
+    const targetInput = overrideInput !== null ? overrideInput : inputAddress.trim();
     const payload = {
-      input: inputAddress.trim(),
+      input: targetInput,
       hops: Number(hops),
       mode: isDemo ? 'sample' : mode,
     };
@@ -88,10 +99,20 @@ export default function App() {
   };
 
   const handleRunDemo = () => {
+    setSelectedScenarioId('SCENARIO_01');
     setInputAddress('bc1qsrc0000000000000000000000000000000000');
     setHops(4);
     setMode('sample');
-    executeTrace(false, true);
+    executeTrace(false, true, 'bc1qsrc0000000000000000000000000000000000');
+  };
+
+  const handleSelectScenario = (scenarioId) => {
+    setSelectedScenarioId(scenarioId);
+    const found = scenarios.find((s) => s.id === scenarioId);
+    const addr = found ? found.source : scenarioId;
+    setInputAddress(addr);
+    setMode('sample');
+    executeTrace(false, true, addr);
   };
 
   const handleExportJSON = () => {
@@ -157,6 +178,24 @@ export default function App() {
             executeTrace(false, false);
           }}
         >
+          {scenarios.length > 0 && (
+            <div className="select-group">
+              <span className="input-label">Dataset ({scenarios.length} Cases):</span>
+              <select
+                className="select-dropdown"
+                value={selectedScenarioId}
+                onChange={(e) => handleSelectScenario(e.target.value)}
+                style={{ maxWidth: '280px' }}
+              >
+                {scenarios.map((sc) => (
+                  <option key={sc.id} value={sc.id}>
+                    {sc.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
           <div className="input-group">
             <span className="input-label">Target Wallet / TXID:</span>
             <input
@@ -164,7 +203,7 @@ export default function App() {
               className="text-input"
               value={inputAddress}
               onChange={(e) => setInputAddress(e.target.value)}
-              placeholder="e.g. bc1qsrc0000..."
+              placeholder="e.g. bc1qsrc0000... or SCENARIO_05"
               required
             />
           </div>

@@ -1,12 +1,4 @@
 {
-  "bc1qexch333333333333333333333333333333333": {
-    "label": "ExchangeX Deposit",
-    "type": "EXCHANGE"
-  },
-  "bc1qsanc000000000000000000000000000000000": {
-    "label": "OFAC SDN Sanctioned Entity",
-    "type": "SANCTIONED"
-  },
   "13AM4VW2dhxYgXeQepoHkHSQuy6NgaEb94": {
     "label": "WannaCry Ransomware Extortion Wallet",
     "type": "RANSOMWARE"
@@ -29,6 +21,906 @@
   },
   "bc1qlazarus0000000000000000000000000000000": {
     "label": "Lazarus Group State-Sponsored Cluster",
+    "type": "SANCTIONED"
+  },
+  "bc1qsrc0000000000000000000000000000000000": {
+    "label": "Reported Ransom Wallet",
+    "type": "RANSOMWARE"
+  },
+  "bc1qexch333333333333333333333333333333333": {
+    "label": "ExchangeX Deposit",
+    "type": "EXCHANGE"
+  },
+  "bc1qsanc000000000000000000000000000000000": {
+    "label": "OFAC SDN Sanctioned Entity",
+    "type": "SANCTIONED"
+  },
+  "bc1qsx00prddtprz8rv9gqqqqxqdzfgfvr0y8qsrx0": {
+    "label": "LockBit 3.0 Black Extortion #02",
+    "type": "RANSOMWARE"
+  },
+  "bc1qex00gy2wfprtzy98qqqqqqf0vp2qvz8grfexx0": {
+    "label": "Binance Cold Storage #02",
+    "type": "EXCHANGE"
+  },
+  "bc1qxx00g20rg2fp22xpfqqqqvq2tfv20rz2x2snx0": {
+    "label": "OFAC SDN Sanctioned Desk #02",
+    "type": "SANCTIONED"
+  },
+  "bc1qsfk0r2p90yf8pf902qqqq0g8vvfv82qpf8srfk": {
+    "label": "BlackCat ALPHV Ransomware #03",
+    "type": "RANSOMWARE"
+  },
+  "bc1qefk0rxv90qvx9ryxrqqqq9w292r29ytgqrexfk": {
+    "label": "Coinbase Prime Custody #03",
+    "type": "EXCHANGE"
+  },
+  "bc1qxfk0wwxgt2yryyz9wqqqqxzqv2zxrvp0pgsnfk": {
+    "label": "OFAC SDN Sanctioned Desk #03",
+    "type": "SANCTIONED"
+  },
+  "bc1qsva0dwqgv8g9xz0y8qqqq0t0vxffpzyw29srva": {
+    "label": "Conti Syndicate Treasury #04",
+    "type": "RANSOMWARE"
+  },
+  "bc1qeva0qfrrtvxrp2w88qqqqv92tq9x98zr29exva": {
+    "label": "Kraken Institutional Deposit #04",
+    "type": "EXCHANGE"
+  },
+  "bc1qxva0gdfg0pyvgvx8wqqqqp90yxrqqpzwyxsnva": {
+    "label": "OFAC SDN Sanctioned Desk #04",
+    "type": "SANCTIONED"
+  },
+  "bc1qs0y0pt0gx9ffg9vdgqqqqv2zyyvdzqpvrtsr0y": {
+    "label": "REvil Sodinokibi Extortion #05",
+    "type": "RANSOMWARE"
+  },
+  "bc1qe0y0drqz8vgvqg29xqqqqyp98qfxzgqyxfex0y": {
+    "label": "OKX Hot Wallet Off-Ramp #05",
+    "type": "EXCHANGE"
+  },
+  "bc1qx0y0d0gy8xz98v9z9qqqqrdqfzvt8xv89dsn0y": {
+    "label": "OFAC SDN Sanctioned Desk #05",
+    "type": "SANCTIONED"
+  },
+  "bc1qsjt00tftq90yrq9q9qqqqq089wwd9zzwzfsrjt": {
+    "label": "WannaCry Legacy Ransomware #06",
+    "type": "RANSOMWARE"
+  },
+  "bc1qejt0gwr2wr08vg8qgqqqqy88qpdgw0dzgqexjt": {
+    "label": "Bitfinex Custodial Vault #06",
+    "type": "EXCHANGE"
+  },
+  "bc1qxjt0qvf9ppxtzgvxgqqqqfqgzpg2gxqvxdsnjt": {
+    "label": "OFAC SDN Sanctioned Desk #06",
+    "type": "SANCTIONED"
+  },
+  "bc1qs4j02gf8py9gx9dxpqqqqptrzy8dtgrqqvsr4j": {
+    "label": "Cl0p MOVEit Exploit Cluster #07",
+    "type": "RANSOMWARE"
+  },
+  "bc1qe4j0wvf90z898rpz0qqqq0gvwy0yp9qzy2ex4j": {
+    "label": "Garantex Sanctioned Exchange #07",
+    "type": "SANCTIONED"
+  },
+  "bc1qx4j0fqdw8t82x2gt2qqqqz8qrgt0ztvfwtsn4j": {
+    "label": "OFAC SDN Sanctioned Desk #07",
+    "type": "SANCTIONED"
+  },
+  "bc1qsce000pz9t9rxgr8qqqqqqpqx20zpxty92srce": {
+    "label": "Akira Corporate Extortion #08",
+    "type": "RANSOMWARE"
+  },
+  "bc1qece0vfz9fypv9yv8wqqqqy2xx22p8pw8ftexce": {
+    "label": "Bybit Liquidity Settlement #08",
+    "type": "EXCHANGE"
+  },
+  "bc1qxce00ppwzrxzvdw8vqqqq9gyv9twy9w8zvsnce": {
+    "label": "OFAC SDN Sanctioned Desk #08",
+    "type": "SANCTIONED"
+  },
+  "bc1qsmq0r20q8tdfyrwvpqqqq8y22vtt09wprxsrmq": {
+    "label": "Play Ransomware Operations #09",
+    "type": "RANSOMWARE"
+  },
+  "bc1qemq0pqp9tzxz2t2f9qqqqgrxd20r8tdp92exmq": {
+    "label": "HTX Global Settlement #09",
+    "type": "EXCHANGE"
+  },
+  "bc1qxmq0pxqgz2zxxrpdgqqqqwvpq29p089z0qsnmq": {
+    "label": "OFAC SDN Sanctioned Desk #09",
+    "type": "SANCTIONED"
+  },
+  "bc1qs78pgr8yytztpd0xvqqqqt2vdg9wgpzrqdsr78": {
+    "label": "Medusa Locker Syndicate #10",
+    "type": "RANSOMWARE"
+  },
+  "bc1qe78p8ryr99wtyfg9gqqqqz2zgzqg9t8y2xex78": {
+    "label": "Gate.io Omnibus Deposit #10",
+    "type": "EXCHANGE"
+  },
+  "bc1qx78p0r9tfqtrrzddxqqqqwrrqttytfyxqtsn78": {
+    "label": "OFAC SDN Sanctioned Desk #10",
+    "type": "SANCTIONED"
+  },
+  "bc1qspwpvftfffvvy28pzqqqqyqtfxfp9xyw2dsrpw": {
+    "label": "DarkSide Pipeline Extortion #11",
+    "type": "RANSOMWARE"
+  },
+  "bc1qepwpppyqyxqg8yt08qqqqdzzww88v2rvwqexpw": {
+    "label": "Suex OTC Sanctioned Desk #11",
+    "type": "SANCTIONED"
+  },
+  "bc1qxpwpw9zd2fv9882ygqqqqwfxgg9zzdpfw0snpw": {
+    "label": "OFAC SDN Sanctioned Desk #11",
+    "type": "SANCTIONED"
+  },
+  "bc1qsy4p22pqztwzqvf8xqqqqz80x00yxwzy9wsry4": {
+    "label": "Lazarus Group Ronin Bridge Hack #12",
+    "type": "SANCTIONED"
+  },
+  "bc1qey4pt8w8zyd8tr2fdqqqqwzvr998gtddxtexy4": {
+    "label": "OFAC SDN DPRK OTC Settlement #12",
+    "type": "SANCTIONED"
+  },
+  "bc1qxy4pftzr8yxvqvvxdqqqq02yf9ygdryvwfsny4": {
+    "label": "OFAC SDN Sanctioned Desk #12",
+    "type": "SANCTIONED"
+  },
+  "bc1qs8upx8rqrzrxgq8zrqqqqwyvtfgr2qgpqwsr8u": {
+    "label": "APT38 Harmony Horizon Exploit #13",
+    "type": "SANCTIONED"
+  },
+  "bc1qe8upvt2y99zwqvqqfqqqqwgfpdgpf29r0gex8u": {
+    "label": "Tornado Bridge BTC Exit Pool #13",
+    "type": "SANCTIONED"
+  },
+  "bc1qx8upz0vy8qz0ff2q8qqqqgxrqyxfgww9gpsn8u": {
+    "label": "OFAC SDN Sanctioned Desk #13",
+    "type": "SANCTIONED"
+  },
+  "bc1qs2rp990pty2yf9gdqqqqqz0zywqwv9rdxzsr2r": {
+    "label": "Kimsuky State Cyber Actor #14",
+    "type": "SANCTIONED"
+  },
+  "bc1qe2rpqyxfpgd2zvzxvqqqqxvr2r99rd9rz8ex2r": {
+    "label": "Chatex Sanctioned VASP #14",
+    "type": "SANCTIONED"
+  },
+  "bc1qx2rp9pwxqgf8pdywtqqqq89z2w08p222tzsn2r": {
+    "label": "OFAC SDN Sanctioned Desk #14",
+    "type": "SANCTIONED"
+  },
+  "bc1qsd2p829gpx8dygw0pqqqqf8dtd09wfpqyysrd2": {
+    "label": "Andariel Defense Intrusion #15",
+    "type": "SANCTIONED"
+  },
+  "bc1qed2pvryqw9zrpwytxqqqqqdpgvfv9zrwxpexd2": {
+    "label": "Huobi High-Risk Off-Ramp #15",
+    "type": "EXCHANGE"
+  },
+  "bc1qxd2pv2fdy8yvpgdd0qqqqdyzrxff9dv9qzsnd2": {
+    "label": "OFAC SDN Sanctioned Desk #15",
+    "type": "SANCTIONED"
+  },
+  "bc1qss3p9g2yzfp20xg0fqqqqzpf9qxxyypr09srs3": {
+    "label": "TraderTraitor Exchange Heist #16",
+    "type": "SANCTIONED"
+  },
+  "bc1qes3pr8f0yfzwgtxvxqqqqd2t80rqyp0gwwexs3": {
+    "label": "Sinbad Mixer Exit Vault #16",
+    "type": "SANCTIONED"
+  },
+  "bc1qxs3pqft0fydgg2tq9qqqqz9wpfggr8vw0wsns3": {
+    "label": "OFAC SDN Sanctioned Desk #16",
+    "type": "SANCTIONED"
+  },
+  "bc1qsncppfgqzyr2p9q92qqqqdz80rtd9rfdv0srnc": {
+    "label": "Hydra Darknet Market Escrow #17",
+    "type": "MIXER"
+  },
+  "bc1qencpvq8xxzdfzprvvqqqqy0w9xvdg0d2r0exnc": {
+    "label": "Hydra Affiliated Cashout Desk #17",
+    "type": "SANCTIONED"
+  },
+  "bc1qxncprdzxv98rtw2rwqqqqypywwxzqgdrz0snnc": {
+    "label": "OFAC SDN Sanctioned Desk #17",
+    "type": "SANCTIONED"
+  },
+  "bc1qsklpygy00t9d2wzt0qqqqyztpd0pyg2pfqsrkl": {
+    "label": "ChipMixer High-Entropy Pool #18",
+    "type": "MIXER"
+  },
+  "bc1qeklp8wzq0qz9f0qg0qqqqx0z8rptqqqpftexkl": {
+    "label": "KuCoin Custodial Off-Ramp #18",
+    "type": "EXCHANGE"
+  },
+  "bc1qxklpw0wypd98fx8rdqqqq2y8r2fddttfr0snkl": {
+    "label": "OFAC SDN Sanctioned Desk #18",
+    "type": "SANCTIONED"
+  },
+  "bc1qsexp8tvwr08zrzyf0qqqq8ggdfqwq20qx8srex": {
+    "label": "Wasabi CoinJoin Coordinator #19",
+    "type": "MIXER"
+  },
+  "bc1qeexpyy829ygzzgr02qqqqr8wzqv2d0ywxtexex": {
+    "label": "Gemini Institutional Custody #19",
+    "type": "EXCHANGE"
+  },
+  "bc1qxexp2tytryq8yp2tdqqqqr8pdzw9qgptxqsnex": {
+    "label": "OFAC SDN Sanctioned Desk #19",
+    "type": "SANCTIONED"
+  },
+  "bc1qsud2rp2grgtwvdzgwqqqqfq2y9dyp2z0dysrud": {
+    "label": "Samourai Whirlpool Premix #20",
+    "type": "MIXER"
+  },
+  "bc1qeud2rgvy2ff2gvzqyqqqqvwz9ztz8y2v28exud": {
+    "label": "Bitstamp Settlement Account #20",
+    "type": "EXCHANGE"
+  },
+  "bc1qxud22gp0z0rq8yg98qqqqydwrqtz2tr2yvsnud": {
+    "label": "OFAC SDN Sanctioned Desk #20",
+    "type": "SANCTIONED"
+  },
+  "bc1qsl522qqv9d9t9ygwyqqqqzttgrz2zd0xd9srl5": {
+    "label": "AlphaBay Reloaded Vendor Treasury #21",
+    "type": "MIXER"
+  },
+  "bc1qel52f8q8fvqxfqqq8qqqq9qwqqfg8dxypqexl5": {
+    "label": "MEXC High-Velocity Deposit #21",
+    "type": "EXCHANGE"
+  },
+  "bc1qxl52xzrf809pfx2rwqqqqytttrtfpg8gz2snl5": {
+    "label": "OFAC SDN Sanctioned Desk #21",
+    "type": "SANCTIONED"
+  },
+  "bc1qszm2r09fr2r88trq0qqqqfg00y2wd8rfq9srzm": {
+    "label": "Royal Ransomware Syndicate #22",
+    "type": "RANSOMWARE"
+  },
+  "bc1qezm22vrrw9t0rd0rzqqqqp8yw2t08zvg0zexzm": {
+    "label": "Crypto.com Hot Wallet #22",
+    "type": "EXCHANGE"
+  },
+  "bc1qxzm2rw9gz9vzrxv0gqqqq9ddpqyzyd2x2rsnzm": {
+    "label": "OFAC SDN Sanctioned Desk #22",
+    "type": "SANCTIONED"
+  },
+  "bc1qs9z2vq200zd00vyz0qqqqd9w8tvzddxfpwsr9z": {
+    "label": "BlackBasta Extortion Vault #23",
+    "type": "RANSOMWARE"
+  },
+  "bc1qe9z2d2q8qx8fv2808qqqqt0p09gr0gdqr0ex9z": {
+    "label": "Bitzlato Seized OTC Cluster #23",
+    "type": "SANCTIONED"
+  },
+  "bc1qx9z29x89f9r9yvtg8qqqqq9v8xvqyyy0wqsn9z": {
+    "label": "OFAC SDN Sanctioned Desk #23",
+    "type": "SANCTIONED"
+  },
+  "bc1qsgf2v8zgztffxzw9vqqqqtrrgrx2tw9g9ysrgf": {
+    "label": "Hive Ransomware Affiliate #24",
+    "type": "RANSOMWARE"
+  },
+  "bc1qegf2r9zxp9z9xfwftqqqqfwyr8xx2xp9qyexgf": {
+    "label": "Poloniex Omnibus Deposit #24",
+    "type": "EXCHANGE"
+  },
+  "bc1qxgf2dvfv908qzg09zqqqqg28xvf2p28q82sngf": {
+    "label": "OFAC SDN Sanctioned Desk #24",
+    "type": "SANCTIONED"
+  },
+  "bc1qsts2qr8xy890xtqgzqqqqffvzwv9yxz09xsrts": {
+    "label": "Hezbollah Illicit Financing Desk #25",
+    "type": "SANCTIONED"
+  },
+  "bc1qets2ryd0ygdq9dgggqqqq2tppxdrt89f02exts": {
+    "label": "OFAC Designated Hawala VASP #25",
+    "type": "SANCTIONED"
+  },
+  "bc1qxts2xqg2pddfdx2q8qqqq28020ygdr8222snts": {
+    "label": "OFAC SDN Sanctioned Desk #25",
+    "type": "SANCTIONED"
+  },
+  "bc1qswh2ptvf9pqdtxwptqqqq0f0fv0t2qppy2srwh": {
+    "label": "Pig Butchering (Sha Zhu Pan) Syndicate #26",
+    "type": "RANSOMWARE"
+  },
+  "bc1qewh28889g9fxprfqrqqqqfvztrpz8txt09exwh": {
+    "label": "OKX Southeast Asia Desk #26",
+    "type": "EXCHANGE"
+  },
+  "bc1qxwh20d08xtft0tppwqqqqy9zzzf9d2p2zfsnwh": {
+    "label": "OFAC SDN Sanctioned Desk #26",
+    "type": "SANCTIONED"
+  },
+  "bc1qs372yffgf29fw98r9qqqqztfwrtydvqvtgsr37": {
+    "label": "LockBit 3.0 Black Extortion #27",
+    "type": "RANSOMWARE"
+  },
+  "bc1qe372p008rx99fx2rgqqqqv9r8x2p2vzgvvex37": {
+    "label": "Binance Cold Storage #27",
+    "type": "EXCHANGE"
+  },
+  "bc1qx372drgzyt90ddr8qqqqqf2pv2pdq2xv9fsn37": {
+    "label": "OFAC SDN Sanctioned Desk #27",
+    "type": "SANCTIONED"
+  },
+  "bc1qs592pw0r9f9x9p28gqqqqq9yzvy98dqpytsr59": {
+    "label": "BlackCat ALPHV Ransomware #28",
+    "type": "RANSOMWARE"
+  },
+  "bc1qe592pqtzzxfpyp2frqqqqxrgt8qfr02xxxex59": {
+    "label": "Coinbase Prime Custody #28",
+    "type": "EXCHANGE"
+  },
+  "bc1qx592fdpwpq2r0q0rxqqqqfx2zf8yy828vdsn59": {
+    "label": "OFAC SDN Sanctioned Desk #28",
+    "type": "SANCTIONED"
+  },
+  "bc1qshv2qfx0zf0qdf0d8qqqqy2tv2wyw9gxvqsrhv": {
+    "label": "Conti Syndicate Treasury #29",
+    "type": "RANSOMWARE"
+  },
+  "bc1qehv2xwf8xx2rdgf9qqqqqq9xwyx2qtdxp8exhv": {
+    "label": "Kraken Institutional Deposit #29",
+    "type": "EXCHANGE"
+  },
+  "bc1qxhv29tprdfy9gq2gvqqqqywfvtz0y2wd2gsnhv": {
+    "label": "OFAC SDN Sanctioned Desk #29",
+    "type": "SANCTIONED"
+  },
+  "bc1qs6n3xzz89qt8dvgxgqqqq8vtxz8dwrpvrpsr6n": {
+    "label": "REvil Sodinokibi Extortion #30",
+    "type": "RANSOMWARE"
+  },
+  "bc1qe6n3gyg9tx9pxty9fqqqq9vtptygzxx0y0ex6n": {
+    "label": "OKX Hot Wallet Off-Ramp #30",
+    "type": "EXCHANGE"
+  },
+  "bc1qx6n3dfdtf29ggtpv0qqqq802yr9r8fzf2tsn6n": {
+    "label": "OFAC SDN Sanctioned Desk #30",
+    "type": "SANCTIONED"
+  },
+  "bc1qsa63f9xyvpqr90f00qqqqqtp0f92w0yydfsra6": {
+    "label": "WannaCry Legacy Ransomware #31",
+    "type": "RANSOMWARE"
+  },
+  "bc1qea63fdwt08rywvy8xqqqq2xdq89qrppgw9exa6": {
+    "label": "Bitfinex Custodial Vault #31",
+    "type": "EXCHANGE"
+  },
+  "bc1qxa63xrvpy2wf9t09vqqqq9yqzvpgddqxvdsna6": {
+    "label": "OFAC SDN Sanctioned Desk #31",
+    "type": "SANCTIONED"
+  },
+  "bc1qsqp3ygv29v20tqd9yqqqqx2vwgvgqt2p9ysrqp": {
+    "label": "Cl0p MOVEit Exploit Cluster #32",
+    "type": "RANSOMWARE"
+  },
+  "bc1qeqp3rg9w08frvrfqrqqqqdrg2ttgptdz8fexqp": {
+    "label": "Garantex Sanctioned Exchange #32",
+    "type": "SANCTIONED"
+  },
+  "bc1qxqp3t0tzztqgrydtzqqqqgq8pgpwyppqyxsnqp": {
+    "label": "OFAC SDN Sanctioned Desk #32",
+    "type": "SANCTIONED"
+  },
+  "bc1qsrg3dt92wz0qz8tf0qqqq2q9rfv9dvydp0srrg": {
+    "label": "Akira Corporate Extortion #33",
+    "type": "RANSOMWARE"
+  },
+  "bc1qerg38tpvyzq8rwrppqqqq0zrzzyz092gzxexrg": {
+    "label": "Bybit Liquidity Settlement #33",
+    "type": "EXCHANGE"
+  },
+  "bc1qxrg3d0x2zz09vyfg2qqqqy2f29x89xxp9tsnrg": {
+    "label": "OFAC SDN Sanctioned Desk #33",
+    "type": "SANCTIONED"
+  },
+  "bc1qsx03v2f02fqtrvzfwqqqqfzt8ptpgqwtrpsrx0": {
+    "label": "Play Ransomware Operations #34",
+    "type": "RANSOMWARE"
+  },
+  "bc1qex03z98p2r9y2wtwrqqqqydqddyggzdt22exx0": {
+    "label": "HTX Global Settlement #34",
+    "type": "EXCHANGE"
+  },
+  "bc1qxx03rqv9xy8dwwzqrqqqq9rfgdf9dyrzvgsnx0": {
+    "label": "OFAC SDN Sanctioned Desk #34",
+    "type": "SANCTIONED"
+  },
+  "bc1qsfk3rtxywt8822tztqqqqxvffvtrd2vwtpsrfk": {
+    "label": "Medusa Locker Syndicate #35",
+    "type": "RANSOMWARE"
+  },
+  "bc1qefk3y2d0qpz8r9g9xqqqq2dvwg0xz08w00exfk": {
+    "label": "Gate.io Omnibus Deposit #35",
+    "type": "EXCHANGE"
+  },
+  "bc1qxfk3gzpzx0p2yfgvgqqqqyfwxgx9wrggdvsnfk": {
+    "label": "OFAC SDN Sanctioned Desk #35",
+    "type": "SANCTIONED"
+  },
+  "bc1qsva38pwrw9wzpwpz9qqqqgqxtvdpf2v0z9srva": {
+    "label": "DarkSide Pipeline Extortion #36",
+    "type": "RANSOMWARE"
+  },
+  "bc1qeva3y8z92zp9zrxdwqqqqdwdptrv9tz80qexva": {
+    "label": "Suex OTC Sanctioned Desk #36",
+    "type": "SANCTIONED"
+  },
+  "bc1qxva3r2wzywz2yd9ywqqqqvd80p2v99x2pxsnva": {
+    "label": "OFAC SDN Sanctioned Desk #36",
+    "type": "SANCTIONED"
+  },
+  "bc1qs0y3drtrzd2f99y9qqqqqrywz8ffw0wptdsr0y": {
+    "label": "Lazarus Group Ronin Bridge Hack #37",
+    "type": "SANCTIONED"
+  },
+  "bc1qe0y3yryxwqpzwptqdqqqqprgqdzpfqyr2vex0y": {
+    "label": "OFAC SDN DPRK OTC Settlement #37",
+    "type": "SANCTIONED"
+  },
+  "bc1qx0y3xdd2gxwx2wgx8qqqqyvtz9qzvpg08psn0y": {
+    "label": "OFAC SDN Sanctioned Desk #37",
+    "type": "SANCTIONED"
+  },
+  "bc1qsjt3vr89tq9qygz9pqqqqrqqryrd0q2fzpsrjt": {
+    "label": "APT38 Harmony Horizon Exploit #38",
+    "type": "SANCTIONED"
+  },
+  "bc1qejt3t92vrp8fxrdzvqqqq2qyx92dy8tvxqexjt": {
+    "label": "Tornado Bridge BTC Exit Pool #38",
+    "type": "SANCTIONED"
+  },
+  "bc1qxjt3q0gxr0qx8dqv9qqqqxtq99r882pv0ysnjt": {
+    "label": "OFAC SDN Sanctioned Desk #38",
+    "type": "SANCTIONED"
+  },
+  "bc1qs4j3rfpv20vvxgwtgqqqq9ftw8wxyywyxpsr4j": {
+    "label": "Kimsuky State Cyber Actor #39",
+    "type": "SANCTIONED"
+  },
+  "bc1qe4j39rtq2zz8t8ffpqqqqy0pqxxvztv08gex4j": {
+    "label": "Chatex Sanctioned VASP #39",
+    "type": "SANCTIONED"
+  },
+  "bc1qx4j3x9tw8w0p8vf8qqqqq88pwfqxf22909sn4j": {
+    "label": "OFAC SDN Sanctioned Desk #39",
+    "type": "SANCTIONED"
+  },
+  "bc1qsce4922fqt2zv8qdqqqqqdfq8fprq00yxwsrce": {
+    "label": "Andariel Defense Intrusion #40",
+    "type": "SANCTIONED"
+  },
+  "bc1qece4ftf2pttt2zw8pqqqq9wvp0z0gpztprexce": {
+    "label": "Huobi High-Risk Off-Ramp #40",
+    "type": "EXCHANGE"
+  },
+  "bc1qxce4fx8r2g98wv2t0qqqqvfvxfxyp2p9r0snce": {
+    "label": "OFAC SDN Sanctioned Desk #40",
+    "type": "SANCTIONED"
+  },
+  "bc1qsmq4zdxtprytwgtxrqqqqwtw299rdvrgyzsrmq": {
+    "label": "TraderTraitor Exchange Heist #41",
+    "type": "SANCTIONED"
+  },
+  "bc1qemq4wrwp8gzxv99ydqqqqpr2y9wr2z2rqqexmq": {
+    "label": "Sinbad Mixer Exit Vault #41",
+    "type": "SANCTIONED"
+  },
+  "bc1qxmq4rgfdf9wq82t8pqqqqqzwdffq0tgf8qsnmq": {
+    "label": "OFAC SDN Sanctioned Desk #41",
+    "type": "SANCTIONED"
+  },
+  "bc1qs784fp2r8tgw9zfg0qqqqrw8yp0fdvr9ygsr78": {
+    "label": "Hydra Darknet Market Escrow #42",
+    "type": "MIXER"
+  },
+  "bc1qe784x29wxqgvt0drzqqqq2r8zyy0yvvqyzex78": {
+    "label": "Hydra Affiliated Cashout Desk #42",
+    "type": "SANCTIONED"
+  },
+  "bc1qx784fzpq2vtvdpp08qqqqztpz2g02v9tqvsn78": {
+    "label": "OFAC SDN Sanctioned Desk #42",
+    "type": "SANCTIONED"
+  },
+  "bc1qspw4trf298fvtrz90qqqqxgpgvryrqdy0wsrpw": {
+    "label": "ChipMixer High-Entropy Pool #43",
+    "type": "MIXER"
+  },
+  "bc1qepw42dzwrtw0x2qf0qqqqdrpvx828pgqvpexpw": {
+    "label": "KuCoin Custodial Off-Ramp #43",
+    "type": "EXCHANGE"
+  },
+  "bc1qxpw49xxqgpwvpyft9qqqqvt8qdxxywpt9tsnpw": {
+    "label": "OFAC SDN Sanctioned Desk #43",
+    "type": "SANCTIONED"
+  },
+  "bc1qsy44fv90w08pqy9p8qqqqtz2xrqgy0zwqdsry4": {
+    "label": "Wasabi CoinJoin Coordinator #44",
+    "type": "MIXER"
+  },
+  "bc1qey44t0pfvq82qtg9fqqqqyxzt2vyrt8r8xexy4": {
+    "label": "Gemini Institutional Custody #44",
+    "type": "EXCHANGE"
+  },
+  "bc1qxy44g0pw9vqz902ptqqqqvfgzg2z82xvrrsny4": {
+    "label": "OFAC SDN Sanctioned Desk #44",
+    "type": "SANCTIONED"
+  },
+  "bc1qs8u4fggvrxrddxrdzqqqqqdd2qzz8tzvpfsr8u": {
+    "label": "Samourai Whirlpool Premix #45",
+    "type": "MIXER"
+  },
+  "bc1qe8u49rr89y9d0vwwgqqqq8gpfpqwzx08dxex8u": {
+    "label": "Bitstamp Settlement Account #45",
+    "type": "EXCHANGE"
+  },
+  "bc1qx8u4wptdtdqg808wgqqqqy2vwxwtf89xgtsn8u": {
+    "label": "OFAC SDN Sanctioned Desk #45",
+    "type": "SANCTIONED"
+  },
+  "bc1qs2r4yxg00tyxxp8wpqqqqp8qxdtt0r9ggvsr2r": {
+    "label": "AlphaBay Reloaded Vendor Treasury #46",
+    "type": "MIXER"
+  },
+  "bc1qe2r40g8pqx22rt9d0qqqq8ryry9ftyffv9ex2r": {
+    "label": "MEXC High-Velocity Deposit #46",
+    "type": "EXCHANGE"
+  },
+  "bc1qx2r48pgzvppz88yrpqqqqvqf0ztqtx02ttsn2r": {
+    "label": "OFAC SDN Sanctioned Desk #46",
+    "type": "SANCTIONED"
+  },
+  "bc1qsd24qq2v9q9gvq0zyqqqqypgfdttggv2zdsrd2": {
+    "label": "Royal Ransomware Syndicate #47",
+    "type": "RANSOMWARE"
+  },
+  "bc1qed248qdwd0ryq9vrpqqqq2pdpdwgv2drfxexd2": {
+    "label": "Crypto.com Hot Wallet #47",
+    "type": "EXCHANGE"
+  },
+  "bc1qxd24qxgzzyyydvz0dqqqqdtt099dr2tv09snd2": {
+    "label": "OFAC SDN Sanctioned Desk #47",
+    "type": "SANCTIONED"
+  },
+  "bc1qss34fgt0ty0ft2qt9qqqqvt229p82vxzv2srs3": {
+    "label": "BlackBasta Extortion Vault #48",
+    "type": "RANSOMWARE"
+  },
+  "bc1qes34ty2w0xvg2td20qqqqrrxf0dvr9yvdqexs3": {
+    "label": "Bitzlato Seized OTC Cluster #48",
+    "type": "SANCTIONED"
+  },
+  "bc1qxs34gyx9tyxg8wt0rqqqqpz0pvvwv9yfpgsns3": {
+    "label": "OFAC SDN Sanctioned Desk #48",
+    "type": "SANCTIONED"
+  },
+  "bc1qsnc4ww2vw92fv298tqqqqypgfd88rzfp9xsrnc": {
+    "label": "Hive Ransomware Affiliate #49",
+    "type": "RANSOMWARE"
+  },
+  "bc1qenc4vww2zw0982p08qqqqptpw0p22gzx08exnc": {
+    "label": "Poloniex Omnibus Deposit #49",
+    "type": "EXCHANGE"
+  },
+  "bc1qxnc40f0vxy0zvpr2xqqqq8qtvr28x99x98snnc": {
+    "label": "OFAC SDN Sanctioned Desk #49",
+    "type": "SANCTIONED"
+  },
+  "bc1qskl58d0dzygyg22xzqqqq2rtprft2vvfq8srkl": {
+    "label": "Hezbollah Illicit Financing Desk #50",
+    "type": "SANCTIONED"
+  },
+  "bc1qekl508xv2gwpzq82fqqqqpyfww9p8pfg28exkl": {
+    "label": "OFAC Designated Hawala VASP #50",
+    "type": "SANCTIONED"
+  },
+  "bc1qxkl5fgzg22yxx88zrqqqqz9wtzydyrgvtgsnkl": {
+    "label": "OFAC SDN Sanctioned Desk #50",
+    "type": "SANCTIONED"
+  },
+  "bc1qsex5tqwgt92r9tptgqqqqtfwvrdprwqypqsrex": {
+    "label": "Pig Butchering (Sha Zhu Pan) Syndicate #51",
+    "type": "RANSOMWARE"
+  },
+  "bc1qeex5yzt0dxvff2fqyqqqq92z09pzgrptxqexex": {
+    "label": "OKX Southeast Asia Desk #51",
+    "type": "EXCHANGE"
+  },
+  "bc1qxex5wqrqtyqd9drdgqqqqzw9pqwpqzw9x2snex": {
+    "label": "OFAC SDN Sanctioned Desk #51",
+    "type": "SANCTIONED"
+  },
+  "bc1qsud5gpypp88ww8q0zqqqqpwpdwyfxzy29xsrud": {
+    "label": "LockBit 3.0 Black Extortion #52",
+    "type": "RANSOMWARE"
+  },
+  "bc1qeud5gvxvxd9gwdvwxqqqq98tyv0yvqgvyrexud": {
+    "label": "Binance Cold Storage #52",
+    "type": "EXCHANGE"
+  },
+  "bc1qxud5d2w0xrd80vv28qqqqg9r0ztftzdxpfsnud": {
+    "label": "OFAC SDN Sanctioned Desk #52",
+    "type": "SANCTIONED"
+  },
+  "bc1qsl55zqppvrf2qddgrqqqqpd90xqwt2ry8qsrl5": {
+    "label": "BlackCat ALPHV Ransomware #53",
+    "type": "RANSOMWARE"
+  },
+  "bc1qel55xtvzrdr28qq8rqqqqygf88rfd8dtrtexl5": {
+    "label": "Coinbase Prime Custody #53",
+    "type": "EXCHANGE"
+  },
+  "bc1qxl55vdgzg8gwzzgxtqqqq0ytrrt8yqxzwpsnl5": {
+    "label": "OFAC SDN Sanctioned Desk #53",
+    "type": "SANCTIONED"
+  },
+  "bc1qszm50f9f8pxtdqy80qqqqftdt0zrvr9ty8srzm": {
+    "label": "Conti Syndicate Treasury #54",
+    "type": "RANSOMWARE"
+  },
+  "bc1qezm5vd80dvxwgdq2wqqqqyrpvx2v2wt2pwexzm": {
+    "label": "Kraken Institutional Deposit #54",
+    "type": "EXCHANGE"
+  },
+  "bc1qxzm5zpzgfq02trygxqqqqy8f8ppv0yxqgysnzm": {
+    "label": "OFAC SDN Sanctioned Desk #54",
+    "type": "SANCTIONED"
+  },
+  "bc1qs9z5zwpqvwpwwvtf8qqqqxzzgzxyqxwf9ysr9z": {
+    "label": "REvil Sodinokibi Extortion #55",
+    "type": "RANSOMWARE"
+  },
+  "bc1qe9z5wv8zwfgvqvg9vqqqqy9dwgp0vxrff9ex9z": {
+    "label": "OKX Hot Wallet Off-Ramp #55",
+    "type": "EXCHANGE"
+  },
+  "bc1qx9z5xr9p89zpdqrqyqqqqqt0ggr9t8xdtgsn9z": {
+    "label": "OFAC SDN Sanctioned Desk #55",
+    "type": "SANCTIONED"
+  },
+  "bc1qsgf5x8y08zt89vg2rqqqqwrvrzpd0p89zqsrgf": {
+    "label": "WannaCry Legacy Ransomware #56",
+    "type": "RANSOMWARE"
+  },
+  "bc1qegf5ptfvtttw0p8dfqqqqrfpt0rrt2rvfrexgf": {
+    "label": "Bitfinex Custodial Vault #56",
+    "type": "EXCHANGE"
+  },
+  "bc1qxgf582d20wvv2pzpfqqqqwdgzfv0r8zwqysngf": {
+    "label": "OFAC SDN Sanctioned Desk #56",
+    "type": "SANCTIONED"
+  },
+  "bc1qsts5xdtfg00yygwp8qqqqyvd2wqrqzzzwpsrts": {
+    "label": "Cl0p MOVEit Exploit Cluster #57",
+    "type": "RANSOMWARE"
+  },
+  "bc1qets5gwp89yd20y8pvqqqqr2vx0d2fxdrd9exts": {
+    "label": "Garantex Sanctioned Exchange #57",
+    "type": "SANCTIONED"
+  },
+  "bc1qxts5ry9fgd8rwvp2wqqqqz2wfgzdqd2wqvsnts": {
+    "label": "OFAC SDN Sanctioned Desk #57",
+    "type": "SANCTIONED"
+  },
+  "bc1qswh5fx928fdxpf8p2qqqqpwyg9dg0y0tftsrwh": {
+    "label": "Akira Corporate Extortion #58",
+    "type": "RANSOMWARE"
+  },
+  "bc1qewh5x29zwrqvrgqvpqqqqqq99zvgtxgq8vexwh": {
+    "label": "Bybit Liquidity Settlement #58",
+    "type": "EXCHANGE"
+  },
+  "bc1qxwh5qxydtxzt00vqyqqqqyz8z80yyr9ztdsnwh": {
+    "label": "OFAC SDN Sanctioned Desk #58",
+    "type": "SANCTIONED"
+  },
+  "bc1qs375r988wxwxwv890qqqqx2fvz0p99fydgsr37": {
+    "label": "Play Ransomware Operations #59",
+    "type": "RANSOMWARE"
+  },
+  "bc1qe3759xxwvx0rypww9qqqqrygzxpzxg0yrzex37": {
+    "label": "HTX Global Settlement #59",
+    "type": "EXCHANGE"
+  },
+  "bc1qx375w2qv2w0yx9ztdqqqqyfxwd2r0fdt9tsn37": {
+    "label": "OFAC SDN Sanctioned Desk #59",
+    "type": "SANCTIONED"
+  },
+  "bc1qs59609wz99rdrq8drqqqq2r2wgw8tryrrpsr59": {
+    "label": "Medusa Locker Syndicate #60",
+    "type": "RANSOMWARE"
+  },
+  "bc1qe596f0t9vtpt0x2zqqqqqwpr2p8wftgpzqex59": {
+    "label": "Gate.io Omnibus Deposit #60",
+    "type": "EXCHANGE"
+  },
+  "bc1qx5962dgx229pzfpy9qqqqzvgd0qgfrqr92sn59": {
+    "label": "OFAC SDN Sanctioned Desk #60",
+    "type": "SANCTIONED"
+  },
+  "bc1qshv6r9vzx80qrzvxpqqqqdp99q8fgfrfvxsrhv": {
+    "label": "DarkSide Pipeline Extortion #61",
+    "type": "RANSOMWARE"
+  },
+  "bc1qehv6zpgqgtvt9txqqqqqq8yww0wdxwfw0gexhv": {
+    "label": "Suex OTC Sanctioned Desk #61",
+    "type": "SANCTIONED"
+  },
+  "bc1qxhv68ddgxpp2r8d8xqqqq02d808fzvq8xdsnhv": {
+    "label": "OFAC SDN Sanctioned Desk #61",
+    "type": "SANCTIONED"
+  },
+  "bc1qs6n6xpgtrpfy8qg8zqqqqg2zwwxzzzfvrzsr6n": {
+    "label": "Lazarus Group Ronin Bridge Hack #62",
+    "type": "SANCTIONED"
+  },
+  "bc1qe6n6qxtxprzrp8zqdqqqqwqy0yp9w0f89tex6n": {
+    "label": "OFAC SDN DPRK OTC Settlement #62",
+    "type": "SANCTIONED"
+  },
+  "bc1qx6n6pq0w9vt0grqtgqqqqdwwfgtgg2gvyrsn6n": {
+    "label": "OFAC SDN Sanctioned Desk #62",
+    "type": "SANCTIONED"
+  },
+  "bc1qsa66d0z8zx2yprtd0qqqq2dx0tq2t8r9tzsra6": {
+    "label": "APT38 Harmony Horizon Exploit #63",
+    "type": "SANCTIONED"
+  },
+  "bc1qea66w0py8f0p2t8ttqqqqzv2z9pz0wqvfrexa6": {
+    "label": "Tornado Bridge BTC Exit Pool #63",
+    "type": "SANCTIONED"
+  },
+  "bc1qxa66yzg22tz8z8vrwqqqqy9p09yggqrdqxsna6": {
+    "label": "OFAC SDN Sanctioned Desk #63",
+    "type": "SANCTIONED"
+  },
+  "bc1qsqp6pzrd9zrtytvffqqqqg90rygrtp0qrdsrqp": {
+    "label": "Kimsuky State Cyber Actor #64",
+    "type": "SANCTIONED"
+  },
+  "bc1qeqp68qv92dt82dt9fqqqqpwrdrg08t0zpyexqp": {
+    "label": "Chatex Sanctioned VASP #64",
+    "type": "SANCTIONED"
+  },
+  "bc1qxqp60z8f2zgx2gxffqqqqxyygr9wzr000rsnqp": {
+    "label": "OFAC SDN Sanctioned Desk #64",
+    "type": "SANCTIONED"
+  },
+  "bc1qsrg6xdwzwrf8gdtytqqqq2y0vy89yyv0rdsrrg": {
+    "label": "Andariel Defense Intrusion #65",
+    "type": "SANCTIONED"
+  },
+  "bc1qerg6z8zf9ptzrv9yrqqqq8820xt92qzpx9exrg": {
+    "label": "Huobi High-Risk Off-Ramp #65",
+    "type": "EXCHANGE"
+  },
+  "bc1qxrg6xzgyftrxffw0gqqqqf0fqtfrpw2pwfsnrg": {
+    "label": "OFAC SDN Sanctioned Desk #65",
+    "type": "SANCTIONED"
+  },
+  "bc1qsx06xfwyqqqgqv909qqqqzgygdd9pgprptsrx0": {
+    "label": "TraderTraitor Exchange Heist #66",
+    "type": "SANCTIONED"
+  },
+  "bc1qex06zg2t9pdxpqfvwqqqqg8gvptpd82ywrexx0": {
+    "label": "Sinbad Mixer Exit Vault #66",
+    "type": "SANCTIONED"
+  },
+  "bc1qxx06dpwr20ptz0qr9qqqq9fzzqvr8fpq8fsnx0": {
+    "label": "OFAC SDN Sanctioned Desk #66",
+    "type": "SANCTIONED"
+  },
+  "bc1qsfk6gvqxxtf0vtd0qqqqqv0dx2w09d0v9ysrfk": {
+    "label": "Hydra Darknet Market Escrow #67",
+    "type": "MIXER"
+  },
+  "bc1qefk6p2tydzvdzz9t2qqqqwpggwxf2y09y0exfk": {
+    "label": "Hydra Affiliated Cashout Desk #67",
+    "type": "SANCTIONED"
+  },
+  "bc1qxfk680prdp2q8qxgxqqqqpqx9t0qrzpt9fsnfk": {
+    "label": "OFAC SDN Sanctioned Desk #67",
+    "type": "SANCTIONED"
+  },
+  "bc1qsva6xygf20t299wg0qqqqrq9vggp98zdd9srva": {
+    "label": "ChipMixer High-Entropy Pool #68",
+    "type": "MIXER"
+  },
+  "bc1qeva6d9rzy0zfgzfd2qqqqqydfvtywq9zrfexva": {
+    "label": "KuCoin Custodial Off-Ramp #68",
+    "type": "EXCHANGE"
+  },
+  "bc1qxva6x8x2zq8wffvfpqqqq980qwtw2vztzqsnva": {
+    "label": "OFAC SDN Sanctioned Desk #68",
+    "type": "SANCTIONED"
+  },
+  "bc1qs0y6frgf0wpdgptdvqqqqddgypw8t9zv8rsr0y": {
+    "label": "Wasabi CoinJoin Coordinator #69",
+    "type": "MIXER"
+  },
+  "bc1qe0y6yrtg98g89vyvtqqqqf9fgddvq0pw9vex0y": {
+    "label": "Gemini Institutional Custody #69",
+    "type": "EXCHANGE"
+  },
+  "bc1qx0y6xvw0t282rwgwdqqqqpxzt99yypyrxfsn0y": {
+    "label": "OFAC SDN Sanctioned Desk #69",
+    "type": "SANCTIONED"
+  },
+  "bc1qsjt7yy989gpv28xrdqqqqfrdddgf0ytqpysrjt": {
+    "label": "Samourai Whirlpool Premix #70",
+    "type": "MIXER"
+  },
+  "bc1qejt7w2vqxrrfftrr0qqqq9gfgz2wq0w2ftexjt": {
+    "label": "Bitstamp Settlement Account #70",
+    "type": "EXCHANGE"
+  },
+  "bc1qxjt7v9tvg9tdgdr2wqqqqgztfrtr8vy8pzsnjt": {
+    "label": "OFAC SDN Sanctioned Desk #70",
+    "type": "SANCTIONED"
+  },
+  "bc1qs4j7qpty0ftp0yqt9qqqq9g88wvg900xt9sr4j": {
+    "label": "AlphaBay Reloaded Vendor Treasury #71",
+    "type": "MIXER"
+  },
+  "bc1qe4j7wpt29trwvxppyqqqqrtpffpqzdzqyxex4j": {
+    "label": "MEXC High-Velocity Deposit #71",
+    "type": "EXCHANGE"
+  },
+  "bc1qx4j7tz9rq00ztxdgqqqqqp9wr88d2w8zq2sn4j": {
+    "label": "OFAC SDN Sanctioned Desk #71",
+    "type": "SANCTIONED"
+  },
+  "bc1qsce72f2qpgtx0xrdwqqqqgfd9p9yw8twfxsrce": {
+    "label": "Royal Ransomware Syndicate #72",
+    "type": "RANSOMWARE"
+  },
+  "bc1qece7drwwqtvq0y9drqqqqxdfdxxz92ydvtexce": {
+    "label": "Crypto.com Hot Wallet #72",
+    "type": "EXCHANGE"
+  },
+  "bc1qxce7gww8dttx8wtd2qqqqgwwr8xxtvtg9dsnce": {
+    "label": "OFAC SDN Sanctioned Desk #72",
+    "type": "SANCTIONED"
+  },
+  "bc1qsmq7zfz2qydyqxzqgqqqq80rzv08fr20drsrmq": {
+    "label": "BlackBasta Extortion Vault #73",
+    "type": "RANSOMWARE"
+  },
+  "bc1qemq7f9z9g82zp2gzdqqqqpyf22pvvxzd89exmq": {
+    "label": "Bitzlato Seized OTC Cluster #73",
+    "type": "SANCTIONED"
+  },
+  "bc1qxmq7pqxrgpqyfqff9qqqqdqrx2xwqgdpzxsnmq": {
+    "label": "OFAC SDN Sanctioned Desk #73",
+    "type": "SANCTIONED"
+  },
+  "bc1qs7879d2xdrxgfzt9gqqqq8r8dxtfv08drzsr78": {
+    "label": "Hive Ransomware Affiliate #74",
+    "type": "RANSOMWARE"
+  },
+  "bc1qe787txf2tv9tzypdfqqqq2p2v9d2ytrqv9ex78": {
+    "label": "Poloniex Omnibus Deposit #74",
+    "type": "EXCHANGE"
+  },
+  "bc1qx787fgpf9wwzrttx2qqqqd8zqgww2w9yr0sn78": {
+    "label": "OFAC SDN Sanctioned Desk #74",
+    "type": "SANCTIONED"
+  },
+  "bc1qspw7qzrytfr2gr2ztqqqqgw8wt980qw88wsrpw": {
+    "label": "Hezbollah Illicit Financing Desk #75",
+    "type": "SANCTIONED"
+  },
+  "bc1qepw7tvfwgv800qr8qqqqq0xqt0qxgdqyqqexpw": {
+    "label": "OFAC Designated Hawala VASP #75",
+    "type": "SANCTIONED"
+  },
+  "bc1qxpw78qfytpgdw0qgpqqqqxp0f88vx9qgzvsnpw": {
+    "label": "OFAC SDN Sanctioned Desk #75",
     "type": "SANCTIONED"
   }
 }

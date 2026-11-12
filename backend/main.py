@@ -145,6 +145,12 @@ def health_check() -> Dict[str, Any]:
     return {"status": "ok", "service": "CryptoTrace", "mode_support": ["sample", "live"]}
 
 
+@app.get("/scenarios")
+def get_scenarios() -> List[Dict[str, Any]]:
+    """Return all 75 offline forensic scenario datasets for the UI scenario selector."""
+    return sample_loader.list_scenarios()
+
+
 @app.post("/trace")
 def trace_funds(req: TraceRequest) -> Dict[str, Any]:
     """
@@ -155,11 +161,16 @@ def trace_funds(req: TraceRequest) -> Dict[str, Any]:
     """
     raw_input = (req.input or "").strip()
 
-    # In sample mode, resolve shorthand aliases like "S" or "E1" before validation
+    # In sample mode, resolve which of the 75 scenarios matches the input or alias
     sample_data = sample_loader.load_sample() if req.mode == "sample" else None
-    effective_input = (
-        sample_loader.resolve_sample_input(raw_input, sample_data)
+    matched_scenario = (
+        sample_loader.select_scenario_for_input(raw_input, sample_data)
         if req.mode == "sample" and sample_data
+        else None
+    )
+    effective_input = (
+        matched_scenario.get("source", raw_input)
+        if matched_scenario is not None
         else raw_input
     )
 
@@ -185,10 +196,10 @@ def trace_funds(req: TraceRequest) -> Dict[str, Any]:
     # 2. Fetch transactions: sample_loader or chain_client (P1)
     second_source: List[Dict[str, Any]] | None = None
     if req.mode == "sample":
-        assert sample_data is not None
-        txs = sample_data.get("txs", [])
-        source_addr = sample_data.get("source", effective_input)
-        aliases = sample_data.get("aliases", {})
+        assert matched_scenario is not None
+        txs = matched_scenario.get("txs", [])
+        source_addr = matched_scenario.get("source", effective_input)
+        aliases = matched_scenario.get("aliases", {})
     else:
         source_addr, txs, second_source = _fetch_live_bfs(
             effective_input, input_kind or "address", req.hops
