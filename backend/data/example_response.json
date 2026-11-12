@@ -1,0 +1,1350 @@
+{
+  "graph": {
+    "nodes": [
+      {
+        "id": "bc1qsrc0000000000000000000000000000000000",
+        "type": "address",
+        "label": "Reported Ransom Wallet",
+        "cluster": "c30",
+        "tags": [
+          "SOURCE",
+          "FAN_OUT",
+          "AUTOMATED_BOT"
+        ],
+        "risk": 70,
+        "taint": 1.0
+      },
+      {
+        "id": "bc1qmix100000000000000000000000000000m1qp",
+        "type": "address",
+        "label": "Mixer Pool M1",
+        "cluster": "c21",
+        "tags": [
+          "FAN_OUT",
+          "FAN_IN",
+          "MIXER_PATTERN",
+          "AUTOMATED_BOT"
+        ],
+        "risk": 46,
+        "taint": 0.0
+      },
+      {
+        "id": "bc1qmix200000000000000000000000000000m2zr",
+        "type": "address",
+        "label": "Mixer Pool M2",
+        "cluster": "c21",
+        "tags": [
+          "FAN_OUT",
+          "FAN_IN",
+          "MIXER_PATTERN",
+          "AUTOMATED_BOT"
+        ],
+        "risk": 46,
+        "taint": 0.0
+      },
+      {
+        "id": "bc1qmix300000000000000000000000000000m3y9",
+        "type": "address",
+        "label": "Mixer Pool M3",
+        "cluster": "c21",
+        "tags": [
+          "FAN_OUT",
+          "FAN_IN",
+          "MIXER_PATTERN",
+          "AUTOMATED_BOT"
+        ],
+        "risk": 46,
+        "taint": 0.0
+      },
+      {
+        "id": "bc1qmix400000000000000000000000000000m4x8",
+        "type": "address",
+        "label": "Mixer Pool M4",
+        "cluster": "c21",
+        "tags": [
+          "FAN_OUT",
+          "FAN_IN",
+          "MIXER_PATTERN",
+          "AUTOMATED_BOT"
+        ],
+        "risk": 46,
+        "taint": 0.0
+      },
+      {
+        "id": "bc1qmix500000000000000000000000000000m5gf",
+        "type": "address",
+        "label": "Mixer Pool M5",
+        "cluster": "c21",
+        "tags": [
+          "FAN_OUT",
+          "FAN_IN",
+          "MIXER_PATTERN",
+          "AUTOMATED_BOT"
+        ],
+        "risk": 46,
+        "taint": 0.0
+      },
+      {
+        "id": "bc1qmix600000000000000000000000000000m62t",
+        "type": "address",
+        "label": "Mixer Pool M6",
+        "cluster": "c21",
+        "tags": [
+          "FAN_OUT",
+          "FAN_IN",
+          "MIXER_PATTERN",
+          "AUTOMATED_BOT"
+        ],
+        "risk": 46,
+        "taint": 0.0
+      },
+      {
+        "id": "bc1qmix700000000000000000000000000000m7vd",
+        "type": "address",
+        "label": "Mixer Leaf M7",
+        "cluster": "c22",
+        "tags": [
+          "FAN_OUT",
+          "MIXER_PATTERN"
+        ],
+        "risk": 56,
+        "taint": 0.125
+      },
+      {
+        "id": "bc1qmix800000000000000000000000000000m8w0",
+        "type": "address",
+        "label": "Mixer Leaf M8",
+        "cluster": "c23",
+        "tags": [
+          "FAN_OUT",
+          "MIXER_PATTERN"
+        ],
+        "risk": 56,
+        "taint": 0.125
+      },
+      {
+        "id": "bc1qc10000000000000000000000000000000c1s3",
+        "type": "address",
+        "label": "Consolidation Hub C1",
+        "cluster": "c1",
+        "tags": [
+          "PEEL_CHAIN",
+          "FAN_IN",
+          "AUTOMATED_BOT"
+        ],
+        "risk": 51,
+        "taint": 0.0
+      },
+      {
+        "id": "bc1qw10000000000000000000000000000000w154",
+        "type": "address",
+        "label": "Peel Change W1",
+        "cluster": "c32",
+        "tags": [],
+        "risk": 56,
+        "taint": 0.0543
+      },
+      {
+        "id": "bc1qp10000000000000000000000000000000p1jn",
+        "type": "address",
+        "label": "Peel Node P1",
+        "cluster": "c24",
+        "tags": [
+          "PEEL_CHAIN",
+          "AUTOMATED_BOT"
+        ],
+        "risk": 27,
+        "taint": 0.0
+      },
+      {
+        "id": "bc1qw20000000000000000000000000000000w2ce",
+        "type": "address",
+        "label": "Peel Change W2",
+        "cluster": "c33",
+        "tags": [],
+        "risk": 56,
+        "taint": 0.0543
+      },
+      {
+        "id": "bc1qp20000000000000000000000000000000p2kh",
+        "type": "address",
+        "label": "Peel Node P2",
+        "cluster": "c25",
+        "tags": [
+          "PEEL_CHAIN",
+          "FAN_OUT",
+          "MIXER_PATTERN",
+          "AUTOMATED_BOT"
+        ],
+        "risk": 51,
+        "taint": 0.0
+      },
+      {
+        "id": "bc1qw30000000000000000000000000000000w3ua",
+        "type": "address",
+        "label": "Peel Change W3",
+        "cluster": "c34",
+        "tags": [
+          "AUTOMATED_BOT"
+        ],
+        "risk": 22,
+        "taint": 0.0
+      },
+      {
+        "id": "bc1qp30000000000000000000000000000000p36m",
+        "type": "address",
+        "label": "Peel Node P3",
+        "cluster": "c26",
+        "tags": [
+          "PEEL_CHAIN",
+          "AUTOMATED_BOT"
+        ],
+        "risk": 27,
+        "taint": 0.0
+      },
+      {
+        "id": "bc1qsanc000000000000000000000000000000000",
+        "type": "address",
+        "label": "OFAC SDN Sanctioned Entity",
+        "cluster": "c29",
+        "tags": [
+          "SANCTIONED"
+        ],
+        "risk": 52,
+        "taint": 0.0541
+      },
+      {
+        "id": "bc1qw40000000000000000000000000000000w4qp",
+        "type": "address",
+        "label": "Peel Change W4",
+        "cluster": "c35",
+        "tags": [
+          "AUTOMATED_BOT"
+        ],
+        "risk": 22,
+        "taint": 0.0
+      },
+      {
+        "id": "bc1qp40000000000000000000000000000000p47l",
+        "type": "address",
+        "label": "Peel Node P4",
+        "cluster": "c27",
+        "tags": [
+          "PEEL_CHAIN",
+          "AUTOMATED_BOT"
+        ],
+        "risk": 27,
+        "taint": 0.0
+      },
+      {
+        "id": "bc1qunrf77777777777777777777777777777urnf",
+        "type": "address",
+        "label": "Decoy Leaf Wallet U1",
+        "cluster": "c31",
+        "tags": [],
+        "risk": 22,
+        "taint": 0.0
+      },
+      {
+        "id": "bc1qchng66666666666666666666666666666cng6",
+        "type": "address",
+        "label": "",
+        "cluster": "c2",
+        "tags": [],
+        "risk": 22,
+        "taint": 0.0543
+      },
+      {
+        "id": "bc1qw50000000000000000000000000000000w5y9",
+        "type": "address",
+        "label": "Peel Change W5",
+        "cluster": "c36",
+        "tags": [
+          "AUTOMATED_BOT"
+        ],
+        "risk": 22,
+        "taint": 0.0
+      },
+      {
+        "id": "bc1qp50000000000000000000000000000000p5zr",
+        "type": "address",
+        "label": "Peel Node P5",
+        "cluster": "c28",
+        "tags": [
+          "PEEL_CHAIN",
+          "AUTOMATED_BOT"
+        ],
+        "risk": 27,
+        "taint": 0.0
+      },
+      {
+        "id": "bc1qexch999999999999999999999999999993333",
+        "type": "address",
+        "label": "Look-Alike Poison Wallet E1X",
+        "cluster": "c19",
+        "tags": [
+          "LOOKALIKE"
+        ],
+        "risk": 22,
+        "taint": 0.0123
+      },
+      {
+        "id": "bc1qexch333333333333333333333333333333333",
+        "type": "address",
+        "label": "ExchangeX Deposit",
+        "cluster": "c18",
+        "tags": [
+          "EXCHANGE"
+        ],
+        "risk": 56,
+        "taint": 0.4462
+      },
+      {
+        "id": "bc1ql10000000000000000000000000000000l1x8",
+        "type": "address",
+        "label": "Unspent Leaf L1",
+        "cluster": "c20",
+        "tags": [],
+        "risk": 22,
+        "taint": 0.0195
+      },
+      {
+        "id": "bc1qdust88888888888888888888888888888ds8t",
+        "type": "address",
+        "label": "Dust Attack Distributor DS",
+        "cluster": "c12",
+        "tags": [
+          "FAN_OUT",
+          "AUTOMATED_BOT",
+          "DUSTING"
+        ],
+        "risk": 46,
+        "taint": 0.0
+      },
+      {
+        "id": "bc1qdqgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagqdf",
+        "type": "address",
+        "label": "",
+        "cluster": "c9",
+        "tags": [
+          "FAN_OUT",
+          "MIXER_PATTERN"
+        ],
+        "risk": 46,
+        "taint": 0.0
+      },
+      {
+        "id": "bc1qdpgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagpdf",
+        "type": "address",
+        "label": "",
+        "cluster": "c8",
+        "tags": [
+          "FAN_OUT",
+          "MIXER_PATTERN"
+        ],
+        "risk": 46,
+        "taint": 0.0
+      },
+      {
+        "id": "bc1qdzgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagzdf",
+        "type": "address",
+        "label": "",
+        "cluster": "c17",
+        "tags": [
+          "FAN_OUT",
+          "MIXER_PATTERN"
+        ],
+        "risk": 46,
+        "taint": 0.0
+      },
+      {
+        "id": "bc1qdrgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagrdf",
+        "type": "address",
+        "label": "",
+        "cluster": "c10",
+        "tags": [
+          "FAN_OUT",
+          "MIXER_PATTERN"
+        ],
+        "risk": 46,
+        "taint": 0.0
+      },
+      {
+        "id": "bc1qdygfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagydf",
+        "type": "address",
+        "label": "",
+        "cluster": "c16",
+        "tags": [
+          "FAN_OUT",
+          "MIXER_PATTERN"
+        ],
+        "risk": 46,
+        "taint": 0.0
+      },
+      {
+        "id": "bc1qd9gfaaaaaaaaaaaaaaaaaaaaaaaaaaaaag9df",
+        "type": "address",
+        "label": "",
+        "cluster": "c5",
+        "tags": [
+          "FAN_OUT",
+          "MIXER_PATTERN"
+        ],
+        "risk": 46,
+        "taint": 0.0
+      },
+      {
+        "id": "bc1qdxgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagxdf",
+        "type": "address",
+        "label": "",
+        "cluster": "c15",
+        "tags": [
+          "FAN_OUT",
+          "MIXER_PATTERN"
+        ],
+        "risk": 46,
+        "taint": 0.0
+      },
+      {
+        "id": "bc1qd8gfaaaaaaaaaaaaaaaaaaaaaaaaaaaaag8df",
+        "type": "address",
+        "label": "",
+        "cluster": "c4",
+        "tags": [
+          "FAN_OUT",
+          "MIXER_PATTERN"
+        ],
+        "risk": 46,
+        "taint": 0.0
+      },
+      {
+        "id": "bc1qdfgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagfdf",
+        "type": "address",
+        "label": "",
+        "cluster": "c7",
+        "tags": [
+          "FAN_OUT",
+          "MIXER_PATTERN"
+        ],
+        "risk": 46,
+        "taint": 0.0
+      },
+      {
+        "id": "bc1qd2gfaaaaaaaaaaaaaaaaaaaaaaaaaaaaag2df",
+        "type": "address",
+        "label": "",
+        "cluster": "c3",
+        "tags": [
+          "FAN_OUT",
+          "MIXER_PATTERN"
+        ],
+        "risk": 46,
+        "taint": 0.0
+      },
+      {
+        "id": "bc1qdtgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagtdf",
+        "type": "address",
+        "label": "",
+        "cluster": "c11",
+        "tags": [
+          "FAN_OUT",
+          "MIXER_PATTERN"
+        ],
+        "risk": 46,
+        "taint": 0.0
+      },
+      {
+        "id": "bc1qdvgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagvdf",
+        "type": "address",
+        "label": "",
+        "cluster": "c13",
+        "tags": [
+          "FAN_OUT",
+          "MIXER_PATTERN"
+        ],
+        "risk": 46,
+        "taint": 0.0
+      },
+      {
+        "id": "bc1qddgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagddf",
+        "type": "address",
+        "label": "",
+        "cluster": "c6",
+        "tags": [
+          "FAN_OUT",
+          "MIXER_PATTERN"
+        ],
+        "risk": 46,
+        "taint": 0.0
+      },
+      {
+        "id": "bc1qdwgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagwdf",
+        "type": "address",
+        "label": "",
+        "cluster": "c14",
+        "tags": [
+          "FAN_OUT",
+          "MIXER_PATTERN"
+        ],
+        "risk": 46,
+        "taint": 0.0
+      }
+    ],
+    "edges": [
+      {
+        "from": "bc1qsrc0000000000000000000000000000000000",
+        "to": "bc1qmix100000000000000000000000000000m1qp",
+        "txid": "1111111111111111111111111111111111111111111111111111111111111101",
+        "value": 0.5062,
+        "ts": 1700000000,
+        "tags": [
+          "FAN_OUT",
+          "MIXER_PATTERN"
+        ]
+      },
+      {
+        "from": "bc1qsrc0000000000000000000000000000000000",
+        "to": "bc1qmix200000000000000000000000000000m2zr",
+        "txid": "1111111111111111111111111111111111111111111111111111111111111101",
+        "value": 0.5062,
+        "ts": 1700000000,
+        "tags": [
+          "FAN_OUT",
+          "MIXER_PATTERN"
+        ]
+      },
+      {
+        "from": "bc1qsrc0000000000000000000000000000000000",
+        "to": "bc1qmix300000000000000000000000000000m3y9",
+        "txid": "1111111111111111111111111111111111111111111111111111111111111101",
+        "value": 0.5062,
+        "ts": 1700000000,
+        "tags": [
+          "FAN_OUT",
+          "MIXER_PATTERN"
+        ]
+      },
+      {
+        "from": "bc1qsrc0000000000000000000000000000000000",
+        "to": "bc1qmix400000000000000000000000000000m4x8",
+        "txid": "1111111111111111111111111111111111111111111111111111111111111101",
+        "value": 0.5062,
+        "ts": 1700000000,
+        "tags": [
+          "FAN_OUT",
+          "MIXER_PATTERN"
+        ]
+      },
+      {
+        "from": "bc1qsrc0000000000000000000000000000000000",
+        "to": "bc1qmix500000000000000000000000000000m5gf",
+        "txid": "1111111111111111111111111111111111111111111111111111111111111101",
+        "value": 0.5062,
+        "ts": 1700000000,
+        "tags": [
+          "FAN_OUT",
+          "MIXER_PATTERN"
+        ]
+      },
+      {
+        "from": "bc1qsrc0000000000000000000000000000000000",
+        "to": "bc1qmix600000000000000000000000000000m62t",
+        "txid": "1111111111111111111111111111111111111111111111111111111111111101",
+        "value": 0.5062,
+        "ts": 1700000000,
+        "tags": [
+          "FAN_OUT",
+          "MIXER_PATTERN"
+        ]
+      },
+      {
+        "from": "bc1qsrc0000000000000000000000000000000000",
+        "to": "bc1qmix700000000000000000000000000000m7vd",
+        "txid": "1111111111111111111111111111111111111111111111111111111111111101",
+        "value": 0.5062,
+        "ts": 1700000000,
+        "tags": [
+          "FAN_OUT",
+          "MIXER_PATTERN"
+        ]
+      },
+      {
+        "from": "bc1qsrc0000000000000000000000000000000000",
+        "to": "bc1qmix800000000000000000000000000000m8w0",
+        "txid": "1111111111111111111111111111111111111111111111111111111111111101",
+        "value": 0.5062,
+        "ts": 1700000000,
+        "tags": [
+          "FAN_OUT",
+          "MIXER_PATTERN"
+        ]
+      },
+      {
+        "from": "bc1qmix100000000000000000000000000000m1qp",
+        "to": "bc1qc10000000000000000000000000000000c1s3",
+        "txid": "2222222222222222222222222222222222222222222222222222222222222202",
+        "value": 0.50616667,
+        "ts": 1700000600,
+        "tags": [
+          "FAN_IN"
+        ]
+      },
+      {
+        "from": "bc1qmix200000000000000000000000000000m2zr",
+        "to": "bc1qc10000000000000000000000000000000c1s3",
+        "txid": "2222222222222222222222222222222222222222222222222222222222222202",
+        "value": 0.50616667,
+        "ts": 1700000600,
+        "tags": [
+          "FAN_IN"
+        ]
+      },
+      {
+        "from": "bc1qmix300000000000000000000000000000m3y9",
+        "to": "bc1qc10000000000000000000000000000000c1s3",
+        "txid": "2222222222222222222222222222222222222222222222222222222222222202",
+        "value": 0.50616667,
+        "ts": 1700000600,
+        "tags": [
+          "FAN_IN"
+        ]
+      },
+      {
+        "from": "bc1qmix400000000000000000000000000000m4x8",
+        "to": "bc1qc10000000000000000000000000000000c1s3",
+        "txid": "2222222222222222222222222222222222222222222222222222222222222202",
+        "value": 0.50616667,
+        "ts": 1700000600,
+        "tags": [
+          "FAN_IN"
+        ]
+      },
+      {
+        "from": "bc1qmix500000000000000000000000000000m5gf",
+        "to": "bc1qc10000000000000000000000000000000c1s3",
+        "txid": "2222222222222222222222222222222222222222222222222222222222222202",
+        "value": 0.50616667,
+        "ts": 1700000600,
+        "tags": [
+          "FAN_IN"
+        ]
+      },
+      {
+        "from": "bc1qmix600000000000000000000000000000m62t",
+        "to": "bc1qc10000000000000000000000000000000c1s3",
+        "txid": "2222222222222222222222222222222222222222222222222222222222222202",
+        "value": 0.50616667,
+        "ts": 1700000600,
+        "tags": [
+          "FAN_IN"
+        ]
+      },
+      {
+        "from": "bc1qc10000000000000000000000000000000c1s3",
+        "to": "bc1qw10000000000000000000000000000000w154",
+        "txid": "3333333333333333333333333333333333333333333333333333333333333301",
+        "value": 0.22,
+        "ts": 1700001200,
+        "tags": [
+          "PEEL"
+        ]
+      },
+      {
+        "from": "bc1qc10000000000000000000000000000000c1s3",
+        "to": "bc1qp10000000000000000000000000000000p1jn",
+        "txid": "3333333333333333333333333333333333333333333333333333333333333301",
+        "value": 2.807,
+        "ts": 1700001200,
+        "tags": [
+          "PEEL_CONTINUATION"
+        ]
+      },
+      {
+        "from": "bc1qp10000000000000000000000000000000p1jn",
+        "to": "bc1qw20000000000000000000000000000000w2ce",
+        "txid": "3333333333333333333333333333333333333333333333333333333333333302",
+        "value": 0.22,
+        "ts": 1700001800,
+        "tags": [
+          "PEEL"
+        ]
+      },
+      {
+        "from": "bc1qp10000000000000000000000000000000p1jn",
+        "to": "bc1qp20000000000000000000000000000000p2kh",
+        "txid": "3333333333333333333333333333333333333333333333333333333333333302",
+        "value": 2.577,
+        "ts": 1700001800,
+        "tags": [
+          "PEEL_CONTINUATION"
+        ]
+      },
+      {
+        "from": "bc1qp20000000000000000000000000000000p2kh",
+        "to": "bc1qw30000000000000000000000000000000w3ua",
+        "txid": "3333333333333333333333333333333333333333333333333333333333333303",
+        "value": 0.22,
+        "ts": 1700002400,
+        "tags": [
+          "PEEL"
+        ]
+      },
+      {
+        "from": "bc1qp20000000000000000000000000000000p2kh",
+        "to": "bc1qp30000000000000000000000000000000p36m",
+        "txid": "3333333333333333333333333333333333333333333333333333333333333303",
+        "value": 2.347,
+        "ts": 1700002400,
+        "tags": [
+          "PEEL_CONTINUATION"
+        ]
+      },
+      {
+        "from": "bc1qw30000000000000000000000000000000w3ua",
+        "to": "bc1qsanc000000000000000000000000000000000",
+        "txid": "5555555555555555555555555555555555555555555555555555555555555505",
+        "value": 0.219,
+        "ts": 1700004800,
+        "tags": []
+      },
+      {
+        "from": "bc1qp30000000000000000000000000000000p36m",
+        "to": "bc1qw40000000000000000000000000000000w4qp",
+        "txid": "3333333333333333333333333333333333333333333333333333333333333304",
+        "value": 0.22,
+        "ts": 1700003000,
+        "tags": [
+          "PEEL"
+        ]
+      },
+      {
+        "from": "bc1qp30000000000000000000000000000000p36m",
+        "to": "bc1qp40000000000000000000000000000000p47l",
+        "txid": "3333333333333333333333333333333333333333333333333333333333333304",
+        "value": 2.117,
+        "ts": 1700003000,
+        "tags": [
+          "PEEL_CONTINUATION"
+        ]
+      },
+      {
+        "from": "bc1qw40000000000000000000000000000000w4qp",
+        "to": "bc1qunrf77777777777777777777777777777urnf",
+        "txid": "8888888888888888888888888888888888888888888888888888888888888808",
+        "value": 6e-06,
+        "ts": 1700006600,
+        "tags": [
+          "DECOY"
+        ]
+      },
+      {
+        "from": "bc1qw40000000000000000000000000000000w4qp",
+        "to": "bc1qchng66666666666666666666666666666cng6",
+        "txid": "8888888888888888888888888888888888888888888888888888888888888808",
+        "value": 0.2198,
+        "ts": 1700006600,
+        "tags": []
+      },
+      {
+        "from": "bc1qp40000000000000000000000000000000p47l",
+        "to": "bc1qw50000000000000000000000000000000w5y9",
+        "txid": "3333333333333333333333333333333333333333333333333333333333333305",
+        "value": 0.22,
+        "ts": 1700003600,
+        "tags": [
+          "PEEL"
+        ]
+      },
+      {
+        "from": "bc1qp40000000000000000000000000000000p47l",
+        "to": "bc1qp50000000000000000000000000000000p5zr",
+        "txid": "3333333333333333333333333333333333333333333333333333333333333305",
+        "value": 1.887,
+        "ts": 1700003600,
+        "tags": [
+          "PEEL_CONTINUATION"
+        ]
+      },
+      {
+        "from": "bc1qw50000000000000000000000000000000w5y9",
+        "to": "bc1qexch999999999999999999999999999993333",
+        "txid": "7777777777777777777777777777777777777777777777777777777777777707",
+        "value": 0.05,
+        "ts": 1700006000,
+        "tags": []
+      },
+      {
+        "from": "bc1qp50000000000000000000000000000000p5zr",
+        "to": "bc1qexch333333333333333333333333333333333",
+        "txid": "4444444444444444444444444444444444444444444444444444444444444404",
+        "value": 1.807,
+        "ts": 1700004200,
+        "tags": []
+      },
+      {
+        "from": "bc1qp50000000000000000000000000000000p5zr",
+        "to": "bc1ql10000000000000000000000000000000l1x8",
+        "txid": "4444444444444444444444444444444444444444444444444444444444444404",
+        "value": 0.079,
+        "ts": 1700004200,
+        "tags": []
+      },
+      {
+        "from": "bc1qdust88888888888888888888888888888ds8t",
+        "to": "bc1qp20000000000000000000000000000000p2kh",
+        "txid": "6666666666666666666666666666666666666666666666666666666666666606",
+        "value": 5.46e-06,
+        "ts": 1700005400,
+        "tags": [
+          "DUSTING",
+          "FAN_OUT",
+          "MIXER_PATTERN"
+        ]
+      },
+      {
+        "from": "bc1qdust88888888888888888888888888888ds8t",
+        "to": "bc1qdqgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagqdf",
+        "txid": "6666666666666666666666666666666666666666666666666666666666666606",
+        "value": 5.46e-06,
+        "ts": 1700005400,
+        "tags": [
+          "DUSTING",
+          "FAN_OUT",
+          "MIXER_PATTERN"
+        ]
+      },
+      {
+        "from": "bc1qdust88888888888888888888888888888ds8t",
+        "to": "bc1qdpgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagpdf",
+        "txid": "6666666666666666666666666666666666666666666666666666666666666606",
+        "value": 5.46e-06,
+        "ts": 1700005400,
+        "tags": [
+          "DUSTING",
+          "FAN_OUT",
+          "MIXER_PATTERN"
+        ]
+      },
+      {
+        "from": "bc1qdust88888888888888888888888888888ds8t",
+        "to": "bc1qdzgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagzdf",
+        "txid": "6666666666666666666666666666666666666666666666666666666666666606",
+        "value": 5.46e-06,
+        "ts": 1700005400,
+        "tags": [
+          "DUSTING",
+          "FAN_OUT",
+          "MIXER_PATTERN"
+        ]
+      },
+      {
+        "from": "bc1qdust88888888888888888888888888888ds8t",
+        "to": "bc1qdrgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagrdf",
+        "txid": "6666666666666666666666666666666666666666666666666666666666666606",
+        "value": 5.46e-06,
+        "ts": 1700005400,
+        "tags": [
+          "DUSTING",
+          "FAN_OUT",
+          "MIXER_PATTERN"
+        ]
+      },
+      {
+        "from": "bc1qdust88888888888888888888888888888ds8t",
+        "to": "bc1qdygfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagydf",
+        "txid": "6666666666666666666666666666666666666666666666666666666666666606",
+        "value": 5.46e-06,
+        "ts": 1700005400,
+        "tags": [
+          "DUSTING",
+          "FAN_OUT",
+          "MIXER_PATTERN"
+        ]
+      },
+      {
+        "from": "bc1qdust88888888888888888888888888888ds8t",
+        "to": "bc1qd9gfaaaaaaaaaaaaaaaaaaaaaaaaaaaaag9df",
+        "txid": "6666666666666666666666666666666666666666666666666666666666666606",
+        "value": 5.46e-06,
+        "ts": 1700005400,
+        "tags": [
+          "DUSTING",
+          "FAN_OUT",
+          "MIXER_PATTERN"
+        ]
+      },
+      {
+        "from": "bc1qdust88888888888888888888888888888ds8t",
+        "to": "bc1qdxgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagxdf",
+        "txid": "6666666666666666666666666666666666666666666666666666666666666606",
+        "value": 5.46e-06,
+        "ts": 1700005400,
+        "tags": [
+          "DUSTING",
+          "FAN_OUT",
+          "MIXER_PATTERN"
+        ]
+      },
+      {
+        "from": "bc1qdust88888888888888888888888888888ds8t",
+        "to": "bc1qd8gfaaaaaaaaaaaaaaaaaaaaaaaaaaaaag8df",
+        "txid": "6666666666666666666666666666666666666666666666666666666666666606",
+        "value": 5.46e-06,
+        "ts": 1700005400,
+        "tags": [
+          "DUSTING",
+          "FAN_OUT",
+          "MIXER_PATTERN"
+        ]
+      },
+      {
+        "from": "bc1qdust88888888888888888888888888888ds8t",
+        "to": "bc1qdfgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagfdf",
+        "txid": "6666666666666666666666666666666666666666666666666666666666666606",
+        "value": 5.46e-06,
+        "ts": 1700005400,
+        "tags": [
+          "DUSTING",
+          "FAN_OUT",
+          "MIXER_PATTERN"
+        ]
+      },
+      {
+        "from": "bc1qdust88888888888888888888888888888ds8t",
+        "to": "bc1qd2gfaaaaaaaaaaaaaaaaaaaaaaaaaaaaag2df",
+        "txid": "6666666666666666666666666666666666666666666666666666666666666606",
+        "value": 5.46e-06,
+        "ts": 1700005400,
+        "tags": [
+          "DUSTING",
+          "FAN_OUT",
+          "MIXER_PATTERN"
+        ]
+      },
+      {
+        "from": "bc1qdust88888888888888888888888888888ds8t",
+        "to": "bc1qdtgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagtdf",
+        "txid": "6666666666666666666666666666666666666666666666666666666666666606",
+        "value": 5.46e-06,
+        "ts": 1700005400,
+        "tags": [
+          "DUSTING",
+          "FAN_OUT",
+          "MIXER_PATTERN"
+        ]
+      },
+      {
+        "from": "bc1qdust88888888888888888888888888888ds8t",
+        "to": "bc1qdvgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagvdf",
+        "txid": "6666666666666666666666666666666666666666666666666666666666666606",
+        "value": 5.46e-06,
+        "ts": 1700005400,
+        "tags": [
+          "DUSTING",
+          "FAN_OUT",
+          "MIXER_PATTERN"
+        ]
+      },
+      {
+        "from": "bc1qdust88888888888888888888888888888ds8t",
+        "to": "bc1qddgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagddf",
+        "txid": "6666666666666666666666666666666666666666666666666666666666666606",
+        "value": 5.46e-06,
+        "ts": 1700005400,
+        "tags": [
+          "DUSTING",
+          "FAN_OUT",
+          "MIXER_PATTERN"
+        ]
+      },
+      {
+        "from": "bc1qdust88888888888888888888888888888ds8t",
+        "to": "bc1qdwgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagwdf",
+        "txid": "6666666666666666666666666666666666666666666666666666666666666606",
+        "value": 5.46e-06,
+        "ts": 1700005400,
+        "tags": [
+          "DUSTING",
+          "FAN_OUT",
+          "MIXER_PATTERN"
+        ]
+      }
+    ]
+  },
+  "findings": [
+    {
+      "type": "PEEL_CHAIN",
+      "severity": "high",
+      "text": "Peel chain of 5 hops detected",
+      "nodes": [
+        "bc1qc10000000000000000000000000000000c1s3",
+        "bc1qp10000000000000000000000000000000p1jn",
+        "bc1qp20000000000000000000000000000000p2kh",
+        "bc1qp30000000000000000000000000000000p36m",
+        "bc1qp40000000000000000000000000000000p47l",
+        "bc1qp50000000000000000000000000000000p5zr"
+      ]
+    },
+    {
+      "type": "FAN_OUT",
+      "severity": "medium",
+      "text": "Fan-out pattern: single input split into 8 outputs",
+      "nodes": [
+        "bc1qsrc0000000000000000000000000000000000",
+        "bc1qmix100000000000000000000000000000m1qp",
+        "bc1qmix200000000000000000000000000000m2zr",
+        "bc1qmix300000000000000000000000000000m3y9",
+        "bc1qmix400000000000000000000000000000m4x8",
+        "bc1qmix500000000000000000000000000000m5gf",
+        "bc1qmix600000000000000000000000000000m62t",
+        "bc1qmix700000000000000000000000000000m7vd",
+        "bc1qmix800000000000000000000000000000m8w0"
+      ]
+    },
+    {
+      "type": "FAN_IN",
+      "severity": "medium",
+      "text": "Fan-in pattern: 6 inputs consolidated into 1 output",
+      "nodes": [
+        "bc1qmix100000000000000000000000000000m1qp",
+        "bc1qmix200000000000000000000000000000m2zr",
+        "bc1qmix300000000000000000000000000000m3y9",
+        "bc1qmix400000000000000000000000000000m4x8",
+        "bc1qmix500000000000000000000000000000m5gf",
+        "bc1qmix600000000000000000000000000000m62t",
+        "bc1qc10000000000000000000000000000000c1s3"
+      ]
+    },
+    {
+      "type": "FAN_OUT",
+      "severity": "medium",
+      "text": "Fan-out pattern: single input split into 15 outputs",
+      "nodes": [
+        "bc1qdust88888888888888888888888888888ds8t",
+        "bc1qp20000000000000000000000000000000p2kh",
+        "bc1qdqgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagqdf",
+        "bc1qdpgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagpdf",
+        "bc1qdzgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagzdf",
+        "bc1qdrgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagrdf",
+        "bc1qdygfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagydf",
+        "bc1qd9gfaaaaaaaaaaaaaaaaaaaaaaaaaaaaag9df",
+        "bc1qdxgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagxdf",
+        "bc1qd8gfaaaaaaaaaaaaaaaaaaaaaaaaaaaaag8df",
+        "bc1qdfgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagfdf",
+        "bc1qd2gfaaaaaaaaaaaaaaaaaaaaaaaaaaaaag2df",
+        "bc1qdtgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagtdf",
+        "bc1qdvgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagvdf",
+        "bc1qddgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagddf",
+        "bc1qdwgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagwdf"
+      ]
+    },
+    {
+      "type": "MIXER_PATTERN",
+      "severity": "high",
+      "text": "Mixer pattern: 8 outputs with near-equal values (~0.5062 BTC)",
+      "nodes": [
+        "bc1qmix100000000000000000000000000000m1qp",
+        "bc1qmix200000000000000000000000000000m2zr",
+        "bc1qmix300000000000000000000000000000m3y9",
+        "bc1qmix400000000000000000000000000000m4x8",
+        "bc1qmix500000000000000000000000000000m5gf",
+        "bc1qmix600000000000000000000000000000m62t",
+        "bc1qmix700000000000000000000000000000m7vd",
+        "bc1qmix800000000000000000000000000000m8w0"
+      ]
+    },
+    {
+      "type": "MIXER_PATTERN",
+      "severity": "high",
+      "text": "Mixer pattern: 15 outputs with near-equal values (~0.0000 BTC)",
+      "nodes": [
+        "bc1qp20000000000000000000000000000000p2kh",
+        "bc1qdqgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagqdf",
+        "bc1qdpgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagpdf",
+        "bc1qdzgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagzdf",
+        "bc1qdrgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagrdf",
+        "bc1qdygfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagydf",
+        "bc1qd9gfaaaaaaaaaaaaaaaaaaaaaaaaaaaaag9df",
+        "bc1qdxgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagxdf",
+        "bc1qd8gfaaaaaaaaaaaaaaaaaaaaaaaaaaaaag8df",
+        "bc1qdfgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagfdf",
+        "bc1qd2gfaaaaaaaaaaaaaaaaaaaaaaaaaaaaag2df",
+        "bc1qdtgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagtdf",
+        "bc1qdvgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagvdf",
+        "bc1qddgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagddf",
+        "bc1qdwgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagwdf"
+      ]
+    },
+    {
+      "type": "AUTOMATED_SCRIPT",
+      "severity": "high",
+      "text": "Programmatic laundering bot detected: 11 hops executed with regular 600s (\u00b10s) clockwork intervals",
+      "nodes": [
+        "bc1qsrc0000000000000000000000000000000000",
+        "bc1qmix100000000000000000000000000000m1qp",
+        "bc1qmix200000000000000000000000000000m2zr",
+        "bc1qmix300000000000000000000000000000m3y9",
+        "bc1qmix400000000000000000000000000000m4x8",
+        "bc1qmix500000000000000000000000000000m5gf",
+        "bc1qmix600000000000000000000000000000m62t",
+        "bc1qc10000000000000000000000000000000c1s3"
+      ]
+    },
+    {
+      "type": "THREAT_PROFILE",
+      "severity": "high",
+      "text": "Advanced Threat Modus Operandi [Ransomware Extortion Origin -> High-Entropy Mixer Dilution -> Multi-Hop Peel Chain Layering -> Programmatic Bot Execution] designed to bypass exchange KYC thresholds.",
+      "nodes": [
+        "bc1qsrc0000000000000000000000000000000000"
+      ]
+    },
+    {
+      "type": "DUSTING",
+      "severity": "medium",
+      "text": "15 outputs of 546 sats targeting active trace wallet bc1qp2000000... for cluster poisoning",
+      "nodes": [
+        "bc1qd2gfaaaaaaaaaaaaaaaaaaaaaaaaaaaaag2df",
+        "bc1qd8gfaaaaaaaaaaaaaaaaaaaaaaaaaaaaag8df",
+        "bc1qd9gfaaaaaaaaaaaaaaaaaaaaaaaaaaaaag9df",
+        "bc1qddgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagddf",
+        "bc1qdfgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagfdf",
+        "bc1qdpgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagpdf",
+        "bc1qdqgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagqdf",
+        "bc1qdrgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagrdf",
+        "bc1qdtgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagtdf",
+        "bc1qdust88888888888888888888888888888ds8t",
+        "bc1qdvgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagvdf",
+        "bc1qdwgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagwdf",
+        "bc1qdxgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagxdf",
+        "bc1qdygfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagydf",
+        "bc1qdzgfaaaaaaaaaaaaaaaaaaaaaaaaaaaaagzdf",
+        "bc1qp20000000000000000000000000000000p2kh"
+      ]
+    },
+    {
+      "type": "LOOKALIKE",
+      "severity": "high",
+      "text": "Address poisoning look-alike detected: bc1qexch999999999999999999999999999993333 spoofs bc1qexch333333333333333333333333333333333 (matching 4-char prefix 'exch' and 4-char suffix '3333', 29 middle chars differ)",
+      "nodes": [
+        "bc1qexch333333333333333333333333333333333",
+        "bc1qexch999999999999999999999999999993333"
+      ]
+    },
+    {
+      "type": "DECOY",
+      "severity": "low",
+      "text": "Decoy low-value edge of 600 sats (0.00000600 BTC, 0.0002% of peak flow) from bc1qw40000000000000000000000000000000w4qp to bc1qunrf77777777777777777777777777777urnf \u2014 pruned from ranking",
+      "nodes": [
+        "bc1qw40000000000000000000000000000000w4qp",
+        "bc1qunrf77777777777777777777777777777urnf"
+      ]
+    }
+  ],
+  "ranked": [
+    {
+      "address": "bc1qexch333333333333333333333333333333333",
+      "confidence": 0.72,
+      "taint_share": 0.4462,
+      "reasoning": [
+        "Receives 45% of the tainted value",
+        "Labeled as an exchange deposit address (ExchangeX Deposit)",
+        "End of a 5-hop peel chain"
+      ],
+      "path": [
+        "bc1qsrc0000000000000000000000000000000000",
+        "bc1qmix100000000000000000000000000000m1qp",
+        "bc1qc10000000000000000000000000000000c1s3",
+        "bc1qp10000000000000000000000000000000p1jn",
+        "bc1qp20000000000000000000000000000000p2kh",
+        "bc1qp30000000000000000000000000000000p36m",
+        "bc1qp40000000000000000000000000000000p47l",
+        "bc1qp50000000000000000000000000000000p5zr",
+        "bc1qexch333333333333333333333333333333333"
+      ],
+      "taint_metrics": {
+        "proportional_share": 0.4462,
+        "strict_poison": true,
+        "hop_depth": 8,
+        "unspent_tainted_btc": 1.807
+      },
+      "risk": 56,
+      "risk_breakdown": {
+        "mixer": 0.8,
+        "sanction": 0.0,
+        "ransomware": 0.6,
+        "peel_depth": 1.0,
+        "adversarial": 1.0
+      },
+      "compliance": {
+        "tier": "ELEVATED_RISK",
+        "action_mandate": "FLAG_FOR_MANUAL_COMPLIANCE_REVIEW"
+      },
+      "critical_path": [
+        "bc1qsrc0000000000000000000000000000000000",
+        "bc1qmix100000000000000000000000000000m1qp",
+        "bc1qc10000000000000000000000000000000c1s3",
+        "bc1qp10000000000000000000000000000000p1jn",
+        "bc1qp20000000000000000000000000000000p2kh",
+        "bc1qp30000000000000000000000000000000p36m",
+        "bc1qp40000000000000000000000000000000p47l",
+        "bc1qp50000000000000000000000000000000p5zr",
+        "bc1qexch333333333333333333333333333333333"
+      ]
+    },
+    {
+      "address": "bc1qmix700000000000000000000000000000m7vd",
+      "confidence": 0.41,
+      "taint_share": 0.125,
+      "reasoning": [
+        "Receives 13% of the tainted value",
+        "Unspent leaf wallet holding destination funds",
+        "Target of an equal-value mixer fan-out distribution"
+      ],
+      "path": [
+        "bc1qsrc0000000000000000000000000000000000",
+        "bc1qmix700000000000000000000000000000m7vd"
+      ],
+      "taint_metrics": {
+        "proportional_share": 0.125,
+        "strict_poison": true,
+        "hop_depth": 1,
+        "unspent_tainted_btc": 0.5062
+      },
+      "risk": 56,
+      "risk_breakdown": {
+        "mixer": 0.8,
+        "sanction": 0.0,
+        "ransomware": 0.6,
+        "peel_depth": 1.0,
+        "adversarial": 1.0
+      },
+      "compliance": {
+        "tier": "ELEVATED_RISK",
+        "action_mandate": "FLAG_FOR_MANUAL_COMPLIANCE_REVIEW"
+      },
+      "critical_path": [
+        "bc1qsrc0000000000000000000000000000000000",
+        "bc1qmix700000000000000000000000000000m7vd"
+      ]
+    },
+    {
+      "address": "bc1qmix800000000000000000000000000000m8w0",
+      "confidence": 0.41,
+      "taint_share": 0.125,
+      "reasoning": [
+        "Receives 13% of the tainted value",
+        "Unspent leaf wallet holding destination funds",
+        "Target of an equal-value mixer fan-out distribution"
+      ],
+      "path": [
+        "bc1qsrc0000000000000000000000000000000000",
+        "bc1qmix800000000000000000000000000000m8w0"
+      ],
+      "taint_metrics": {
+        "proportional_share": 0.125,
+        "strict_poison": true,
+        "hop_depth": 1,
+        "unspent_tainted_btc": 0.5062
+      },
+      "risk": 56,
+      "risk_breakdown": {
+        "mixer": 0.8,
+        "sanction": 0.0,
+        "ransomware": 0.6,
+        "peel_depth": 1.0,
+        "adversarial": 1.0
+      },
+      "compliance": {
+        "tier": "ELEVATED_RISK",
+        "action_mandate": "FLAG_FOR_MANUAL_COMPLIANCE_REVIEW"
+      },
+      "critical_path": [
+        "bc1qsrc0000000000000000000000000000000000",
+        "bc1qmix800000000000000000000000000000m8w0"
+      ]
+    },
+    {
+      "address": "bc1qw20000000000000000000000000000000w2ce",
+      "confidence": 0.38,
+      "taint_share": 0.0543,
+      "reasoning": [
+        "Receives 5% of the tainted value",
+        "Unspent leaf wallet holding destination funds",
+        "End of a 5-hop peel chain"
+      ],
+      "path": [
+        "bc1qsrc0000000000000000000000000000000000",
+        "bc1qmix100000000000000000000000000000m1qp",
+        "bc1qc10000000000000000000000000000000c1s3",
+        "bc1qp10000000000000000000000000000000p1jn",
+        "bc1qw20000000000000000000000000000000w2ce"
+      ],
+      "taint_metrics": {
+        "proportional_share": 0.0543,
+        "strict_poison": true,
+        "hop_depth": 4,
+        "unspent_tainted_btc": 0.22
+      },
+      "risk": 56,
+      "risk_breakdown": {
+        "mixer": 0.8,
+        "sanction": 0.0,
+        "ransomware": 0.6,
+        "peel_depth": 1.0,
+        "adversarial": 1.0
+      },
+      "compliance": {
+        "tier": "ELEVATED_RISK",
+        "action_mandate": "FLAG_FOR_MANUAL_COMPLIANCE_REVIEW"
+      },
+      "critical_path": [
+        "bc1qsrc0000000000000000000000000000000000",
+        "bc1qmix100000000000000000000000000000m1qp",
+        "bc1qc10000000000000000000000000000000c1s3",
+        "bc1qp10000000000000000000000000000000p1jn",
+        "bc1qw20000000000000000000000000000000w2ce"
+      ]
+    },
+    {
+      "address": "bc1qw10000000000000000000000000000000w154",
+      "confidence": 0.38,
+      "taint_share": 0.0543,
+      "reasoning": [
+        "Receives 5% of the tainted value",
+        "Unspent leaf wallet holding destination funds",
+        "End of a 5-hop peel chain"
+      ],
+      "path": [
+        "bc1qsrc0000000000000000000000000000000000",
+        "bc1qmix100000000000000000000000000000m1qp",
+        "bc1qc10000000000000000000000000000000c1s3",
+        "bc1qw10000000000000000000000000000000w154"
+      ],
+      "taint_metrics": {
+        "proportional_share": 0.0543,
+        "strict_poison": true,
+        "hop_depth": 3,
+        "unspent_tainted_btc": 0.22
+      },
+      "risk": 56,
+      "risk_breakdown": {
+        "mixer": 0.8,
+        "sanction": 0.0,
+        "ransomware": 0.6,
+        "peel_depth": 1.0,
+        "adversarial": 1.0
+      },
+      "compliance": {
+        "tier": "ELEVATED_RISK",
+        "action_mandate": "FLAG_FOR_MANUAL_COMPLIANCE_REVIEW"
+      },
+      "critical_path": [
+        "bc1qsrc0000000000000000000000000000000000",
+        "bc1qmix100000000000000000000000000000m1qp",
+        "bc1qc10000000000000000000000000000000c1s3",
+        "bc1qw10000000000000000000000000000000w154"
+      ]
+    }
+  ],
+  "audit_head": "cb5ecf43896cb9192f0e233e4b5a661bda77a97a0ea6631dce17e74260e330d4"
+}

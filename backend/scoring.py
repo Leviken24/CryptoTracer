@@ -9,7 +9,7 @@ Risk = 100 * (0.30*mixer + 0.30*sanction + 0.20*ransomware + 0.10*peel_depth + 0
 Each sub-component is normalized between 0.0 and 1.0.
 """
 
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Tuple
 import networkx as nx
 
 
