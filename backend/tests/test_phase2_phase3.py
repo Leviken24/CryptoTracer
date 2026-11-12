@@ -13,7 +13,8 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../.
 from backend.ai_summary import generate_investigation_summary
 from backend.timeline import generate_forensic_timeline
 from backend.pdf_report import generate_forensic_pdf
-from backend import heuristics, taint, scoring
+from backend.audit_log import AuditLog
+from backend import heuristics, taint, scoring, security
 from backend.graph_builder import build_graph
 from backend.sample_loader import load_sample
 
@@ -119,7 +120,7 @@ def test_forensic_timeline_generation():
 def test_pdf_report_generation():
     """
     Verifies that the PDF report builds a valid binary stream incorporating
-    all 7-point summary and audit trail data.
+    all 7-point summary and audit trail data, without asserting automatic court admissibility.
     """
     sample = load_sample("bitcoin")
     target = sample["source"]
@@ -165,3 +166,53 @@ def test_pdf_report_generation():
     assert isinstance(pdf_bytes, bytes)
     assert len(pdf_bytes) > 2000
     assert pdf_bytes.startswith(b"%PDF")
+    # Verify no claim of "court-admissible"
+    assert b"court-admissible" not in pdf_bytes.lower()
+
+
+def test_audit_log_canonical_schema_and_tamper():
+    """
+    Verifies Phase 3 Audit Log schema:
+    event_id, investigation_id, event_type, timestamp, event_details,
+    previous_entry_hash, current_entry_hash.
+    """
+    audit = AuditLog()
+    e0 = audit.append("validate_input", {"target": "bc1qtest"}, investigation_id="CT-CASE-001")
+    e1 = audit.append("fetch_txs", {"count": 12}, investigation_id="CT-CASE-001")
+
+    assert e0["event_id"] == "EVT-0000"
+    assert e0["investigation_id"] == "CT-CASE-001"
+    assert e0["event_type"] == "validate_input"
+    assert "timestamp" in e0
+    assert e0["event_details"] == {"target": "bc1qtest"}
+    assert e0["previous_entry_hash"] == "0" * 64
+    assert len(e0["current_entry_hash"]) == 64
+
+    assert e1["event_id"] == "EVT-0001"
+    assert e1["previous_entry_hash"] == e0["current_entry_hash"]
+
+    # Verify intact chain
+    v1 = audit.verify()
+    assert v1["valid"] is True
+
+    # Tamper and verify failure detection
+    audit.tamper(0)
+    v2 = audit.verify()
+    assert v2["valid"] is False
+    assert v2["broken_at"] == 0
+
+
+def test_adversarial_lookalike_and_dusting_detection():
+    """
+    Verifies that security detectors identify dusting attacks and look-alike poisoning.
+    """
+    sample = load_sample("bitcoin")
+    target = sample["source"]
+    txs = sample["txs"]
+
+    g = build_graph(txs, target, hops=4)
+    sec_findings = security.run_detectors(g)
+    types = {f["type"] for f in sec_findings}
+
+    assert "DUSTING" in types
+    assert "LOOKALIKE" in types

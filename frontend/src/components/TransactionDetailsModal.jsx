@@ -1,5 +1,17 @@
 import React, { useState } from 'react';
-import { X, Copy, Check, ExternalLink, ArrowRight, Clock, Shield, Coins } from 'lucide-react';
+import {
+  X,
+  Copy,
+  Check,
+  ExternalLink,
+  ArrowRight,
+  Clock,
+  Shield,
+  Coins,
+  Pin,
+  AlertTriangle,
+} from 'lucide-react';
+import { useEvidence } from '../context/EvidenceContext';
 
 function shorten(addr) {
   if (!addr || addr.length <= 16) return addr;
@@ -8,6 +20,8 @@ function shorten(addr) {
 
 export default function TransactionDetailsModal({ edge, onClose, onInspectWallet }) {
   const [copiedTxid, setCopiedTxid] = useState(false);
+  const [pinned, setPinned] = useState(false);
+  const { addEvidenceItem, isItemPinned } = useEvidence();
 
   if (!edge) return null;
 
@@ -19,12 +33,33 @@ export default function TransactionDetailsModal({ edge, onClose, onInspectWallet
     }
   };
 
+  const handlePin = () => {
+    const txHash = edge.txid || `TX-${edge.from.slice(0, 6)}-${edge.to.slice(0, 6)}`;
+    addEvidenceItem({
+      type: 'TRANSACTION',
+      title: `Transfer of ${edge.value} ${edge.blockchain === 'ethereum' ? 'ETH' : 'BTC'}`,
+      reference: txHash,
+      details: `Sender: ${edge.from}\nRecipient: ${edge.to}\nAmount: ${edge.value} ${edge.blockchain === 'ethereum' ? 'ETH' : 'BTC'}\nTags: ${(edge.tags || []).join(', ') || 'Direct Hop'}`,
+      source: 'On-Chain Ledger Hop / Block Inspection',
+      tags: edge.tags || ['TRANSACTION'],
+    });
+    setPinned(true);
+    setTimeout(() => setPinned(false), 2500);
+  };
+
   const formattedDate = edge.ts
     ? new Date(edge.ts * 1000).toUTCString()
     : 'Simulated Forensic Block';
 
   const chain = edge.blockchain || 'bitcoin';
   const symbol = chain === 'ethereum' ? 'ETH' : 'BTC';
+  const txHash = edge.txid || 'Direct Structured Split';
+  const alreadyPinned = isItemPinned(txHash) || pinned;
+
+  const isDustOrDecoy =
+    edge.value <= 0.0001 ||
+    (edge.tags || []).includes('DUSTING') ||
+    (edge.tags || []).includes('DECOY');
 
   return (
     <div className="modal-backdrop" onClick={onClose}>
@@ -40,11 +75,24 @@ export default function TransactionDetailsModal({ edge, onClose, onInspectWallet
         </div>
 
         <div className="modal-body">
+          {/* Dusting / Decoy Edge Alert */}
+          {isDustOrDecoy && (
+            <div className="lookalike-warning-card mb-3">
+              <div className="lookalike-header">
+                <AlertTriangle size={16} className="text-warning" />
+                <strong>ADVERSARIAL DUST / DECOY TRANSFER DETECTED</strong>
+              </div>
+              <p className="lookalike-body-text">
+                This transaction carries negligible economic value ({edge.value} {symbol}). Adversaries inject micro-value dust to contaminate graph heuristics or poison wallet addresses without owner consent.
+              </p>
+            </div>
+          )}
+
           {/* TxID Box */}
           <div className="tx-hash-box">
             <span className="tx-hash-label">Transaction Hash (TxID)</span>
             <div className="tx-hash-value-wrap">
-              <span className="tx-hash-code code-font">{edge.txid || 'Direct Structured Split'}</span>
+              <span className="tx-hash-code code-font">{txHash}</span>
               {edge.txid && (
                 <button
                   type="button"
@@ -56,6 +104,19 @@ export default function TransactionDetailsModal({ edge, onClose, onInspectWallet
                 </button>
               )}
             </div>
+          </div>
+
+          {/* Pin to Evidence Board */}
+          <div className="mb-3">
+            <button
+              type="button"
+              className={`btn-pin-evidence ${alreadyPinned ? 'already-pinned' : ''}`}
+              onClick={handlePin}
+              disabled={alreadyPinned}
+            >
+              <Pin size={14} />
+              <span>{alreadyPinned ? '✓ Transaction Pinned to Evidence Board' : 'Pin Transaction to Evidence Board'}</span>
+            </button>
           </div>
 
           {/* Transfer Flow Visual */}

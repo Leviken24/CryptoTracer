@@ -13,28 +13,23 @@ import {
   ExternalLink,
   Layers,
   Lock,
+  Pin,
+  FileText,
 } from 'lucide-react';
 import TopHeader from '../components/TopHeader';
+import EvidenceBoard from '../components/EvidenceBoard';
+import AuditPanel from '../components/AuditPanel';
 
 export default function ReportsEvidencePage({ onOpenNewInvestigation }) {
+  const [activeSection, setActiveSection] = useState('board'); // 'board' | 'reports' | 'audit'
   const [investigations, setInvestigations] = useState([]);
-  const [auditLog, setAuditLog] = useState([]);
-  const [auditStatus, setAuditStatus] = useState({ valid: true, message: 'Chain intact' });
   const [loading, setLoading] = useState(true);
-  const [verifying, setVerifying] = useState(false);
-  const [tampering, setTampering] = useState(false);
 
-  const fetchReportsAndAudit = async () => {
+  const fetchReports = async () => {
     setLoading(true);
     try {
-      const [invRes, auditRes, verifyRes] = await Promise.all([
-        axios.get('http://localhost:8000/api/investigations', { timeout: 3000 }),
-        axios.get('http://localhost:8000/audit', { timeout: 3000 }),
-        axios.get('http://localhost:8000/audit/verify', { timeout: 3000 }),
-      ]);
-      setInvestigations(invRes.data);
-      setAuditLog(auditRes.data);
-      setAuditStatus(verifyRes.data);
+      const res = await axios.get('http://localhost:8000/api/investigations', { timeout: 3000 });
+      setInvestigations(res.data);
     } catch (err) {
       console.warn('Backend unavailable, using fallback:', err);
       setInvestigations([
@@ -48,74 +43,102 @@ export default function ReportsEvidencePage({ onOpenNewInvestigation }) {
           status: 'completed',
           created_at: Math.floor(Date.now() / 1000) - 86400 * 2,
         },
+        {
+          id: 2,
+          case_id: 'CT-CASE-2026-ETH02',
+          title: 'DeFi Flash Loan Exploit & Mixer Hop',
+          blockchain: 'ethereum',
+          target: '0x71C8fb9697d744876ae1529d7694901f40d226a4',
+          risk_score: 84,
+          status: 'active',
+          created_at: Math.floor(Date.now() / 1000) - 86400,
+        },
       ]);
-      setAuditStatus({ valid: true, message: 'Chain intact' });
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchReportsAndAudit();
+    fetchReports();
   }, []);
-
-  const handleVerifyAudit = async () => {
-    setVerifying(true);
-    try {
-      const res = await axios.get('http://localhost:8000/audit/verify');
-      setAuditStatus(res.data);
-    } catch (err) {
-      console.error('Audit verification error:', err);
-    } finally {
-      setVerifying(false);
-    }
-  };
-
-  const handleTamperAudit = async () => {
-    setTampering(true);
-    try {
-      await axios.post('http://localhost:8000/audit/tamper', { idx: 0 });
-      const verifyRes = await axios.get('http://localhost:8000/audit/verify');
-      setAuditStatus(verifyRes.data);
-      const auditRes = await axios.get('http://localhost:8000/audit');
-      setAuditLog(auditRes.data);
-    } catch (err) {
-      console.error('Audit tampering demo error:', err);
-    } finally {
-      setTampering(false);
-    }
-  };
-
-  const handleResetAudit = async () => {
-    try {
-      await axios.post('http://localhost:8000/audit/reset');
-      const verifyRes = await axios.get('http://localhost:8000/audit/verify');
-      setAuditStatus(verifyRes.data);
-      setAuditLog([]);
-    } catch (err) {
-      console.error('Audit reset error:', err);
-    }
-  };
 
   const handleDownloadPdf = (invId) => {
     window.open(`http://localhost:8000/api/investigations/${invId}/pdf`, '_blank');
+  };
+
+  const handleExportJson = (inv) => {
+    const blob = new Blob([JSON.stringify(inv, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `CryptoTrace-Case-${inv.case_id}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   return (
     <div className="page-container reports-evidence-page">
       <TopHeader
         title="Reports &amp; Evidence Vault"
-        subtitle="Cryptographic chain of custody, court-admissible dossiers, and tamper verification"
+        subtitle="Cryptographic chain of custody, evidence exhibits, and downloadable forensic dossiers"
         onOpenNewInvestigation={onOpenNewInvestigation}
       />
 
-      <div className="reports-content">
-        {/* Reports Table Section */}
+      {/* Primary Section Switcher Tabs */}
+      <div className="tab-navigation-strip mb-4">
+        <button
+          type="button"
+          className={`workspace-tab-btn ${activeSection === 'board' ? 'active' : ''}`}
+          onClick={() => setActiveSection('board')}
+        >
+          <Pin size={14} className="mr-1" />
+          <span>Case Evidence Board</span>
+        </button>
+
+        <button
+          type="button"
+          className={`workspace-tab-btn ${activeSection === 'reports' ? 'active' : ''}`}
+          onClick={() => setActiveSection('reports')}
+        >
+          <FileText size={14} className="mr-1" />
+          <span>Forensic PDF Dossiers</span>
+          <span className="tab-badge">{investigations.length}</span>
+        </button>
+
+        <button
+          type="button"
+          className={`workspace-tab-btn ${activeSection === 'audit' ? 'active' : ''}`}
+          onClick={() => setActiveSection('audit')}
+        >
+          <Lock size={14} className="mr-1" />
+          <span>SHA-256 Audit Trail</span>
+        </button>
+      </div>
+
+      {/* Mandatory Forensic Integrity Notice */}
+      <div className="legal-notice-banner mb-4">
+        <AlertTriangle size={15} className="notice-icon text-warning" />
+        <div>
+          <strong>Forensic Decision-Support &amp; Legal Integrity Notice:</strong>
+          <p>
+            Generated dossiers and evidence board exhibits provide investigative decision-support and cryptographic verification of recorded events. They do not claim automatic legal admissibility or statutory court certification; formal judicial proceedings require evidentiary admission under local procedural rules and verified custodian affidavits.
+          </p>
+        </div>
+      </div>
+
+      {/* Tab 1: Evidence Board */}
+      {activeSection === 'board' && (
+        <EvidenceBoard />
+      )}
+
+      {/* Tab 2: Forensic PDF Dossiers Table */}
+      {activeSection === 'reports' && (
         <div className="panel-card reports-table-panel">
           <div className="panel-header">
             <div className="panel-title-group">
-              <h3>Official Forensic Reports</h3>
-              <span className="panel-subtitle">Exportable PDF investigation dossiers with cryptographic signatures</span>
+              <h3>Official Forensic Case Dossiers</h3>
+              <span className="panel-subtitle">Exportable PDF investigation reports with cryptographic verification seals</span>
             </div>
           </div>
 
@@ -155,15 +178,25 @@ export default function ReportsEvidencePage({ onOpenNewInvestigation }) {
                       <span className="format-badge">PDF &amp; JSON</span>
                     </td>
                     <td>
-                      <button
-                        type="button"
-                        className="btn-download-pdf-table"
-                        onClick={() => handleDownloadPdf(inv.id)}
-                        title="Generate &amp; Download PDF Report"
-                      >
-                        <FileDown size={14} />
-                        <span>Download PDF</span>
-                      </button>
+                      <div className="flex-row-gap-2">
+                        <button
+                          type="button"
+                          className="btn-download-pdf-table"
+                          onClick={() => handleDownloadPdf(inv.id)}
+                          title="Generate &amp; Download Forensic PDF Report"
+                        >
+                          <FileDown size={14} />
+                          <span>Download PDF</span>
+                        </button>
+                        <button
+                          type="button"
+                          className="btn-header-outline"
+                          onClick={() => handleExportJson(inv)}
+                          title="Export raw JSON evidence bundle"
+                        >
+                          <Download size={13} />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -171,114 +204,12 @@ export default function ReportsEvidencePage({ onOpenNewInvestigation }) {
             </table>
           </div>
         </div>
+      )}
 
-        {/* Cryptographic Chain of Custody & Audit Log Section */}
-        <div className="panel-card audit-vault-panel">
-          <div className="panel-header">
-            <div className="panel-title-group">
-              <div className="vault-header-title">
-                <Lock size={18} className="accent-icon" />
-                <h3>Tamper-Evident SHA-256 Audit Log</h3>
-              </div>
-              <span className="panel-subtitle">
-                Section 9 Specification: SHA256("idx|ts|action|payload_hash|prev_hash")
-              </span>
-            </div>
-
-            <div className="audit-controls-actions">
-              <button
-                type="button"
-                className="btn-audit-tool verify-btn"
-                onClick={handleVerifyAudit}
-                disabled={verifying}
-              >
-                <ShieldCheck size={14} />
-                <span>{verifying ? 'Verifying...' : 'Verify Chain Integrity'}</span>
-              </button>
-
-              <button
-                type="button"
-                className="btn-audit-tool tamper-btn"
-                onClick={handleTamperAudit}
-                disabled={tampering}
-                title="Demo Only: Corrupt entry #0 to test tamper detection"
-              >
-                <ShieldAlert size={14} />
-                <span>Simulate Evidence Tamper</span>
-              </button>
-
-              <button
-                type="button"
-                className="btn-audit-tool reset-btn"
-                onClick={handleResetAudit}
-                title="Reset audit chain between demo runs"
-              >
-                <RotateCcw size={14} />
-                <span>Reset Chain</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Verification Status Pill Banner */}
-          <div className={`audit-status-banner ${auditStatus.valid ? 'valid' : 'tampered'}`}>
-            {auditStatus.valid ? (
-              <>
-                <CheckCircle2 size={18} className="status-svg success" />
-                <div className="status-text-wrap">
-                  <strong>Chain Cryptographically Intact</strong>
-                  <span>All intermediate action hashes and parent linkages match SHA-256 signatures.</span>
-                </div>
-              </>
-            ) : (
-              <>
-                <XCircle size={18} className="status-svg danger" />
-                <div className="status-text-wrap">
-                  <strong>SECURITY ALERT: Evidence Tampering Detected!</strong>
-                  <span>
-                    Hash mismatch at entry #{auditStatus.broken_at}. The cryptographic chain of custody was breached.
-                  </span>
-                </div>
-              </>
-            )}
-          </div>
-
-          {/* Audit Chain Entries Table */}
-          {auditLog.length > 0 && (
-            <div className="table-wrapper audit-table-wrapper">
-              <table className="custom-data-table audit-table">
-                <thead>
-                  <tr>
-                    <th>Index</th>
-                    <th>Action</th>
-                    <th>Payload Hash (SHA-256)</th>
-                    <th>Parent Hash (prev_hash)</th>
-                    <th>Merkle Link Hash</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {auditLog.map((entry) => (
-                    <tr key={entry.idx}>
-                      <td className="code-font">#{entry.idx}</td>
-                      <td>
-                        <span className="action-tag code-font">{entry.action}</span>
-                      </td>
-                      <td className="code-font hash-cell">
-                        {entry.payload_hash ? `${entry.payload_hash.slice(0, 12)}...${entry.payload_hash.slice(-8)}` : 'N/A'}
-                      </td>
-                      <td className="code-font hash-cell">
-                        {entry.prev_hash ? `${entry.prev_hash.slice(0, 12)}...${entry.prev_hash.slice(-8)}` : '000000000000...'}
-                      </td>
-                      <td className="code-font hash-cell highlight">
-                        {entry.hash ? `${entry.hash.slice(0, 14)}...${entry.hash.slice(-8)}` : 'N/A'}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
-      </div>
+      {/* Tab 3: Cryptographic SHA-256 Audit Panel */}
+      {activeSection === 'audit' && (
+        <AuditPanel />
+      )}
     </div>
   );
 }

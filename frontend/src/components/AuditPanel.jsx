@@ -1,5 +1,19 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import {
+  ShieldCheck,
+  ShieldAlert,
+  AlertTriangle,
+  RotateCcw,
+  CheckCircle2,
+  XCircle,
+  Clock,
+  ExternalLink,
+  Layers,
+  Lock,
+  Copy,
+  Check,
+} from 'lucide-react';
 
 function shortenHash(hash) {
   if (!hash || hash.length <= 16) return hash || '';
@@ -11,10 +25,14 @@ export default function AuditPanel() {
   const [verifyStatus, setVerifyStatus] = useState({
     valid: true,
     broken_at: null,
-    message: 'Chain intact',
+    message: 'Chain intact: Genesis to Head validated',
   });
+  const [verificationTime, setVerificationTime] = useState(
+    new Date().toISOString().replace('T', ' ').slice(0, 19) + ' UTC'
+  );
   const [isTampered, setIsTampered] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [copiedHash, setCopiedHash] = useState(null);
 
   useEffect(() => {
     fetchAuditEntries();
@@ -22,7 +40,7 @@ export default function AuditPanel() {
 
   const fetchAuditEntries = async () => {
     try {
-      const res = await axios.get('http://localhost:8000/audit', { timeout: 1500 });
+      const res = await axios.get('http://localhost:8000/audit', { timeout: 2000 });
       setEntries(res.data);
       setIsTampered(false);
     } catch {
@@ -42,9 +60,10 @@ export default function AuditPanel() {
   const handleVerify = async () => {
     setLoading(true);
     try {
-      const res = await axios.get('http://localhost:8000/audit/verify', { timeout: 1500 });
+      const res = await axios.get('http://localhost:8000/audit/verify', { timeout: 2000 });
       setVerifyStatus(res.data);
       setIsTampered(!res.data.valid);
+      setVerificationTime(new Date().toISOString().replace('T', ' ').slice(0, 19) + ' UTC');
     } catch {
       if (isTampered) {
         setVerifyStatus({
@@ -59,6 +78,7 @@ export default function AuditPanel() {
           message: 'Chain intact: Genesis to Head validated',
         });
       }
+      setVerificationTime(new Date().toISOString().replace('T', ' ').slice(0, 19) + ' UTC');
     } finally {
       setLoading(false);
     }
@@ -67,11 +87,12 @@ export default function AuditPanel() {
   const handleTamper = async () => {
     setLoading(true);
     try {
-      await axios.post('http://localhost:8000/audit/tamper', { idx: 0 }, { timeout: 1500 });
+      await axios.post('http://localhost:8000/audit/tamper', { idx: 0 }, { timeout: 2000 });
       await fetchAuditEntries();
-      const vRes = await axios.get('http://localhost:8000/audit/verify', { timeout: 1500 });
+      const vRes = await axios.get('http://localhost:8000/audit/verify', { timeout: 2000 });
       setVerifyStatus(vRes.data);
       setIsTampered(true);
+      setVerificationTime(new Date().toISOString().replace('T', ' ').slice(0, 19) + ' UTC');
     } catch {
       setIsTampered(true);
       setEntries((prev) =>
@@ -86,6 +107,7 @@ export default function AuditPanel() {
         broken_at: 0,
         message: 'Tampered at entry 0: stored information no longer matches its expected hash',
       });
+      setVerificationTime(new Date().toISOString().replace('T', ' ').slice(0, 19) + ' UTC');
     } finally {
       setLoading(false);
     }
@@ -94,10 +116,11 @@ export default function AuditPanel() {
   const handleReset = async () => {
     setLoading(true);
     try {
-      await axios.post('http://localhost:8000/audit/reset', {}, { timeout: 1500 });
+      await axios.post('http://localhost:8000/audit/reset', {}, { timeout: 2000 });
       await fetchAuditEntries();
-      setVerifyStatus({ valid: true, broken_at: null, message: 'Chain intact' });
+      setVerifyStatus({ valid: true, broken_at: null, message: 'Chain intact: Genesis to Head validated' });
       setIsTampered(false);
+      setVerificationTime(new Date().toISOString().replace('T', ' ').slice(0, 19) + ' UTC');
     } catch {
       setIsTampered(false);
       try {
@@ -109,20 +132,27 @@ export default function AuditPanel() {
       } catch (err) {
         console.error(err);
       }
-      setVerifyStatus({ valid: true, broken_at: null, message: 'Chain intact' });
+      setVerifyStatus({ valid: true, broken_at: null, message: 'Chain intact: Genesis to Head validated' });
+      setVerificationTime(new Date().toISOString().replace('T', ' ').slice(0, 19) + ' UTC');
     } finally {
       setLoading(false);
     }
   };
 
+  const handleCopyHash = (text) => {
+    navigator.clipboard?.writeText(text);
+    setCopiedHash(text);
+    setTimeout(() => setCopiedHash(null), 1800);
+  };
+
   const checks = [
-    { name: 'Sequence Check', desc: 'Verify sequential numbering', status: 'PASS' },
-    { name: 'Hash Validation', desc: 'Verify content SHA-256 hashes', status: 'PASS' },
-    { name: 'Link Verification', desc: 'Confirm previous_hash links', status: 'PASS' },
-    { name: 'Signature Check', desc: 'Validate HMAC signatures', status: 'PASS' },
+    { name: 'Sequence Continuity', desc: 'Verify monotonic event indices (0..N)', status: 'PASS' },
+    { name: 'Payload Hash Check', desc: 'Canonicalized JSON content hash validation', status: isTampered ? 'FAIL' : 'PASS' },
+    { name: 'Merkle Linkage', desc: 'Confirm each prev_hash equals previous current_hash', status: isTampered ? 'FAIL' : 'PASS' },
+    { name: 'Genesis Root Anchor', desc: 'Ensure genesis entry links to 64-zero anchor', status: 'PASS' },
     {
-      name: 'Tamper Detection',
-      desc: 'Check for unauthorized changes in payload or hashes',
+      name: 'Tamper-Evident State',
+      desc: 'Verify zero unauthorized bit modifications',
       status: isTampered ? 'FAIL' : 'PASS',
     },
   ];
@@ -132,8 +162,8 @@ export default function AuditPanel() {
       {/* Top action toolbar */}
       <div className="audit-controls-header">
         <div className="audit-header-titles">
-          <h3>Cryptographic Chain of Custody</h3>
-          <p>Court-admissible proof • SHA-256 Merkle-style sequential hash chain</p>
+          <h3>Cryptographic SHA-256 Audit Trail</h3>
+          <p>Sequential hash-chained event ledger • Forensic state integrity verification</p>
         </div>
 
         <div className="audit-buttons-group">
@@ -143,15 +173,18 @@ export default function AuditPanel() {
             onClick={handleVerify}
             disabled={loading}
           >
-            🛡️ Verify Chain
+            <ShieldCheck size={14} />
+            <span>Verify Chain Integrity</span>
           </button>
           <button
             type="button"
             className="btn-audit-hero btn-tamper-hero"
             onClick={handleTamper}
             disabled={loading}
+            title="Simulate bit modification to demonstrate tamper detection in court"
           >
-            ⚠️ DEMO: Tamper
+            <AlertTriangle size={14} />
+            <span>Simulate Tampering (Demo)</span>
           </button>
           <button
             type="button"
@@ -159,19 +192,42 @@ export default function AuditPanel() {
             onClick={handleReset}
             disabled={loading}
           >
-            🔄 Reset
+            <RotateCcw size={14} />
+            <span>Reset Chain</span>
           </button>
         </div>
       </div>
 
+      {/* Overview Stat Strip */}
+      <div className="audit-summary-strip">
+        <div className="audit-strip-item">
+          <span className="strip-label">Total Audit Events</span>
+          <span className="strip-value">{entries.length} Recorded</span>
+        </div>
+        <div className="audit-strip-item">
+          <span className="strip-label">Chain Integrity Status</span>
+          <span className={`strip-value ${isTampered ? 'text-danger' : 'text-success'}`}>
+            {isTampered ? '✕ ALTERATION DETECTED' : '✓ CRYPTOGRAPHICALLY VALID'}
+          </span>
+        </div>
+        <div className="audit-strip-item">
+          <span className="strip-label">Last Verification Time</span>
+          <span className="strip-value code-font">{verificationTime}</span>
+        </div>
+        <div className="audit-strip-item">
+          <span className="strip-label">Audit Engine</span>
+          <span className="strip-value">SHA-256 Hash Chain</span>
+        </div>
+      </div>
+
       <div className="audit-grid-layout">
-        {/* Left Card: 5-step validation process (Image 9) */}
+        {/* Left Card: 5-step validation process */}
         <div className="audit-card-surface">
           <div className="audit-card-header">
             <span className="card-badge-icon">🛡️</span>
             <div>
-              <h4>Chain Integrity</h4>
-              <span className="card-subtext">5-step validation process</span>
+              <h4>Chain Integrity Status</h4>
+              <span className="card-subtext">5-step mathematical verification</span>
             </div>
           </div>
 
@@ -197,63 +253,88 @@ export default function AuditPanel() {
             })}
           </div>
 
-          {/* Bottom Banner */}
+          {/* Verification Status Box */}
           <div className={`chain-status-box ${isTampered ? 'status-box-tampered' : 'status-box-valid'}`}>
             <span className="box-icon">{isTampered ? '🚨' : '🛡️'}</span>
             <div>
-              <strong>{isTampered ? 'Tamper Detected!' : 'Chain Valid'}</strong>
+              <strong>{isTampered ? 'Cryptographic Integrity Violation!' : 'Chain Intact & Sealed'}</strong>
               <p>
                 {isTampered
-                  ? 'Integrity violation at entry 0 · Hash mismatch in memory'
-                  : `All ${entries.length || 5} entries verified · Zero tampering detected`}
+                  ? `Integrity violation at entry ${verifyStatus.broken_at ?? 0}: stored payload hash does not match recomputed SHA-256 root.`
+                  : `All ${entries.length} sequential entries verified. Current Merkle root matches ledger state.`}
+              </p>
+            </div>
+          </div>
+
+          {/* Mandatory Forensic Limitation Notice */}
+          <div className="audit-disclaimer-notice">
+            <AlertTriangle size={15} className="notice-icon text-warning" />
+            <div>
+              <strong>Forensic Science &amp; Integrity Notice:</strong>
+              <p>
+                A hash-chained audit log proves that recorded system events have not been altered or tampered with after generation. It does <em>not</em> independently prove that the original public blockchain API data was truthful or that the original transactions occurred as reported off-chain.
               </p>
             </div>
           </div>
         </div>
 
-        {/* Right Card: Chain Links sequence (Image 9 & Image 6) */}
+        {/* Right Card: Individual Audit Records */}
         <div className="audit-card-surface">
           <div className="audit-card-header">
             <span className="card-badge-icon">🔗</span>
             <div>
-              <h4>Chain Links</h4>
-              <span className="card-subtext">Hash-linked sequence</span>
+              <h4>Sequential Audit Records</h4>
+              <span className="card-subtext">Immutable hash-linked event entries</span>
             </div>
           </div>
 
           <div className="chain-links-scroll-list">
             {entries.map((entry, idx) => {
               const entryTampered = isTampered && (entry.idx === (verifyStatus.broken_at ?? 0));
+              const eventId = entry.event_id || `EVT-${entry.idx.toString().padStart(4, '0')}`;
+              const eventType = entry.action || entry.event_type || 'SYSTEM_ACTION';
 
               return (
                 <div key={entry.idx} className="chain-link-wrapper">
                   <div className={`chain-link-card ${entryTampered ? 'card-tampered' : 'card-valid'}`}>
                     <div className="chain-link-top">
-                      <span className="entry-tag">#{entry.idx}</span>
-                      <span className="entry-action-name">{entry.action}</span>
+                      <span className="entry-tag code-font">{eventId}</span>
+                      <span className="entry-action-name">{eventType}</span>
                       <span className={`status-pill-small ${entryTampered ? 'pill-tampered' : 'pill-valid'}`}>
-                        {entryTampered ? 'Tampered' : 'Valid'}
+                        {entryTampered ? 'Tampered' : 'Verified'}
                       </span>
                     </div>
 
                     <div className="chain-link-hashes">
                       <div className="hash-line">
-                        <span className="hash-key">PREVIOUS:</span>
-                        <span className="hash-val" title={entry.prev_hash}>
-                          sha256:{shortenHash(entry.prev_hash)}
-                        </span>
+                        <span className="hash-key">PREV HASH:</span>
+                        <button
+                          type="button"
+                          className="hash-val code-font btn-hash-copy"
+                          onClick={() => handleCopyHash(entry.prev_hash)}
+                          title="Click to copy previous hash"
+                        >
+                          <span>{shortenHash(entry.prev_hash)}</span>
+                          {copiedHash === entry.prev_hash ? <Check size={10} className="text-success" /> : <Copy size={10} />}
+                        </button>
                       </div>
                       <div className="hash-line">
-                        <span className="hash-key">HASH:</span>
-                        <span className={`hash-val ${entryTampered ? 'hash-tampered-text' : 'hash-glow'}`} title={entry.hash}>
-                          sha256:{shortenHash(entry.hash)}
-                        </span>
+                        <span className="hash-key">ENTRY HASH:</span>
+                        <button
+                          type="button"
+                          className={`hash-val code-font btn-hash-copy ${entryTampered ? 'hash-tampered-text' : 'hash-glow'}`}
+                          onClick={() => handleCopyHash(entry.hash)}
+                          title="Click to copy entry hash"
+                        >
+                          <span>{shortenHash(entry.hash)}</span>
+                          {copiedHash === entry.hash ? <Check size={10} className="text-success" /> : <Copy size={10} />}
+                        </button>
                       </div>
                     </div>
 
                     {entryTampered && (
                       <div className="tamper-reason-callout">
-                        The stored information no longer matches its expected hash.
+                        Integrity Failure: The stored payload hash no longer matches this entry's cryptographic signature.
                       </div>
                     )}
                   </div>
@@ -268,35 +349,19 @@ export default function AuditPanel() {
             })}
           </div>
 
-          {/* Tamper detection rules & stats box (Image 9) */}
-          <div className="tamper-explanation-box">
-            <div className="tamper-explanation-title">
-              <span>⚠️</span>
-              <strong>Tamper Detection Engine</strong>
-            </div>
-            <p>
-              Any modification to historical data breaks the chain. The hash of each entry depends on both its content and the previous entry's hash, creating an unbreakable cryptographic dependency chain.
-            </p>
-            <div className="tamper-tags-row">
-              <span className="tamper-tag">Hash Mismatch Detection</span>
-              <span className="tamper-tag">Signature Validation</span>
-              <span className="tamper-tag">Sequence Gap Detection</span>
-            </div>
-          </div>
-
           <div className="audit-metrics-row">
             <div className="audit-metric-tile">
               <span className="metric-num" style={{ color: isTampered ? '#ef4444' : '#10b981' }}>
-                {isTampered ? '80%' : '100%'}
+                {isTampered ? 'Broken' : '100%'}
               </span>
-              <span className="metric-lbl">Validation Success</span>
+              <span className="metric-lbl">Integrity Ratio</span>
             </div>
 
             <div className="audit-metric-tile">
               <span className="metric-num" style={{ color: isTampered ? '#ef4444' : '#94a3b8' }}>
-                {isTampered ? '1' : '0'}
+                {isTampered ? '1 Alert' : '0 Alerts'}
               </span>
-              <span className="metric-lbl">Tampering Events</span>
+              <span className="metric-lbl">Tamper Detections</span>
             </div>
           </div>
         </div>

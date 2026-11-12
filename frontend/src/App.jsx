@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { EvidenceProvider } from './context/EvidenceContext';
 import Sidebar from './components/Sidebar';
 import NewInvestigationModal from './components/NewInvestigationModal';
 
@@ -46,85 +47,90 @@ export default function App() {
 
   return (
     <AuthProvider>
-      <Router>
-        <Routes>
-          {/* Public Login Route */}
-          <Route path="/login" element={<LoginPage />} />
+      <EvidenceProvider>
+        <Router>
+          <Routes>
+            {/* Public Login Route */}
+            <Route path="/login" element={<LoginPage />} />
 
-          {/* Protected Main Workspace Routes */}
-          <Route
-            path="/"
-            element={
-              <ProtectedLayout onOpenNewInvestigation={handleOpenNewInvestigation}>
-                <DashboardPage onOpenNewInvestigation={() => handleOpenNewInvestigation()} />
-              </ProtectedLayout>
-            }
+            {/* Protected Main Workspace Routes */}
+            <Route
+              path="/"
+              element={
+                <ProtectedLayout onOpenNewInvestigation={handleOpenNewInvestigation}>
+                  <DashboardPage onOpenNewInvestigation={() => handleOpenNewInvestigation()} />
+                </ProtectedLayout>
+              }
+            />
+
+            <Route
+              path="/investigations"
+              element={
+                <ProtectedLayout onOpenNewInvestigation={handleOpenNewInvestigation}>
+                  <InvestigationsPage onOpenNewInvestigation={() => handleOpenNewInvestigation()} />
+                </ProtectedLayout>
+              }
+            />
+
+            <Route
+              path="/investigations/:id"
+              element={
+                <ProtectedLayout onOpenNewInvestigation={handleOpenNewInvestigation}>
+                  <InvestigationDetailPage
+                    onOpenNewInvestigation={handleOpenNewInvestigation}
+                  />
+                </ProtectedLayout>
+              }
+            />
+
+            <Route
+              path="/explorer"
+              element={
+                <ProtectedLayout onOpenNewInvestigation={handleOpenNewInvestigation}>
+                  <TransactionExplorerPage onOpenNewInvestigation={() => handleOpenNewInvestigation()} />
+                </ProtectedLayout>
+              }
+            />
+
+            <Route
+              path="/risk-intelligence"
+              element={
+                <ProtectedLayout onOpenNewInvestigation={handleOpenNewInvestigation}>
+                  <RiskIntelligencePage onOpenNewInvestigation={() => handleOpenNewInvestigation()} />
+                </ProtectedLayout>
+              }
+            />
+
+            <Route
+              path="/reports-evidence"
+              element={
+                <ProtectedLayout onOpenNewInvestigation={handleOpenNewInvestigation}>
+                  <ReportsEvidencePage onOpenNewInvestigation={() => handleOpenNewInvestigation()} />
+                </ProtectedLayout>
+              }
+            />
+
+            <Route
+              path="/settings"
+              element={
+                <ProtectedLayout onOpenNewInvestigation={handleOpenNewInvestigation}>
+                  <SettingsPage onOpenNewInvestigation={() => handleOpenNewInvestigation()} />
+                </ProtectedLayout>
+              }
+            />
+
+            {/* Fallback to Dashboard */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+
+          {/* Global New Investigation Modal */}
+          <NewInvestigationModal
+            isOpen={newInvModalOpen}
+            onClose={() => setNewInvModalOpen(false)}
+            presetTarget={presetTarget}
           />
-
-          <Route
-            path="/investigations"
-            element={
-              <ProtectedLayout onOpenNewInvestigation={handleOpenNewInvestigation}>
-                <InvestigationsPage onOpenNewInvestigation={() => handleOpenNewInvestigation()} />
-              </ProtectedLayout>
-            }
-          />
-
-          <Route
-            path="/investigations/:id"
-            element={
-              <ProtectedLayout onOpenNewInvestigation={handleOpenNewInvestigation}>
-                <InvestigationDetailPage onOpenNewInvestigation={handleOpenNewInvestigation} />
-              </ProtectedLayout>
-            }
-          />
-
-          <Route
-            path="/explorer"
-            element={
-              <ProtectedLayout onOpenNewInvestigation={handleOpenNewInvestigation}>
-                <TransactionExplorerPage onOpenNewInvestigation={handleOpenNewInvestigation} />
-              </ProtectedLayout>
-            }
-          />
-
-          <Route
-            path="/risk-intelligence"
-            element={
-              <ProtectedLayout onOpenNewInvestigation={handleOpenNewInvestigation}>
-                <RiskIntelligencePage onOpenNewInvestigation={() => handleOpenNewInvestigation()} />
-              </ProtectedLayout>
-            }
-          />
-
-          <Route
-            path="/reports"
-            element={
-              <ProtectedLayout onOpenNewInvestigation={handleOpenNewInvestigation}>
-                <ReportsEvidencePage onOpenNewInvestigation={() => handleOpenNewInvestigation()} />
-              </ProtectedLayout>
-            }
-          />
-
-          <Route
-            path="/settings"
-            element={
-              <ProtectedLayout onOpenNewInvestigation={handleOpenNewInvestigation}>
-                <SettingsPage onOpenNewInvestigation={() => handleOpenNewInvestigation()} />
-              </ProtectedLayout>
-            }
-          />
-
-          {/* Fallback to Dashboard */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-
-        {/* Global New Investigation Modal */}
-        <NewInvestigationModal
-          isOpen={newInvModalOpen}
-          onClose={() => setNewInvModalOpen(false)}
-        />
-      </Router>
+        </Router>
+      </EvidenceProvider>
     </AuthProvider>
   );
 }

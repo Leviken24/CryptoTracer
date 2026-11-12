@@ -9,7 +9,11 @@ import {
   ArrowUpRight,
   Search,
   Plus,
+  Pin,
+  AlertTriangle,
+  ShieldCheck,
 } from 'lucide-react';
+import { useEvidence } from '../context/EvidenceContext';
 
 function shorten(addr) {
   if (!addr || addr.length <= 16) return addr;
@@ -25,6 +29,8 @@ export default function WalletDetailsDrawer({
   onLaunchNewInvestigation,
 }) {
   const [copied, setCopied] = useState(false);
+  const [pinned, setPinned] = useState(false);
+  const { addEvidenceItem, isItemPinned } = useEvidence();
 
   if (!node) return null;
 
@@ -32,6 +38,19 @@ export default function WalletDetailsDrawer({
     navigator.clipboard?.writeText(node.id);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handlePin = () => {
+    addEvidenceItem({
+      type: 'WALLET',
+      title: `${node.label || 'Investigated Wallet'} (${node.id.slice(0, 10)}...)`,
+      reference: node.id,
+      details: `Held taint: ${Math.round((node.taint || 0) * 100)}%, Risk score: ${node.risk || 0}/100, Cluster: ${node.cluster || 'c1'}. Tags: ${(node.tags || []).join(', ')}.`,
+      source: `Multi-Hop Ledger Graph (Cluster ${node.cluster || 'c1'})`,
+      tags: node.tags || ['WALLET'],
+    });
+    setPinned(true);
+    setTimeout(() => setPinned(false), 2500);
   };
 
   const incomingEdges = (graphData?.edges || []).filter((e) => e.to === node.id);
@@ -52,6 +71,14 @@ export default function WalletDetailsDrawer({
   }
 
   const tags = node.tags || [];
+  const isLookalike =
+    tags.includes('LOOKALIKE') ||
+    tags.includes('POISONING') ||
+    node.id.includes('dpst') && tags.includes('DECOY') ||
+    (node.label || '').toLowerCase().includes('poison') ||
+    (node.label || '').toLowerCase().includes('lookalike');
+
+  const alreadyPinned = isItemPinned(node.id) || pinned;
 
   return (
     <div className="entity-drawer-overlay" onClick={onClose}>
@@ -67,11 +94,32 @@ export default function WalletDetailsDrawer({
         </div>
 
         <div className="drawer-body">
+          {/* Look-Alike Address Poisoning Warning Banner */}
+          {isLookalike && (
+            <div className="lookalike-warning-card">
+              <div className="lookalike-header">
+                <AlertTriangle size={18} className="text-danger" />
+                <strong>ADVERSARIAL LOOK-ALIKE ADDRESS DETECTED</strong>
+              </div>
+              <p className="lookalike-body-text">
+                This address mirrors the prefix (<code>{node.id.slice(0, 8)}</code>) and suffix (<code>{node.id.slice(-6)}</code>) of a legitimate counterparty cluster, but has distinct intermediate entropy.
+              </p>
+              <div className="lookalike-rule-alert">
+                <strong>Forensic Protection Rule:</strong> Never substitute this visually similar address for the verified transaction address. Automated address poisoning attacks exploit visual truncation to de-anonymize or misdirect funds.
+              </div>
+            </div>
+          )}
+
           {/* Address Display & Copy */}
           <div className="drawer-section">
-            <span className="section-label">Wallet Address</span>
+            <div className="flex-between">
+              <span className="section-label">Wallet Address</span>
+              <span className="code-font address-length-indicator">{node.id.length} chars</span>
+            </div>
             <div className="address-copy-box">
-              <span className="full-address code-font">{node.id}</span>
+              <span className="full-address code-font" title={node.id}>
+                {node.id}
+              </span>
               <button
                 type="button"
                 className="btn-copy-address"
@@ -82,6 +130,19 @@ export default function WalletDetailsDrawer({
                 <span>{copied ? 'Copied' : 'Copy'}</span>
               </button>
             </div>
+          </div>
+
+          {/* Pin to Evidence Board Button */}
+          <div className="drawer-section">
+            <button
+              type="button"
+              className={`btn-pin-evidence ${alreadyPinned ? 'already-pinned' : ''}`}
+              onClick={handlePin}
+              disabled={alreadyPinned}
+            >
+              <Pin size={14} />
+              <span>{alreadyPinned ? '✓ Exhibit Pinned to Evidence Board' : 'Pin Wallet to Evidence Board'}</span>
+            </button>
           </div>
 
           {/* Risk & Taint Metrics Grid */}
@@ -151,10 +212,14 @@ export default function WalletDetailsDrawer({
                   >
                     <div className="transfer-main">
                       <span className="transfer-sender">From: {shorten(edge.from)}</span>
-                      <span className="transfer-amount incoming">+{edge.value} {node.blockchain === 'ethereum' ? 'ETH' : 'BTC'}</span>
+                      <span className="transfer-amount incoming">
+                        +{edge.value} {node.blockchain === 'ethereum' ? 'ETH' : 'BTC'}
+                      </span>
                     </div>
                     <div className="transfer-sub">
-                      <span className="transfer-txid code-font">{edge.txid ? edge.txid.slice(0, 14) + '...' : 'Direct Split'}</span>
+                      <span className="transfer-txid code-font">
+                        {edge.txid ? edge.txid.slice(0, 14) + '...' : 'Direct Split'}
+                      </span>
                       {edge.tags && edge.tags.length > 0 && (
                         <span className="transfer-tag">{edge.tags[0]}</span>
                       )}
@@ -182,10 +247,14 @@ export default function WalletDetailsDrawer({
                   >
                     <div className="transfer-main">
                       <span className="transfer-sender">To: {shorten(edge.to)}</span>
-                      <span className="transfer-amount outgoing">-{edge.value} {node.blockchain === 'ethereum' ? 'ETH' : 'BTC'}</span>
+                      <span className="transfer-amount outgoing">
+                        -{edge.value} {node.blockchain === 'ethereum' ? 'ETH' : 'BTC'}
+                      </span>
                     </div>
                     <div className="transfer-sub">
-                      <span className="transfer-txid code-font">{edge.txid ? edge.txid.slice(0, 14) + '...' : 'Direct Split'}</span>
+                      <span className="transfer-txid code-font">
+                        {edge.txid ? edge.txid.slice(0, 14) + '...' : 'Direct Split'}
+                      </span>
                       {edge.tags && edge.tags.length > 0 && (
                         <span className="transfer-tag">{edge.tags[0]}</span>
                       )}

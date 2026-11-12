@@ -14,6 +14,7 @@ import {
   Plus,
   RefreshCw,
   Search,
+  Sparkles,
 } from 'lucide-react';
 import TopHeader from '../components/TopHeader';
 
@@ -106,6 +107,14 @@ export default function DashboardPage({ onOpenNewInvestigation }) {
     return 'risk-badge-low';
   };
 
+  const handleLaunchDemoCase = () => {
+    if (recentInvestigations.length > 0) {
+      navigate(`/investigations/${recentInvestigations[0].id}`);
+    } else if (onOpenNewInvestigation) {
+      onOpenNewInvestigation('bc1qsrc0000000000000000000000000000000000', 'bitcoin');
+    }
+  };
+
   const maxVolume = Math.max(...(stats.activity_timeline || []).map((t) => t.volume_btc), 10);
 
   return (
@@ -180,41 +189,31 @@ export default function DashboardPage({ onOpenNewInvestigation }) {
           <div className="panel-card chart-panel">
             <div className="panel-header">
               <div className="panel-title-group">
-                <h3>7-Day Forensics Volume &amp; Case Ingestion</h3>
-                <span className="panel-subtitle">Daily transaction value analyzed (BTC equivalent)</span>
+                <h3>Forensic Activity &amp; Ingestion Volume</h3>
+                <span className="panel-subtitle">Rolling 7-day transaction tracing volume</span>
               </div>
-              <button
-                type="button"
-                className="btn-icon-refresh"
-                onClick={fetchDashboardData}
-                title="Refresh Metrics"
-              >
-                <RefreshCw size={14} className={loading ? 'spin' : ''} />
-              </button>
+              <span className="chart-legend-badge">
+                <TrendingUp size={14} /> Total: ~59.1 BTC
+              </span>
             </div>
 
-            {/* SVG Activity Histogram Chart */}
-            <div className="chart-canvas-area">
-              <div className="activity-chart-bars">
-                {(stats.activity_timeline || []).map((item, idx) => {
-                  const heightPercent = Math.min(100, Math.max(15, (item.volume_btc / maxVolume) * 100));
-                  return (
-                    <div key={idx} className="chart-bar-col">
-                      <div className="chart-bar-track">
-                        <div
-                          className="chart-bar-fill"
-                          style={{ height: `${heightPercent}%` }}
-                        >
-                          <span className="bar-tooltip">
-                            {item.volume_btc} BTC ({item.investigations} cases)
-                          </span>
-                        </div>
-                      </div>
-                      <span className="chart-bar-label">{item.date}</span>
+            <div className="chart-container-bars">
+              {(stats.activity_timeline || []).map((point, idx) => {
+                const heightPct = Math.round((point.volume_btc / maxVolume) * 100);
+                return (
+                  <div key={idx} className="chart-bar-column">
+                    <div className="bar-wrapper">
+                      <div
+                        className="chart-bar-fill"
+                        style={{ height: `${heightPct}%` }}
+                        title={`${point.volume_btc} BTC (${point.investigations} traces)`}
+                      />
                     </div>
-                  );
-                })}
-              </div>
+                    <span className="chart-bar-date">{point.date}</span>
+                    <span className="chart-bar-val">{point.volume_btc}B</span>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
@@ -238,18 +237,30 @@ export default function DashboardPage({ onOpenNewInvestigation }) {
               </div>
               <div className="feature-item">
                 <CheckCircle2 size={16} className="feature-icon" />
-                <span>Generates court-admissible PDF forensic reports</span>
+                <span>Generates verifiable PDF forensic dossiers</span>
               </div>
             </div>
 
-            <button
-              type="button"
-              className="btn-launcher-cta"
-              onClick={onOpenNewInvestigation}
-            >
-              <Plus size={16} />
-              <span>Launch New Case</span>
-            </button>
+            <div className="launcher-actions-row">
+              <button
+                type="button"
+                className="btn-launcher-cta"
+                onClick={onOpenNewInvestigation}
+              >
+                <Plus size={16} />
+                <span>New Investigation</span>
+              </button>
+
+              <button
+                type="button"
+                className="btn-demo-cta"
+                onClick={handleLaunchDemoCase}
+                title="Open the pre-configured 5-hop Bitcoin demo scenario"
+              >
+                <Sparkles size={16} />
+                <span>Demo Investigation</span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -312,8 +323,8 @@ export default function DashboardPage({ onOpenNewInvestigation }) {
                         </span>
                       </td>
                       <td>
-                        <span className={`risk-pill ${getRiskClass(inv.risk_score)}`}>
-                          {inv.risk_score}/100
+                        <span className={`risk-pill ${getRiskClass(inv.risk_score || 0)}`}>
+                          {inv.risk_score || 0}/100
                         </span>
                       </td>
                       <td>
@@ -324,10 +335,11 @@ export default function DashboardPage({ onOpenNewInvestigation }) {
                       <td>
                         <button
                           type="button"
-                          className="btn-table-action"
+                          className="btn-open-workspace"
                           onClick={() => navigate(`/investigations/${inv.id}`)}
+                          title="Open Case Workspace"
                         >
-                          <span>Reopen Case</span>
+                          <span>Open Workspace</span>
                           <ArrowUpRight size={13} />
                         </button>
                       </td>

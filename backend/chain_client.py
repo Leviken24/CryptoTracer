@@ -1,14 +1,14 @@
 """
-CryptoTrace - Blockchain Data Client (P1)
+CryptoTrace - Blockchain Data Client (P1 / P3 Integrity)
 Fetches live transaction data from public APIs (Blockstream / Mempool / Etherscan).
-Provides local disk caching and dual-source verification.
+Provides local disk caching, duplicate filtering, retry logic, and dual-source verification.
 """
 
 import hashlib
 import json
 import os
 import time
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Set
 import requests
 
 CACHE_DIR = os.path.join(os.path.dirname(__file__), "data", "cache")
@@ -45,10 +45,33 @@ def _write_cache(key: str, payload: Any) -> None:
         pass
 
 
-def _convert_btc_tx(raw: Dict[str, Any]) -> Dict[str, Any]:
+def _request_with_retries(url: str, retries: int = 3, timeout: int = 5) -> Optional[requests.Response]:
+    """
+    HTTP GET with retry logic and rate-limit backoff handling.
+    """
+    for attempt in range(retries):
+        try:
+            resp = requests.get(url, timeout=timeout)
+            if resp.status_code == 200:
+                return resp
+            if resp.status_code == 429:  # Rate limited
+                time.sleep(1.0 * (2 ** attempt))
+                continue
+            if resp.status_code >= 500:
+                time.sleep(0.5 * (2 ** attempt))
+                continue
+        except (requests.RequestException, Exception):
+            if attempt < retries - 1:
+                time.sleep(0.5 * (2 ** attempt))
+                continue
+    return None
+
+
+def _convert_btc_tx(raw: Dict[str, Any], source_label: str = "blockstream") -> Dict[str, Any]:
     """
     Standardizes a Blockstream/Mempool transaction:
     Converts satoshis to BTC by dividing by 100,000,000.
+    Preserves raw transaction reference and timestamp.
     """
     txid = raw.get("txid", "")
     ts = raw.get("status", {}).get("block_time", int(time.time()))
@@ -76,51 +99,63 @@ def _convert_btc_tx(raw: Dict[str, Any]) -> Dict[str, Any]:
         "outputs": outputs,
         "fee": round(fee_sats / 100_000_000, 8),
         "blockchain": "bitcoin",
-        "source": "blockstream",
+        "source": source_label,
+        "raw_reference": f"{source_label}://tx/{txid}",
     }
 
 
 def get_address_txs(address: str, blockchain: str = "bitcoin", max_txs: int = 25) -> List[Dict[str, Any]]:
     """
     Fetches confirmed transactions for a Bitcoin or Ethereum address.
-    Checks disk cache first, then queries public explorer API.
+    Checks disk cache first, then queries public explorer API with duplicate deduplication.
     """
     cache_key = f"addr_{blockchain}_{address}_{max_txs}"
     cached = _read_cache(cache_key)
     if cached is not None:
         return cached
 
+    seen_txids: Set[str] = set()
+    standardized: List[Dict[str, Any]] = []
+
     if blockchain.lower() == "bitcoin":
-        # 1. Primary: Blockstream API
+        # 1. Primary: Blockstream API with retries
         url = f"{BLOCKSTREAM_BASE_URL}/address/{address}/txs"
-        try:
-            resp = requests.get(url, timeout=5)
-            if resp.status_code == 200:
+        resp = _request_with_retries(url)
+        if resp and resp.status_code == 200:
+            try:
                 raw_list = resp.json()
-                standardized = [_convert_btc_tx(t) for t in raw_list[:max_txs]]
+                for t in raw_list[:max_txs]:
+                    txid = t.get("txid")
+                    if txid and txid not in seen_txids:
+                        seen_txids.add(txid)
+                        standardized.append(_convert_btc_tx(t, "blockstream.info"))
                 _write_cache(cache_key, standardized)
                 return standardized
-        except Exception:
-            pass
+            except Exception:
+                pass
 
-        # 2. Secondary: Mempool API
+        # 2. Secondary: Mempool API with retries
         url2 = f"{MEMPOOL_BASE_URL}/address/{address}/txs"
-        try:
-            resp = requests.get(url2, timeout=5)
-            if resp.status_code == 200:
-                raw_list = resp.json()
-                standardized = [_convert_btc_tx(t) for t in raw_list[:max_txs]]
+        resp2 = _request_with_retries(url2)
+        if resp2 and resp2.status_code == 200:
+            try:
+                raw_list = resp2.json()
+                for t in raw_list[:max_txs]:
+                    txid = t.get("txid")
+                    if txid and txid not in seen_txids:
+                        seen_txids.add(txid)
+                        standardized.append(_convert_btc_tx(t, "mempool.space"))
                 _write_cache(cache_key, standardized)
                 return standardized
-        except Exception:
-            pass
+            except Exception:
+                pass
 
-    return []
+    return standardized
 
 
 def get_tx(txid: str, blockchain: str = "bitcoin") -> Optional[Dict[str, Any]]:
     """
-    Fetches a single Bitcoin or Ethereum transaction by txid.
+    Fetches a single Bitcoin or Ethereum transaction by txid with retry logic.
     """
     cache_key = f"tx_{blockchain}_{txid}"
     cached = _read_cache(cache_key)
@@ -129,14 +164,14 @@ def get_tx(txid: str, blockchain: str = "bitcoin") -> Optional[Dict[str, Any]]:
 
     if blockchain.lower() == "bitcoin":
         url = f"{BLOCKSTREAM_BASE_URL}/tx/{txid}"
-        try:
-            resp = requests.get(url, timeout=5)
-            if resp.status_code == 200:
-                tx_data = _convert_btc_tx(resp.json())
+        resp = _request_with_retries(url)
+        if resp and resp.status_code == 200:
+            try:
+                tx_data = _convert_btc_tx(resp.json(), "blockstream.info")
                 _write_cache(cache_key, tx_data)
                 return tx_data
-        except Exception:
-            pass
+            except Exception:
+                pass
 
     return None
 
@@ -151,14 +186,13 @@ def get_tx_second_source(txid: str) -> Optional[Dict[str, Any]]:
         return cached
 
     url = f"{MEMPOOL_BASE_URL}/tx/{txid}"
-    try:
-        resp = requests.get(url, timeout=5)
-        if resp.status_code == 200:
-            tx_data = _convert_btc_tx(resp.json())
-            tx_data["source"] = "mempool_second_source"
+    resp = _request_with_retries(url)
+    if resp and resp.status_code == 200:
+        try:
+            tx_data = _convert_btc_tx(resp.json(), "mempool.space")
             _write_cache(cache_key, tx_data)
             return tx_data
-    except Exception:
-        pass
+        except Exception:
+            pass
 
     return None

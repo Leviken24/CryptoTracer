@@ -17,11 +17,13 @@ import {
   ExternalLink,
   Plus,
   Calculator,
+  Pin,
 } from 'lucide-react';
 import GraphView from '../components/GraphView';
 import RankedTable from '../components/RankedTable';
 import FindingsPanel from '../components/FindingsPanel';
 import AuditPanel from '../components/AuditPanel';
+import EvidenceBoard from '../components/EvidenceBoard';
 import WalletDetailsDrawer from '../components/WalletDetailsDrawer';
 import TransactionDetailsModal from '../components/TransactionDetailsModal';
 import AIBriefingCard from '../components/AIBriefingCard';
@@ -37,7 +39,7 @@ export default function InvestigationDetailPage({ onOpenNewInvestigation }) {
   const [error, setError] = useState(null);
 
   // Active workspace state
-  const [activeTab, setActiveTab] = useState('ranked'); // 'ranked' | 'timeline' | 'findings' | 'audit' | 'notes'
+  const [activeTab, setActiveTab] = useState('ranked'); // 'ranked' | 'timeline' | 'findings' | 'board' | 'audit' | 'notes'
   const [highlightedPath, setHighlightedPath] = useState([]);
   const [selectedNodeData, setSelectedNodeData] = useState(null);
   const [selectedEdgeData, setSelectedEdgeData] = useState(null);
@@ -206,7 +208,7 @@ export default function InvestigationDetailPage({ onOpenNewInvestigation }) {
             type="button"
             className="btn-header-primary"
             onClick={handleDownloadPdf}
-            title="Download Court-Admissible PDF Forensic Report"
+            title="Download Forensic PDF Report"
           >
             <FileDown size={15} />
             <span>Download PDF Report</span>
@@ -225,6 +227,9 @@ export default function InvestigationDetailPage({ onOpenNewInvestigation }) {
               {investigation.status || 'completed'}
             </span>
             <span className="hops-pill">{investigation.hops || 4} Hops Radius</span>
+            {investigation.mode !== 'live' && (
+              <span className="demo-data-indicator-pill">DEMO DATA (SIMULATED FORENSIC SCENARIO)</span>
+            )}
           </div>
           <h1 className="case-banner-title">{investigation.title}</h1>
           <div className="case-target-row">
@@ -307,6 +312,15 @@ export default function InvestigationDetailPage({ onOpenNewInvestigation }) {
 
             <button
               type="button"
+              className={`workspace-tab-btn ${activeTab === 'board' ? 'active' : ''}`}
+              onClick={() => setActiveTab('board')}
+            >
+              <Pin size={13} className="mr-1" />
+              <span>Evidence Board</span>
+            </button>
+
+            <button
+              type="button"
               className={`workspace-tab-btn ${activeTab === 'audit' ? 'active' : ''}`}
               onClick={() => setActiveTab('audit')}
             >
@@ -346,6 +360,10 @@ export default function InvestigationDetailPage({ onOpenNewInvestigation }) {
                 findings={findings}
                 onHighlightNodes={(nodes) => setHighlightedPath(nodes || [])}
               />
+            )}
+
+            {activeTab === 'board' && (
+              <EvidenceBoard />
             )}
 
             {activeTab === 'audit' && (
