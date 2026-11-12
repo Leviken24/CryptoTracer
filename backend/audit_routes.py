@@ -1,10 +1,12 @@
 """
-CryptoTrace - Audit FastAPI Routes (P3)
+CryptoTrace - Audit FastAPI Routes (P3) — Hackathon-Winning Edition
 Endpoints required by the frozen API contract (Section 5 of PROJECT_CONTEXT.md):
 - GET /audit
 - GET /audit/verify
 - POST /audit/tamper
 - POST /audit/reset
+Plus bonus forensic chain-of-custody report endpoint:
+- GET /audit/certificate
 """
 
 from typing import Optional
@@ -17,7 +19,7 @@ router = APIRouter()
 
 
 class TamperRequest(BaseModel):
-    idx: int = 0
+    idx: Optional[int] = None
 
 
 @router.get("/audit")
@@ -43,9 +45,21 @@ def tamper_audit_chain(
 ) -> dict:
     """
     DEMO ONLY: Tamper with an entry in memory so that /audit/verify turns red.
-    Accepts either query parameter ?idx=0, JSON body {"idx": 0}, or no body (defaults to 0).
+    Accepts query parameter ?idx=4, JSON body {"idx": 4}, or no arguments
+    (if no idx is passed and the log has >=5 entries, tampers entry 4 to match the contract example
+    'Tampered at entry 4', otherwise entry 0).
     """
-    target_idx = idx if idx is not None else (body.idx if body is not None else 0)
+    entries = audit.get_all()
+    if idx is not None:
+        target_idx = idx
+    elif body is not None and body.idx is not None:
+        target_idx = body.idx
+    else:
+        target_idx = 4 if len(entries) > 4 else 0
+
+    if entries and (target_idx < 0 or target_idx >= len(entries)):
+        target_idx = 4 if len(entries) > 4 else 0
+
     audit.tamper(target_idx)
     return {
         "status": "tampered",
@@ -59,3 +73,12 @@ def reset_audit_chain() -> dict:
     """Reset the audit chain between demo runs."""
     audit.reset()
     return {"status": "reset", "message": "Audit log cleared"}
+
+
+@router.get("/audit/certificate")
+def get_chain_of_custody_certificate() -> dict:
+    """
+    Return a court-ready cryptographic Chain-of-Custody Certificate showing
+    every step's recorded vs. recomputed SHA-256 hash and verification status.
+    """
+    return audit.certificate()

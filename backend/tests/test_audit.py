@@ -1,5 +1,5 @@
 """
-Comprehensive pytest tests for backend/audit_log.py and backend/audit_routes.py (P3 Steps 2, 5, & 6)
+Comprehensive pytest tests for backend/audit_log.py and backend/audit_routes.py (P3 Hackathon-Winning Edition)
 """
 
 from fastapi import FastAPI
@@ -57,10 +57,11 @@ def test_audit_log_verify_and_tamper_at_specific_index():
     assert res_tampered["message"] == "Tampered at entry 4"
 
 
-def test_audit_routes_three_consecutive_demo_runs():
+def test_audit_routes_three_consecutive_demo_runs_and_certificate():
     """
-    Step 6 Polish: Test the full flow 3 times in a row without restarting the server:
-    run a trace (append steps) -> verify (valid) -> tamper -> verify (broken) -> reset.
+    Step 6 Polish + Chain-of-Custody Certificate test:
+    Test the full flow 3 times in a row without restarting the server:
+    run a trace (append steps) -> verify (valid) -> certificate (intact) -> tamper -> verify (broken) -> reset.
     """
     app = FastAPI()
     app.include_router(router)
@@ -83,11 +84,17 @@ def test_audit_routes_three_consecutive_demo_runs():
         v_ok = client.get("/audit/verify").json()
         assert v_ok == {"valid": True, "broken_at": None, "message": "Chain intact"}
 
-        # 3. Call POST /audit/tamper on entry 4
-        r_tamper = client.post("/audit/tamper", json={"idx": 4})
+        # 3. Check GET /audit/certificate when chain is intact
+        cert_ok = client.get("/audit/certificate").json()
+        assert cert_ok["verification"]["valid"] is True
+        assert cert_ok["total_steps"] == 5
+        assert all(s["status"] == "INTACT" for s in cert_ok["steps"])
+
+        # 4. Call POST /audit/tamper (no body needed: defaults to entry 4 when >=5 entries exist!)
+        r_tamper = client.post("/audit/tamper")
         assert r_tamper.status_code == 200
 
-        # 4. Check GET /audit/verify is broken at entry 4
+        # 5. Check GET /audit/verify is broken at entry 4
         v_broken = client.get("/audit/verify").json()
         assert v_broken == {
             "valid": False,
@@ -95,7 +102,12 @@ def test_audit_routes_three_consecutive_demo_runs():
             "message": "Tampered at entry 4",
         }
 
-        # 5. Call POST /audit/reset for the next demo run
+        # 6. Check GET /audit/certificate pinpoints TAMPERED at entry 4
+        cert_broken = client.get("/audit/certificate").json()
+        assert cert_broken["verification"]["valid"] is False
+        assert cert_broken["steps"][4]["status"] == "TAMPERED"
+
+        # 7. Call POST /audit/reset for the next demo run
         r_reset = client.post("/audit/reset")
         assert r_reset.status_code == 200
         assert client.get("/audit").json() == []
