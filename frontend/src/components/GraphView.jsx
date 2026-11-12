@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Network } from 'vis-network';
 import { DataSet } from 'vis-data';
+import { ZoomIn, ZoomOut, Maximize2, RotateCcw, Filter, Play, Pause, ChevronLeft, ChevronRight } from 'lucide-react';
 
 function shortenAddress(addr) {
   if (!addr || addr.length <= 12) return addr;
@@ -11,6 +12,7 @@ export default function GraphView({
   graphData,
   highlightedPath,
   onSelectNode,
+  onSelectEdge,
   onResetHighlight,
 }) {
   const containerRef = useRef(null);
@@ -18,12 +20,13 @@ export default function GraphView({
   const nodesDataSetRef = useRef(null);
   const edgesDataSetRef = useRef(null);
 
-  // Layout mode: 'hierarchical' (Left-to-Right like Arkham/AnChain) | 'organic' (Force-directed) | 'radial'
+  // Layout mode: 'hierarchical' (Left-to-Right) | 'organic' (Force-directed)
   const [layoutMode, setLayoutMode] = useState('hierarchical');
+  const [riskFilter, setRiskFilter] = useState('ALL'); // 'ALL' | 'HIGH' | 'MEDIUM' | 'LOW'
   const [activeStep, setActiveStep] = useState(null); // null means full trail, number means step index
   const [isPlaying, setIsPlaying] = useState(false);
 
-  // Auto-play timer
+  // Auto-play timer for multi-hop money trail
   useEffect(() => {
     let timer;
     if (isPlaying && highlightedPath && highlightedPath.length > 0) {
@@ -53,8 +56,23 @@ export default function GraphView({
   useEffect(() => {
     if (!containerRef.current || !graphData || !graphData.nodes) return;
 
-    const isPathActive = highlightedPath && highlightedPath.length > 0;
-    
+    // Filter nodes by risk if selected
+    let filteredNodes = graphData.nodes;
+    if (riskFilter === 'HIGH') {
+      filteredNodes = graphData.nodes.filter((n) => (n.risk || 0) >= 60 || (n.tags || []).includes('SOURCE'));
+    } else if (riskFilter === 'MEDIUM') {
+      filteredNodes = graphData.nodes.filter((n) => (n.risk || 0) >= 40 || (n.tags || []).includes('SOURCE'));
+    } else if (riskFilter === 'LOW') {
+      filteredNodes = graphData.nodes.filter((n) => (n.risk || 0) < 40 || (n.tags || []).includes('SOURCE'));
+    }
+
+    const visibleNodeIds = new Set(filteredNodes.map((n) => n.id));
+
+    // Filter edges to only those connecting visible nodes
+    const filteredEdges = (graphData.edges || []).filter(
+      (e) => visibleNodeIds.has(e.from) && visibleNodeIds.has(e.to)
+    );
+
     // Determine which subset of path is active if in step-by-step mode
     let effectivePath = highlightedPath || [];
     if (activeStep !== null && effectivePath.length > 0) {
@@ -69,8 +87,10 @@ export default function GraphView({
       }
     }
 
+    const isPathActive = effectivePath.length > 0;
+
     // Format Nodes
-    const formattedNodes = graphData.nodes.map((node) => {
+    const formattedNodes = filteredNodes.map((node) => {
       const tags = node.tags || [];
       const isSanctioned = tags.includes('SANCTIONED');
       const isExchange = tags.includes('EXCHANGE') || (node.label && node.label.toLowerCase().includes('exchange'));
@@ -78,8 +98,9 @@ export default function GraphView({
       const isSource = tags.includes('SOURCE') || node.id === graphData.nodes[0]?.id;
       const isDust = tags.includes('DUSTING');
       const isLookalike = tags.includes('LOOKALIKE');
+      const isPeel = tags.includes('PEEL_CHAIN') || (node.label && node.label.toLowerCase().includes('peel'));
 
-      let baseColor = '#475569'; // default slate grey
+      let baseColor = '#334155'; // default slate grey
       let borderColor = '#64748b';
       let fontColor = '#f8fafc';
 
@@ -95,81 +116,84 @@ export default function GraphView({
       } else if (isSource) {
         baseColor = '#8b5cf6';
         borderColor = '#7c3aed';
-      } else if (isDust) {
-        baseColor = '#6b7280';
-        borderColor = '#9ca3af';
       } else if (isLookalike) {
         baseColor = '#ec4899';
         borderColor = '#be185d';
+      } else if (isDust) {
+        baseColor = '#475569';
+        borderColor = '#94a3b8';
+      } else if (isPeel) {
+        baseColor = '#eab308';
+        borderColor = '#a16207';
       }
 
-      const isOnPath = pathNodeSet.has(node.id);
-      const isCurrentStepTarget = activeStep !== null && effectivePath[effectivePath.length - 1] === node.id;
-      const opacity = isPathActive ? (isOnPath ? 1.0 : 0.22) : 1.0;
+      const isNodeInPath = pathNodeSet.has(node.id);
+      const nodeOpacity = isPathActive ? (isNodeInPath ? 1.0 : 0.25) : 1.0;
 
-      const taint = typeof node.taint === 'number' ? node.taint : 0;
-      const size = 18 + Math.round(taint * 22);
-      const displayName = node.label || shortenAddress(node.id);
+      let displayLabel = shortenAddress(node.id);
+      if (node.label) {
+        displayLabel = `${node.label}\n${shortenAddress(node.id)}`;
+      } else if (isSource) {
+        displayLabel = `Source Ransom\n${shortenAddress(node.id)}`;
+      }
 
       return {
         id: node.id,
-        label: displayName,
-        title: `Address: ${node.id}\nOwner/Label: ${node.label || 'None'}\nTaint Volume: ${(taint * 100).toFixed(1)}%\nCyber Risk: ${node.risk || 0}/100\nCluster: ${node.cluster || 'N/A'}\nTags: ${tags.join(', ') || 'None'}`,
-        value: size,
-        size: isCurrentStepTarget ? size + 8 : size,
-        shape: isExchange ? 'box' : isSource ? 'diamond' : 'dot',
+        label: displayLabel,
+        title: `Address: ${node.id}\nRisk: ${node.risk || 0}/100\nEntity: ${node.label || 'None'}\nCluster: ${node.cluster || 'c1'}\nHeld Taint: ${Math.round((node.taint || 0) * 100)}%`,
         color: {
           background: baseColor,
-          border: isCurrentStepTarget ? '#00e5ff' : isOnPath ? '#fbbf24' : borderColor,
+          border: isNodeInPath ? '#38bdf8' : borderColor,
           highlight: {
-            background: '#f59e0b',
-            border: '#ffffff',
+            background: '#0284c7',
+            border: '#38bdf8',
           },
+          opacity: nodeOpacity,
         },
-        opacity: opacity,
-        borderWidth: isCurrentStepTarget ? 4 : isOnPath ? 3 : 1.5,
-        shadow: isCurrentStepTarget
-          ? { enabled: true, color: '#00e5ff', size: 20, x: 0, y: 0 }
-          : isOnPath
-          ? { enabled: true, color: '#fbbf24', size: 14, x: 0, y: 0 }
-          : { enabled: true, color: 'rgba(0,0,0,0.5)', size: 5, x: 1, y: 2 },
+        borderWidth: isNodeInPath ? 4 : 2,
+        shadow: isNodeInPath
+          ? { enabled: true, color: '#38bdf8', size: 14, x: 0, y: 0 }
+          : { enabled: true, color: 'rgba(0,0,0,0.4)', size: 4, x: 1, y: 2 },
+        shape: isExchange || isSource ? 'box' : 'ellipse',
+        margin: 10,
         font: {
           color: fontColor,
           size: 11,
-          face: '-apple-system, BlinkMacSystemFont, Segoe UI, Roboto',
-          strokeWidth: 2,
-          strokeColor: '#070a12',
+          face: 'ui-sans-serif, system-ui, sans-serif',
+          multi: true,
         },
       };
     });
 
     // Format Edges
-    const formattedEdges = (graphData.edges || []).map((edge, idx) => {
+    const formattedEdges = filteredEdges.map((edge, idx) => {
       const edgeKey = `${edge.from}->${edge.to}`;
       const isHighlightedEdge = pathEdgeSet.has(edgeKey);
-      const edgeOpacity = isPathActive ? (isHighlightedEdge ? 1.0 : 0.12) : 0.8;
+      const edgeOpacity = isPathActive ? (isHighlightedEdge ? 1.0 : 0.15) : 0.85;
 
-      const valText = typeof edge.value === 'number'
-        ? `${edge.value < 0.001 ? edge.value.toFixed(8) : edge.value.toFixed(2)} BTC`
-        : '';
+      const sym = edge.blockchain === 'ethereum' ? 'ETH' : 'BTC';
+      const edgeLabel = `${edge.value} ${sym}`;
 
       return {
-        id: `e-${idx}-${edge.from}-${edge.to}`,
+        id: `e_${idx}_${edgeKey}`,
         from: edge.from,
         to: edge.to,
-        label: valText,
+        label: edgeLabel,
+        title: `TxID: ${edge.txid || 'Direct Split'}\nValue: ${edge.value} ${sym}\nTags: ${(edge.tags || []).join(', ') || 'Transfer'}`,
+        rawEdge: edge,
         arrows: {
           to: {
             enabled: true,
-            scaleFactor: 0.75,
+            scaleFactor: 0.9,
           },
         },
         color: {
-          color: isHighlightedEdge ? '#fbbf24' : '#475569',
+          color: isHighlightedEdge ? '#facc15' : '#475569',
           highlight: '#38bdf8',
+          hover: '#0ea5e9',
           opacity: edgeOpacity,
         },
-        width: isHighlightedEdge ? 3.5 : 1.5,
+        width: isHighlightedEdge ? 4 : 1.8,
         font: {
           color: isHighlightedEdge ? '#fef08a' : '#94a3b8',
           size: 10,
@@ -192,18 +216,16 @@ export default function GraphView({
       edges: edgesDataSetRef.current,
     };
 
-    // Configuration according to selected layout
     let options = {};
     if (layoutMode === 'hierarchical') {
-      // Left-to-Right layered DAG like Arkham / AnChain.ai
       options = {
         layout: {
           hierarchical: {
             enabled: true,
             direction: 'LR',
             sortMethod: 'directed',
-            levelSeparation: 175,
-            nodeSpacing: 85,
+            levelSeparation: 180,
+            nodeSpacing: 90,
             treeSpacing: 100,
           },
         },
@@ -220,7 +242,6 @@ export default function GraphView({
         interaction: { hover: true, tooltipDelay: 100, zoomView: true, dragView: true },
       };
     } else {
-      // Organic ForceAtlas2 Physics
       options = {
         physics: {
           solver: 'forceAtlas2Based',
@@ -242,8 +263,14 @@ export default function GraphView({
 
     network.on('click', (params) => {
       if (params.nodes.length > 0) {
-        const clickedId = params.nodes[0];
-        if (onSelectNode) onSelectNode(clickedId);
+        const clickedNodeId = params.nodes[0];
+        if (onSelectNode) onSelectNode(clickedNodeId);
+      } else if (params.edges.length > 0) {
+        const clickedEdgeId = params.edges[0];
+        const edgeObj = formattedEdges.find((e) => e.id === clickedEdgeId);
+        if (edgeObj && edgeObj.rawEdge && onSelectEdge) {
+          onSelectEdge(edgeObj.rawEdge);
+        }
       } else {
         if (onResetHighlight) onResetHighlight();
       }
@@ -252,7 +279,7 @@ export default function GraphView({
     return () => {
       network.destroy();
     };
-  }, [graphData, highlightedPath, layoutMode, activeStep]);
+  }, [graphData, highlightedPath, layoutMode, activeStep, riskFilter]);
 
   const handleZoomIn = () => {
     if (!networkRef.current) return;
@@ -271,11 +298,19 @@ export default function GraphView({
     networkRef.current.fit({ animation: { duration: 400, easingFunction: 'easeInOutQuad' } });
   };
 
+  const handleReset = () => {
+    setActiveStep(null);
+    setIsPlaying(false);
+    setRiskFilter('ALL');
+    if (onResetHighlight) onResetHighlight();
+    handleFit();
+  };
+
   const totalSteps = highlightedPath?.length ? highlightedPath.length - 1 : 0;
 
   return (
     <div className="graph-container-wrapper">
-      {/* Top Toolbar matching Images 3, 4, 11 */}
+      {/* Top Toolbar */}
       <div className="graph-toolbar">
         <div className="graph-mode-tabs">
           <button
@@ -283,18 +318,18 @@ export default function GraphView({
             className={`graph-tab-pill ${layoutMode === 'hierarchical' ? 'active' : ''}`}
             onClick={() => setLayoutMode('hierarchical')}
           >
-            📊 Flow Trail (Left-to-Right)
+            Flow Trail (Layered)
           </button>
           <button
             type="button"
             className={`graph-tab-pill ${layoutMode === 'organic' ? 'active' : ''}`}
             onClick={() => setLayoutMode('organic')}
           >
-            🕸️ Organic Network
+            Organic Network
           </button>
         </div>
 
-        {/* Trail Step-by-Step Player matching Image 11 (AnChain.ai) */}
+        {/* Trail Step-by-Step Player */}
         {highlightedPath && highlightedPath.length > 1 && (
           <div className="trail-stepper-box">
             <span className="stepper-label">Trail Hop:</span>
@@ -308,7 +343,7 @@ export default function GraphView({
               disabled={activeStep === 0}
               title="Previous hop"
             >
-              ◀
+              <ChevronLeft size={14} />
             </button>
             <span className="step-counter-text">
               {activeStep === null ? `All (${totalSteps} hops)` : `Hop ${activeStep} of ${totalSteps}`}
@@ -323,7 +358,7 @@ export default function GraphView({
               disabled={activeStep === totalSteps}
               title="Next hop"
             >
-              ▶
+              <ChevronRight size={14} />
             </button>
             <button
               type="button"
@@ -337,42 +372,70 @@ export default function GraphView({
                 }
               }}
             >
-              {isPlaying ? '⏸ Pause' : '▶ Play Trail'}
+              {isPlaying ? <><Pause size={12} /> Pause</> : <><Play size={12} /> Play</>}
             </button>
           </div>
         )}
 
+        {/* Risk Filter & Zoom Controls */}
         <div className="graph-actions">
+          {/* Risk Filter Dropdown */}
+          <div className="filter-dropdown-wrap">
+            <Filter size={13} className="filter-icon" />
+            <select
+              className="graph-risk-select"
+              value={riskFilter}
+              onChange={(e) => setRiskFilter(e.target.value)}
+              title="Filter graph nodes by risk level"
+            >
+              <option value="ALL">All Risk Levels</option>
+              <option value="HIGH">High Risk (≥60)</option>
+              <option value="MEDIUM">Medium+ Risk (≥40)</option>
+              <option value="LOW">Low Risk (&lt;40)</option>
+            </select>
+          </div>
+
           {highlightedPath && highlightedPath.length > 0 && (
             <button
               type="button"
-              className="btn-small btn-highlight-active"
+              className="btn-graph-tool active-trail"
               onClick={() => {
                 setActiveStep(null);
                 setIsPlaying(false);
-                onResetHighlight();
+                if (onResetHighlight) onResetHighlight();
               }}
+              title="Clear Highlighted Trail"
             >
-              ✕ Clear Trail
+              Clear Trail
             </button>
           )}
-          <button type="button" className="btn-small" onClick={handleZoomIn} title="Zoom in">+</button>
-          <button type="button" className="btn-small" onClick={handleZoomOut} title="Zoom out">-</button>
-          <button type="button" className="btn-small" onClick={handleFit} title="Fit entire graph to screen">Fit</button>
+
+          <button type="button" className="btn-graph-tool" onClick={handleZoomIn} title="Zoom in">
+            <ZoomIn size={14} />
+          </button>
+          <button type="button" className="btn-graph-tool" onClick={handleZoomOut} title="Zoom out">
+            <ZoomOut size={14} />
+          </button>
+          <button type="button" className="btn-graph-tool" onClick={handleFit} title="Fit graph to view">
+            <Maximize2 size={14} />
+          </button>
+          <button type="button" className="btn-graph-tool" onClick={handleReset} title="Reset graph &amp; filters">
+            <RotateCcw size={14} />
+          </button>
         </div>
       </div>
 
-      {/* Canvas */}
+      {/* Network Canvas */}
       <div ref={containerRef} className="vis-network-canvas" />
 
-      {/* Legend at bottom of canvas */}
+      {/* Legend */}
       <div className="graph-bottom-legend">
-        <span className="legend-item"><span className="legend-swatch bg-source"></span> Ransom Source</span>
+        <span className="legend-item"><span className="legend-swatch bg-source"></span> Source Wallet</span>
         <span className="legend-item"><span className="legend-swatch bg-exchange"></span> Exchange Deposit</span>
         <span className="legend-item"><span className="legend-swatch bg-mixer"></span> Mixer / Fan-Out</span>
-        <span className="legend-item"><span className="legend-swatch bg-sanction"></span> Sanctioned</span>
         <span className="legend-item"><span className="legend-swatch bg-peel"></span> Peel Chain Node</span>
-        <span className="legend-item"><span className="legend-swatch bg-poison"></span> Lookalike / Poison</span>
+        <span className="legend-item"><span className="legend-swatch bg-sanction"></span> Sanctioned</span>
+        <span className="legend-item"><span className="legend-swatch bg-poison"></span> Look-alike Poison</span>
         <span className="legend-item"><span className="legend-swatch bg-dust"></span> Dust Attack</span>
       </div>
     </div>
