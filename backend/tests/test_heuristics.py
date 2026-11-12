@@ -10,6 +10,7 @@ Validates:
 7. End-receiver ranking (E1 must rank #1 with highest confidence and ~47% taint share)
 8. Cyber-risk scoring and breakdown
 9. Determinism: identical results across 3 runs
+10. Edge cases: empty graphs, single-hop graphs, and zero-division protection
 """
 
 import json
@@ -173,7 +174,48 @@ def test_determinism_three_runs():
     print("Test 2: Determinism verified (identical rankings across 3 runs).")
 
 
+def test_empty_and_edge_case_graphs():
+    """Verify graceful handling of empty graphs or minimal single-hop transactions."""
+    # 1. Completely empty graph
+    empty_g = nx.MultiDiGraph()
+    empty_g, findings = heuristics.run(empty_g, {})
+    assert findings == []
+    ranked = taint.rank_end_receivers(empty_g, "bc1qempty0000000000000000000000000000000000")
+    assert ranked == []
+    scored = scoring.score(empty_g, ranked, findings)
+    assert scored == []
+
+    # 2. Minimal single-hop transfer
+    single_g = nx.MultiDiGraph()
+    src = "bc1qsrc11111111111111111111111111111111111"
+    dst = "bc1qdst22222222222222222222222222222222222"
+    tx = {
+        "txid": "single000000000000000000000000000000000000000000000000000000000001",
+        "ts": 1700000000,
+        "inputs": [{"address": src, "value": 1.0}],
+        "outputs": [{"address": dst, "value": 0.9999}],
+    }
+    single_g.graph["txs"] = [tx]
+    single_g.graph["source"] = src
+    single_g.add_node(src, type="address")
+    single_g.add_node(dst, type="address")
+    single_g.add_edge(src, dst, txid=tx["txid"], value=0.9999, ts=tx["ts"])
+
+    single_g, s_findings = heuristics.run(single_g, {})
+    assert s_findings == []  # No peel chain, no mixer
+    s_ranked = taint.rank_end_receivers(single_g, src)
+    assert len(s_ranked) == 1
+    assert s_ranked[0]["address"] == dst
+    assert s_ranked[0]["taint_share"] == 1.0
+    s_scored = scoring.score(single_g, s_ranked, s_findings)
+    assert len(s_scored) == 1
+    assert 0 <= s_scored[0]["risk"] <= 100
+
+    print("Test 3: Edge cases and single-hop graph verified cleanly.")
+
+
 if __name__ == "__main__":
     test_full_forensics_pipeline()
     test_determinism_three_runs()
+    test_empty_and_edge_case_graphs()
     print("All tests passed cleanly!")
