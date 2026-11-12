@@ -1,5 +1,5 @@
 """
-Tests for backend/audit_log.py and backend/audit_routes.py (P3 Step 2)
+Comprehensive pytest tests for backend/audit_log.py and backend/audit_routes.py (P3 Steps 2, 5, & 6)
 """
 
 from fastapi import FastAPI
@@ -49,51 +49,53 @@ def test_audit_log_verify_and_tamper_at_specific_index():
     res = log.verify()
     assert res == {"valid": True, "broken_at": None, "message": "Chain intact"}
 
-    # Tamper at entry 3
-    log.tamper(3)
+    # Tamper at entry 4
+    log.tamper(4)
     res_tampered = log.verify()
     assert res_tampered["valid"] is False
-    assert res_tampered["broken_at"] == 3
-    assert res_tampered["message"] == "Tampered at entry 3"
+    assert res_tampered["broken_at"] == 4
+    assert res_tampered["message"] == "Tampered at entry 4"
 
 
-def test_audit_routes_endpoints():
+def test_audit_routes_three_consecutive_demo_runs():
+    """
+    Step 6 Polish: Test the full flow 3 times in a row without restarting the server:
+    run a trace (append steps) -> verify (valid) -> tamper -> verify (broken) -> reset.
+    """
     app = FastAPI()
     app.include_router(router)
     client = TestClient(app)
 
-    # Reset first
-    r_reset = client.post("/audit/reset")
-    assert r_reset.status_code == 200
-    assert client.get("/audit").json() == []
-
-    # Append 3 entries to shared audit log
-    audit.append("validate_input", {"input": "addr1"})
-    audit.append("build_graph", {"nodes": 10})
-    audit.append("score", {"top": "addr9"})
-
-    # GET /audit
-    r_list = client.get("/audit")
-    assert r_list.status_code == 200
-    assert len(r_list.json()) == 3
-
-    # GET /audit/verify (valid)
-    r_verify = client.get("/audit/verify")
-    assert r_verify.status_code == 200
-    assert r_verify.json() == {"valid": True, "broken_at": None, "message": "Chain intact"}
-
-    # POST /audit/tamper at index 1
-    r_tamper = client.post("/audit/tamper", json={"idx": 1})
-    assert r_tamper.status_code == 200
-
-    # GET /audit/verify (broken at 1)
-    r_verify_after = client.get("/audit/verify")
-    assert r_verify_after.status_code == 200
-    assert r_verify_after.json() == {
-        "valid": False,
-        "broken_at": 1,
-        "message": "Tampered at entry 1",
-    }
-
-    # Clean up
     client.post("/audit/reset")
+
+    for run_num in range(3):
+        # Simulate trace pipeline logging 5 steps
+        for step_idx, action in enumerate(
+            ["validate_input", "fetch_txs", "validate_response", "build_graph", "final_ranking"]
+        ):
+            audit.append(action, {"run": run_num, "step": step_idx})
+
+        # 1. Check GET /audit has 5 entries
+        entries = client.get("/audit").json()
+        assert len(entries) == 5
+
+        # 2. Check GET /audit/verify is valid
+        v_ok = client.get("/audit/verify").json()
+        assert v_ok == {"valid": True, "broken_at": None, "message": "Chain intact"}
+
+        # 3. Call POST /audit/tamper on entry 4
+        r_tamper = client.post("/audit/tamper", json={"idx": 4})
+        assert r_tamper.status_code == 200
+
+        # 4. Check GET /audit/verify is broken at entry 4
+        v_broken = client.get("/audit/verify").json()
+        assert v_broken == {
+            "valid": False,
+            "broken_at": 4,
+            "message": "Tampered at entry 4",
+        }
+
+        # 5. Call POST /audit/reset for the next demo run
+        r_reset = client.post("/audit/reset")
+        assert r_reset.status_code == 200
+        assert client.get("/audit").json() == []
