@@ -332,11 +332,6 @@ def run_detectors(graph) -> list[dict]:
                     "nodes": unique_addrs,
                 }
             )
-            for addr in unique_addrs:
-                if graph.has_node(addr):
-                    node_tags = graph.nodes[addr].setdefault("tags", [])
-                    if "LOOKALIKE" not in node_tags:
-                        node_tags.append("LOOKALIKE")
 
     # --- 3. DECOY EDGE DETECTOR ---
     # Edge value under 0.1% of the largest edge value, not part of a dusting finding.
@@ -364,11 +359,6 @@ def run_detectors(graph) -> list[dict]:
                 tags = data.setdefault("tags", [])
                 if "DECOY" not in tags:
                     tags.append("DECOY")
-                for addr in (u, v):
-                    if graph.has_node(addr):
-                        ntags = graph.nodes[addr].setdefault("tags", [])
-                        if "DECOY" not in ntags:
-                            ntags.append("DECOY")
                 sats = round(val_f * 100_000_000)
                 findings.append(
                     {
