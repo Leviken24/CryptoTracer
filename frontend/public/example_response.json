@@ -1,0 +1,400 @@
+{
+  "graph": {
+    "nodes": [
+      {
+        "id": "bc1qsrc0000000000000000000000000000000000",
+        "type": "address",
+        "label": "Reported Ransom Wallet",
+        "cluster": "c1",
+        "tags": ["SOURCE"],
+        "risk": 70,
+        "taint": 1.0
+      },
+      {
+        "id": "bc1qmix1111111111111111111111111111111111",
+        "type": "address",
+        "label": "Mixer Pool M1",
+        "cluster": "c2",
+        "tags": ["FAN_OUT", "MIXER_PATTERN"],
+        "risk": 60,
+        "taint": 0.50
+      },
+      {
+        "id": "bc1qmix2222222222222222222222222222222222",
+        "type": "address",
+        "label": "Mixer Pool M2",
+        "cluster": "c2",
+        "tags": ["FAN_OUT", "MIXER_PATTERN"],
+        "risk": 60,
+        "taint": 0.50
+      },
+      {
+        "id": "bc1qmix7777777777777777777777777777777777",
+        "type": "address",
+        "label": "Mixer Leaf M7",
+        "cluster": "c2",
+        "tags": ["FAN_OUT"],
+        "risk": 45,
+        "taint": 0.12
+      },
+      {
+        "id": "bc1qcin1111111111111111111111111111111111",
+        "type": "address",
+        "label": "Consolidation Hub C1",
+        "cluster": "c3",
+        "tags": ["FAN_IN"],
+        "risk": 65,
+        "taint": 0.74
+      },
+      {
+        "id": "bc1qpeel111111111111111111111111111111111",
+        "type": "address",
+        "label": "Peel Node P1",
+        "cluster": "c4",
+        "tags": ["PEEL_CHAIN"],
+        "risk": 66,
+        "taint": 0.68
+      },
+      {
+        "id": "bc1qpeel222222222222222222222222222222222",
+        "type": "address",
+        "label": "Peel Node P2",
+        "cluster": "c4",
+        "tags": ["PEEL_CHAIN"],
+        "risk": 68,
+        "taint": 0.62
+      },
+      {
+        "id": "bc1qpeel333333333333333333333333333333333",
+        "type": "address",
+        "label": "Peel Node P3",
+        "cluster": "c4",
+        "tags": ["PEEL_CHAIN"],
+        "risk": 70,
+        "taint": 0.56
+      },
+      {
+        "id": "bc1qpeel444444444444444444444444444444444",
+        "type": "address",
+        "label": "Peel Node P4",
+        "cluster": "c4",
+        "tags": ["PEEL_CHAIN"],
+        "risk": 72,
+        "taint": 0.51
+      },
+      {
+        "id": "bc1qpeel555555555555555555555555555555555",
+        "type": "address",
+        "label": "Peel Node P5",
+        "cluster": "c4",
+        "tags": ["PEEL_CHAIN"],
+        "risk": 75,
+        "taint": 0.47
+      },
+      {
+        "id": "bc1qw003333333333333333333333333333333333",
+        "type": "address",
+        "label": "Peel Change W3",
+        "cluster": "c4",
+        "tags": ["PEEL"],
+        "risk": 55,
+        "taint": 0.08
+      },
+      {
+        "id": "bc1qsanc444444444444444444444444444444444",
+        "type": "address",
+        "label": "OFAC Sanctioned Entity",
+        "cluster": "c5",
+        "tags": ["SANCTIONED"],
+        "risk": 99,
+        "taint": 0.07
+      },
+      {
+        "id": "bc1qdust999999999999999999999999999999999",
+        "type": "address",
+        "label": "Dust Attack Distributor DS",
+        "cluster": "c6",
+        "tags": ["DUSTING"],
+        "risk": 85,
+        "taint": 0.01
+      },
+      {
+        "id": "bc1qexch999999999999999999999999999999333",
+        "type": "address",
+        "label": "Poisoning Lookalike E1X",
+        "cluster": "c7",
+        "tags": ["LOOKALIKE"],
+        "risk": 82,
+        "taint": 0.02
+      },
+      {
+        "id": "bc1qdecoy0000000000000000000000000000000",
+        "type": "address",
+        "label": "Decoy Wallet U1",
+        "cluster": "c8",
+        "tags": ["DECOY"],
+        "risk": 40,
+        "taint": 0.001
+      },
+      {
+        "id": "bc1qexch333333333333333333333333333333333",
+        "type": "address",
+        "label": "ExchangeX Deposit",
+        "cluster": "c9",
+        "tags": ["EXCHANGE"],
+        "risk": 91,
+        "taint": 0.47
+      }
+    ],
+    "edges": [
+      {
+        "from": "bc1qsrc0000000000000000000000000000000000",
+        "to": "bc1qmix1111111111111111111111111111111111",
+        "txid": "aa11aa11aa11aa11aa11aa11aa11aa11aa11aa11aa11aa11aa11aa11aa11aa11",
+        "value": 0.50,
+        "ts": 1700000000,
+        "tags": ["FAN_OUT", "MIXER_PATTERN"]
+      },
+      {
+        "from": "bc1qsrc0000000000000000000000000000000000",
+        "to": "bc1qmix2222222222222222222222222222222222",
+        "txid": "aa11aa11aa11aa11aa11aa11aa11aa11aa11aa11aa11aa11aa11aa11aa11aa11",
+        "value": 0.50,
+        "ts": 1700000000,
+        "tags": ["FAN_OUT", "MIXER_PATTERN"]
+      },
+      {
+        "from": "bc1qsrc0000000000000000000000000000000000",
+        "to": "bc1qmix7777777777777777777777777777777777",
+        "txid": "aa11aa11aa11aa11aa11aa11aa11aa11aa11aa11aa11aa11aa11aa11aa11aa11",
+        "value": 0.50,
+        "ts": 1700000000,
+        "tags": ["FAN_OUT"]
+      },
+      {
+        "from": "bc1qmix1111111111111111111111111111111111",
+        "to": "bc1qcin1111111111111111111111111111111111",
+        "txid": "bb00bb00bb00bb00bb00bb00bb00bb00bb00bb00bb00bb00bb00bb00bb00bb00",
+        "value": 1.50,
+        "ts": 1700000300,
+        "tags": ["FAN_IN"]
+      },
+      {
+        "from": "bc1qmix2222222222222222222222222222222222",
+        "to": "bc1qcin1111111111111111111111111111111111",
+        "txid": "bb00bb00bb00bb00bb00bb00bb00bb00bb00bb00bb00bb00bb00bb00bb00bb00",
+        "value": 1.50,
+        "ts": 1700000300,
+        "tags": ["FAN_IN"]
+      },
+      {
+        "from": "bc1qcin1111111111111111111111111111111111",
+        "to": "bc1qpeel111111111111111111111111111111111",
+        "txid": "cc11cc11cc11cc11cc11cc11cc11cc11cc11cc11cc11cc11cc11cc11cc11cc11",
+        "value": 2.76,
+        "ts": 1700000600,
+        "tags": ["PEEL_CONTINUATION"]
+      },
+      {
+        "from": "bc1qpeel111111111111111111111111111111111",
+        "to": "bc1qpeel222222222222222222222222222222222",
+        "txid": "cc22cc22cc22cc22cc22cc22cc22cc22cc22cc22cc22cc22cc22cc22cc22cc22",
+        "value": 2.54,
+        "ts": 1700000900,
+        "tags": ["PEEL_CONTINUATION"]
+      },
+      {
+        "from": "bc1qpeel222222222222222222222222222222222",
+        "to": "bc1qpeel333333333333333333333333333333333",
+        "txid": "cc33cc33cc33cc33cc33cc33cc33cc33cc33cc33cc33cc33cc33cc33cc33cc33",
+        "value": 2.33,
+        "ts": 1700001200,
+        "tags": ["PEEL_CONTINUATION"]
+      },
+      {
+        "from": "bc1qpeel333333333333333333333333333333333",
+        "to": "bc1qpeel444444444444444444444444444444444",
+        "txid": "cc44cc44cc44cc44cc44cc44cc44cc44cc44cc44cc44cc44cc44cc44cc44cc44",
+        "value": 2.14,
+        "ts": 1700001500,
+        "tags": ["PEEL_CONTINUATION"]
+      },
+      {
+        "from": "bc1qpeel444444444444444444444444444444444",
+        "to": "bc1qpeel555555555555555555555555555555555",
+        "txid": "cc55cc55cc55cc55cc55cc55cc55cc55cc55cc55cc55cc55cc55cc55cc55cc55",
+        "value": 1.98,
+        "ts": 1700001800,
+        "tags": ["PEEL_CONTINUATION"]
+      },
+      {
+        "from": "bc1qpeel555555555555555555555555555555555",
+        "to": "bc1qexch333333333333333333333333333333333",
+        "txid": "ee11ee11ee11ee11ee11ee11ee11ee11ee11ee11ee11ee11ee11ee11ee11ee11",
+        "value": 1.90,
+        "ts": 1700002100,
+        "tags": ["PEEL_CONTINUATION"]
+      },
+      {
+        "from": "bc1qpeel222222222222222222222222222222222",
+        "to": "bc1qw003333333333333333333333333333333333",
+        "txid": "pp01pp01pp01pp01pp01pp01pp01pp01pp01pp01pp01pp01pp01pp01pp01pp01",
+        "value": 0.20,
+        "ts": 1700000950,
+        "tags": ["PEEL"]
+      },
+      {
+        "from": "bc1qw003333333333333333333333333333333333",
+        "to": "bc1qsanc444444444444444444444444444444444",
+        "txid": "ss01ss01ss01ss01ss01ss01ss01ss01ss01ss01ss01ss01ss01ss01ss01ss01",
+        "value": 0.18,
+        "ts": 1700001100,
+        "tags": ["SANCTION_LINK"]
+      },
+      {
+        "from": "bc1qdust999999999999999999999999999999999",
+        "to": "bc1qpeel222222222222222222222222222222222",
+        "txid": "dd01dd01dd01dd01dd01dd01dd01dd01dd01dd01dd01dd01dd01dd01dd01dd01",
+        "value": 0.00000546,
+        "ts": 1700001000,
+        "tags": ["DUSTING"]
+      },
+      {
+        "from": "bc1qpeel333333333333333333333333333333333",
+        "to": "bc1qdecoy0000000000000000000000000000000",
+        "txid": "dc01dc01dc01dc01dc01dc01dc01dc01dc01dc01dc01dc01dc01dc01dc01dc01",
+        "value": 0.000006,
+        "ts": 1700001300,
+        "tags": ["DECOY"]
+      },
+      {
+        "from": "bc1qpeel555555555555555555555555555555555",
+        "to": "bc1qexch999999999999999999999999999999333",
+        "txid": "lk01lk01lk01lk01lk01lk01lk01lk01lk01lk01lk01lk01lk01lk01lk01lk01",
+        "value": 0.05,
+        "ts": 1700002150,
+        "tags": ["LOOKALIKE"]
+      }
+    ]
+  },
+  "findings": [
+    {
+      "type": "PEEL_CHAIN",
+      "severity": "high",
+      "text": "Peel chain of 5 hops detected terminating at exchange deposit",
+      "nodes": [
+        "bc1qpeel111111111111111111111111111111111",
+        "bc1qpeel222222222222222222222222222222222",
+        "bc1qpeel333333333333333333333333333333333",
+        "bc1qpeel444444444444444444444444444444444",
+        "bc1qpeel555555555555555555555555555555555"
+      ]
+    },
+    {
+      "type": "MIXER_PATTERN",
+      "severity": "high",
+      "text": "CoinJoin / Mixer-like fan-out pattern: 8 equal-value outputs (0.5 BTC each)",
+      "nodes": [
+        "bc1qmix1111111111111111111111111111111111",
+        "bc1qmix2222222222222222222222222222222222",
+        "bc1qmix7777777777777777777777777777777777"
+      ]
+    },
+    {
+      "type": "DUSTING",
+      "severity": "medium",
+      "text": "Adversarial dusting attack detected: 15 outputs of 546 sats targeting peel node P2",
+      "nodes": ["bc1qdust999999999999999999999999999999999", "bc1qpeel222222222222222222222222222222222"]
+    },
+    {
+      "type": "LOOKALIKE",
+      "severity": "high",
+      "text": "Address poisoning attempt: lookalike address (E1X) mirrors first and last 4 chars of Exchange deposit",
+      "nodes": ["bc1qexch999999999999999999999999999999333", "bc1qexch333333333333333333333333333333333"]
+    },
+    {
+      "type": "DECOY",
+      "severity": "low",
+      "text": "Decoy low-value edge linking unrelated cluster (< 0.001% of trace value)",
+      "nodes": ["bc1qdecoy0000000000000000000000000000000"]
+    }
+  ],
+  "ranked": [
+    {
+      "address": "bc1qexch333333333333333333333333333333333",
+      "confidence": 0.91,
+      "risk": 94,
+      "reasoning": [
+        "Receives 47% of the total tainted value from ransom wallet",
+        "Labeled as ExchangeX Deposit (Custodial VASP with KYC/AML off-ramp)",
+        "Terminating node of a 5-hop structured peel chain"
+      ],
+      "risk_breakdown": {
+        "mixer": 0.85,
+        "sanction": 0.0,
+        "ransomware": 0.80,
+        "peel_depth": 1.0,
+        "adversarial": 0.40
+      },
+      "critical_path": [
+        "bc1qsrc0000000000000000000000000000000000",
+        "bc1qmix1111111111111111111111111111111111",
+        "bc1qcin1111111111111111111111111111111111",
+        "bc1qpeel111111111111111111111111111111111",
+        "bc1qpeel222222222222222222222222222222222",
+        "bc1qpeel333333333333333333333333333333333",
+        "bc1qpeel444444444444444444444444444444444",
+        "bc1qpeel555555555555555555555555555555555",
+        "bc1qexch333333333333333333333333333333333"
+      ]
+    },
+    {
+      "address": "bc1qsanc444444444444444444444444444444444",
+      "confidence": 0.78,
+      "risk": 99,
+      "reasoning": [
+        "Direct fund flow from peel change wallet W3",
+        "Identified as OFAC Specially Designated National (SDN) sanctioned entity",
+        "Zero-tolerance regulatory asset freeze mandate"
+      ],
+      "risk_breakdown": {
+        "mixer": 0.50,
+        "sanction": 1.0,
+        "ransomware": 0.70,
+        "peel_depth": 0.60,
+        "adversarial": 0.10
+      },
+      "critical_path": [
+        "bc1qsrc0000000000000000000000000000000000",
+        "bc1qmix1111111111111111111111111111111111",
+        "bc1qcin1111111111111111111111111111111111",
+        "bc1qpeel111111111111111111111111111111111",
+        "bc1qpeel222222222222222222222222222222222",
+        "bc1qw003333333333333333333333333333333333",
+        "bc1qsanc444444444444444444444444444444444"
+      ]
+    },
+    {
+      "address": "bc1qmix7777777777777777777777777777777777",
+      "confidence": 0.52,
+      "risk": 62,
+      "reasoning": [
+        "Receives 12% of tainted value directly from initial fan-out",
+        "Unspent leaf mixer wallet holding 0.5 BTC",
+        "Associated with structured CoinJoin fan-out cluster"
+      ],
+      "risk_breakdown": {
+        "mixer": 0.90,
+        "sanction": 0.0,
+        "ransomware": 0.50,
+        "peel_depth": 0.20,
+        "adversarial": 0.0
+      },
+      "critical_path": [
+        "bc1qsrc0000000000000000000000000000000000",
+        "bc1qmix7777777777777777777777777777777777"
+      ]
+    }
+  ],
+  "audit_head": "9f3c1d0e5a7b2c4d6e8f0a1b3c5d7e9f1a2b4c6d8e0f1a3b5c7d9e1f2a4b6c8d"
+}
