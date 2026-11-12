@@ -40,6 +40,16 @@ export default function GraphView({
     return () => clearInterval(timer);
   }, [isPlaying, highlightedPath]);
 
+  // Synchronize active stepper hop with selected node
+  useEffect(() => {
+    if (activeStep !== null && highlightedPath && highlightedPath[activeStep]) {
+      const currentHopNodeId = highlightedPath[activeStep];
+      if (onSelectNode) {
+        onSelectNode(currentHopNodeId);
+      }
+    }
+  }, [activeStep]);
+
   useEffect(() => {
     if (!containerRef.current || !graphData || !graphData.nodes) return;
 

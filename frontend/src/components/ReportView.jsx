@@ -1,25 +1,53 @@
+import { useState } from 'react';
 import TaintTracker from './TaintTracker';
 
-export default function ReportView({ traceData, onClose }) {
+export default function ReportView({
+  traceData,
+  sourceTaintData,
+  intermediateTaintData,
+  endReceiverTaintData,
+  onClose,
+}) {
+  const [reportTheme, setReportTheme] = useState('paper'); // 'paper' (white) | 'dark' (cyber)
   const nodes = traceData?.graph?.nodes || [];
   const edges = traceData?.graph?.edges || [];
   const ranked = traceData?.ranked || [];
   const findings = traceData?.findings || [];
   const sourceNode = nodes.find((n) => n.tags?.includes('SOURCE')) || nodes[0];
-  const topReceiver = ranked[0];
 
   const handlePrint = () => {
     window.print();
   };
 
+  const isDark = reportTheme === 'dark';
+
   return (
     <div className="report-modal-overlay">
-      <div className="report-paper">
+      <div className={`report-paper ${isDark ? 'report-theme-dark' : 'report-theme-paper'}`}>
         {/* Printable Document Controls */}
         <div className="report-screen-controls no-print">
-          <button type="button" className="btn-print-now" onClick={handlePrint}>
-            🖨️ Print Dossier to PDF / Paper
-          </button>
+          <div className="report-controls-left">
+            <button type="button" className="btn-print-now" onClick={handlePrint}>
+              🖨️ Print / Save to PDF
+            </button>
+            <div className="report-theme-switcher">
+              <button
+                type="button"
+                className={`btn-theme-toggle ${reportTheme === 'paper' ? 'active' : ''}`}
+                onClick={() => setReportTheme('paper')}
+              >
+                📄 Clean White Paper
+              </button>
+              <button
+                type="button"
+                className={`btn-theme-toggle ${reportTheme === 'dark' ? 'active' : ''}`}
+                onClick={() => setReportTheme('dark')}
+              >
+                🌙 Dark Cyber Dossier
+              </button>
+            </div>
+          </div>
+
           <button type="button" className="btn-close-report" onClick={onClose}>
             ✕ Close View
           </button>
@@ -73,7 +101,11 @@ export default function ReportView({ traceData, onClose }) {
         {/* Taint Tracking Component (Images 1 & 2) */}
         <div className="report-section">
           <h3 className="section-heading">2. MATHEMATICAL TAINT DISPERSION</h3>
-          <TaintTracker sourceTaint={100} intermediateTaint={60} endReceiverTaint={47} />
+          <TaintTracker
+            source={sourceTaintData}
+            intermediate={intermediateTaintData}
+            endReceiver={endReceiverTaintData}
+          />
         </div>
 
         {/* Ranked End-Receivers */}
@@ -82,25 +114,25 @@ export default function ReportView({ traceData, onClose }) {
           <table className="report-table">
             <thead>
               <tr>
-                <th>Rank</th>
-                <th>Candidate Address</th>
-                <th>Attribution Confidence</th>
-                <th>Risk Score</th>
+                <th style={{ width: '60px' }}>Rank</th>
+                <th style={{ width: '220px' }}>Candidate Address</th>
+                <th style={{ width: '100px' }}>Attribution Confidence</th>
+                <th style={{ width: '90px' }}>Risk Score</th>
                 <th>Primary Attribution Rationale</th>
               </tr>
             </thead>
             <tbody>
               {ranked.map((item, idx) => (
-                <tr key={idx}>
-                  <td><strong>#{idx + 1}</strong></td>
-                  <td className="table-mono">{item.address}</td>
-                  <td><strong>{Math.round((item.confidence || 0) * 100)}%</strong></td>
-                  <td>
+                <tr key={idx} className="report-row-highlight">
+                  <td className="cell-rank"><strong>#{idx + 1}</strong></td>
+                  <td className="table-mono cell-addr">{item.address}</td>
+                  <td className="cell-conf"><strong>{Math.round((item.confidence || 0) * 100)}%</strong></td>
+                  <td className="cell-risk">
                     <span className="report-risk-badge">
                       {item.risk}/100
                     </span>
                   </td>
-                  <td>
+                  <td className="cell-reasoning">
                     <ul className="report-bullets">
                       {(item.reasoning || []).map((r, i) => (
                         <li key={i}>{r}</li>

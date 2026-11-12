@@ -123,6 +123,42 @@ export default function App() {
 
   const currentRankedMatch = traceData?.ranked?.find((r) => r.address === selectedAddress);
 
+  // Dynamically calculate taint levels for TaintTracker as user selects nodes or ranks
+  const sourceNode = traceData?.graph?.nodes?.find((n) => n.tags?.includes('SOURCE')) || traceData?.graph?.nodes?.[0];
+  const sourceTaintData = {
+    label: sourceNode?.label || 'Source wallet',
+    address: sourceNode?.id || '',
+    taint: sourceNode ? Math.round((sourceNode.taint ?? 1) * 100) : 100,
+  };
+
+  const activeRanked = currentRankedMatch || traceData?.ranked?.[0];
+  const endNode = traceData?.graph?.nodes?.find((n) => n.id === activeRanked?.address);
+  const endReceiverTaintData = {
+    label: endNode?.label || 'Possible end receiver',
+    address: activeRanked?.address || '',
+    taint: activeRanked ? Math.round((activeRanked.taint_share ?? endNode?.taint ?? 0.47) * 100) : 47,
+  };
+
+  const isClickedIntermediary = selectedNodeData && selectedNodeData.id !== sourceNode?.id && selectedNodeData.id !== activeRanked?.address;
+  let intermediateTaintData;
+  if (isClickedIntermediary) {
+    intermediateTaintData = {
+      label: selectedNodeData.label || 'Intermediate wallet',
+      address: selectedNodeData.id,
+      taint: Math.round((selectedNodeData.taint ?? 0.6) * 100),
+    };
+  } else {
+    const midHopId = highlightedPath.length > 2
+      ? highlightedPath[Math.min(highlightedPath.length - 2, Math.max(1, Math.floor(highlightedPath.length / 2)))]
+      : null;
+    const midNode = traceData?.graph?.nodes?.find((n) => n.id === midHopId);
+    intermediateTaintData = {
+      label: midNode?.label || 'Intermediate wallet',
+      address: midNode?.id || '',
+      taint: midNode ? Math.round((midNode.taint ?? 0.6) * 100) : 60,
+    };
+  }
+
   return (
     <div className="app-root">
       {/* Top Header Navigation */}
@@ -234,8 +270,12 @@ export default function App() {
             onResetHighlight={handleResetHighlight}
           />
 
-          {/* Illustrative Taint Tracking Component (Images 1 & 2) */}
-          <TaintTracker sourceTaint={100} intermediateTaint={60} endReceiverTaint={47} />
+          {/* Dynamic Taint Tracking Component (Images 1 & 2) */}
+          <TaintTracker
+            source={sourceTaintData}
+            intermediate={intermediateTaintData}
+            endReceiver={endReceiverTaintData}
+          />
         </div>
 
         {/* Right Column: Intelligence Panels */}
@@ -309,7 +349,13 @@ export default function App() {
 
       {/* Printable Report Modal View (Image 10) */}
       {showReport && (
-        <ReportView traceData={traceData} onClose={() => setShowReport(false)} />
+        <ReportView
+          traceData={traceData}
+          sourceTaintData={sourceTaintData}
+          intermediateTaintData={intermediateTaintData}
+          endReceiverTaintData={endReceiverTaintData}
+          onClose={() => setShowReport(false)}
+        />
       )}
     </div>
   );
