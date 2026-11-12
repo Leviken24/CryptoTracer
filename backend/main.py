@@ -20,6 +20,8 @@ from backend.audit_log import audit
 from backend.audit_routes import router as audit_router
 from backend import security, heuristics, taint, scoring
 from backend import sample_loader, graph_builder, chain_client
+from backend.ai_summary import generate_investigation_summary
+from backend.timeline import generate_forensic_timeline
 from backend.pdf_report import generate_forensic_pdf
 
 app = FastAPI(
@@ -166,6 +168,22 @@ def execute_trace_pipeline(
     top_ranked_risk = scored_ranked[0].get("risk", 50) if scored_ranked else max_node_risk
     case_risk = max(max_node_risk, top_ranked_risk)
 
+    # Generate Phase 2 AI Investigation Summary & Timeline
+    ai_summary = generate_investigation_summary(
+        target=source_address,
+        blockchain=blockchain,
+        graph_data=serialized_graph,
+        findings=all_findings,
+        ranked=scored_ranked,
+        txs=txs,
+    )
+
+    timeline = generate_forensic_timeline(
+        txs=txs,
+        findings=all_findings,
+        labels=KNOWN_LABELS,
+    )
+
     return {
         "graph": serialized_graph,
         "findings": all_findings,
@@ -174,6 +192,8 @@ def execute_trace_pipeline(
         "risk_score": case_risk,
         "source": source_address,
         "input_kind": input_kind,
+        "ai_summary": ai_summary,
+        "timeline": timeline,
     }
 
 
@@ -207,6 +227,8 @@ def trace_endpoint(req: TraceRequest):
         "findings": res["findings"],
         "ranked": res["ranked"],
         "audit_head": res["audit_head"],
+        "ai_summary": res.get("ai_summary", {}),
+        "timeline": res.get("timeline", []),
     }
 
 

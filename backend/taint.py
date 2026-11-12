@@ -53,7 +53,7 @@ def compute_strict_poison_taint(graph: nx.MultiDiGraph, source: str) -> Dict[str
 
 def propagate_proportional_taint(graph: nx.MultiDiGraph, source: str) -> Tuple[Dict[str, float], float]:
     """
-    Plain English: Follows the money step by step from the source wallet.
+    Follows the money step by step from the source wallet.
     At every transaction, whatever fraction of incoming money was tainted gets passed
     proportionately to all outgoing addresses.
 
@@ -66,7 +66,6 @@ def propagate_proportional_taint(graph: nx.MultiDiGraph, source: str) -> Tuple[D
         return {}, 1.0
 
     sorted_txs = sorted(txs, key=lambda t: t.get("ts", 0))
-
     held_taint: Dict[str, float] = {}
 
     source_outflow = 0.0
@@ -190,7 +189,7 @@ def rank_end_receivers(graph: nx.MultiDiGraph, source: str, top_n: int = 5) -> L
         raw_conf = (0.50 * taint_share) + leaf_exchange_bonus + peel_bonus + label_bonus - decoy_penalty
         confidence = round(min(1.0, max(0.0, raw_conf)), 2)
 
-        # Build exactly 3 clear, human-readable reasons for non-technical judges
+        # Build exactly 3 clear, human-readable reasons for non-technical investigators
         reasoning: List[str] = []
 
         pct_share = int(round(taint_share * 100))
@@ -221,12 +220,50 @@ def rank_end_receivers(graph: nx.MultiDiGraph, source: str, top_n: int = 5) -> L
         hop_count = max(1, len(critical_path) - 1)
         is_poisoned = poison_map.get(addr, False)
 
+        # Relevant transaction hashes
+        relevant_txs = list({
+            data.get("txid")
+            for _, _, data in graph.in_edges(addr, data=True)
+            if data.get("txid")
+        })
+
+        # Suggested Next Investigative Action
+        if is_exchange:
+            suggested_action = (
+                f"Draft formal preservation letter and legal subpoena to {label or 'Centralized Exchange'} "
+                "for customer KYC records, login IP logs, and linked withdrawal fiat accounts."
+            )
+        elif "SANCTIONED" in tags:
+            suggested_action = (
+                "File immediate OFAC Blocked Property Report (31 CFR Part 501) and notify federal sanctions liaison."
+            )
+        elif is_leaf:
+            suggested_action = (
+                "Deploy continuous webhook monitor on this unspent address to detect future consolidation or cashout transfers."
+            )
+        else:
+            suggested_action = "Subpoena intermediate node hosting infrastructure or tracer cluster counterparties."
+
+        # Evidence strength
+        if confidence >= 0.70:
+            evidence_strength = "High Evidence Corroboration"
+        elif confidence >= 0.40:
+            evidence_strength = "Moderate Evidence Corroboration"
+        else:
+            evidence_strength = "Tentative / Circumstantial"
+
         ranked.append({
             "address": addr,
             "confidence": confidence,
+            "evidence_strength": evidence_strength,
             "taint_share": round(taint_share, 4),
+            "entity_label": label or ("Centralized Exchange" if is_exchange else ""),
+            "relevant_txs": relevant_txs,
+            "suggested_action": suggested_action,
+            "attribution_disclaimer": "Identified on-chain destination wallet. Associating this address with a specific real-world individual requires authorized off-chain records (KYC documents, IP logs, banking rails).",
             "reasoning": reasoning[:3],
             "path": critical_path,
+            "critical_path": critical_path,
             "taint_metrics": {
                 "proportional_share": round(taint_share, 4),
                 "strict_poison": is_poisoned,
@@ -236,6 +273,9 @@ def rank_end_receivers(graph: nx.MultiDiGraph, source: str, top_n: int = 5) -> L
         })
 
     ranked.sort(key=lambda x: (x["confidence"], x["taint_share"]), reverse=True)
+    for idx, item in enumerate(ranked, 1):
+        item["rank"] = idx
+
     return ranked[:top_n]
 
 

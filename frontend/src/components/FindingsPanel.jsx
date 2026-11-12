@@ -1,3 +1,15 @@
+import React, { useState } from 'react';
+import {
+  AlertTriangle,
+  Copy,
+  Check,
+  ShieldAlert,
+  GitCommit,
+  Info,
+  ExternalLink,
+  ChevronRight,
+} from 'lucide-react';
+
 const SEVERITY_WEIGHT = {
   high: 1,
   medium: 2,
@@ -7,14 +19,14 @@ const SEVERITY_WEIGHT = {
 const FINDING_CONFIGS = {
   PEEL_CHAIN: {
     icon: '⛓️',
-    title: 'Peel Chain Pattern',
-    desc: 'Structured rapid multi-hop peeling used to launder funds into incremental off-ramps.',
+    title: 'Peel-Chain Structuring Pattern',
+    desc: 'Structured rapid multi-hop peeling where a wallet sends the vast majority of balance downstream while peeling small off-ramps (<15%) to change addresses.',
     color: '#f97316',
   },
   MIXER_PATTERN: {
     icon: '🌪️',
     title: 'Mixer / CoinJoin Obfuscation',
-    desc: 'Equal-value fan-out splitting transaction volume across unlinked addresses to break attribution.',
+    desc: 'Equal-denomination multi-output fan-out splitting transaction volume across unlinked addresses to break attribution.',
     color: '#eab308',
   },
   FAN_OUT: {
@@ -32,24 +44,26 @@ const FINDING_CONFIGS = {
   DUSTING: {
     icon: '💨',
     title: 'Adversarial Dusting Attack',
-    desc: 'Micro-satoshis sent to de-anonymize wallet clustering heuristics without consent.',
+    desc: 'Micro-satoshis sent to de-anonymize wallet clustering heuristics without user consent.',
     color: '#ef4444',
   },
   LOOKALIKE: {
     icon: '🎭',
-    title: 'Address Poisoning / Lookalike',
-    desc: 'Adversarial fake wallet spoofing first and last 4 characters of verified deposit address.',
+    title: 'Look-Alike Address Poisoning',
+    desc: 'Adversarial spoof address mirroring the initial and trailing 4 characters of a verified counterparty.',
     color: '#ec4899',
   },
   DECOY: {
     icon: '🪤',
-    title: 'Decoy Dust / Noise Edge',
-    desc: 'Extremely low value edge designed to poison forensic graphs with irrelevant nodes.',
+    title: 'Decoy Dust / Graph Poisoning Edge',
+    desc: 'Extremely low value edge designed to poison forensic graphs with irrelevant noise nodes.',
     color: '#94a3b8',
   },
 };
 
 export default function FindingsPanel({ findings, onHighlightNodes }) {
+  const [copiedTx, setCopiedTx] = useState(null);
+
   if (!findings || findings.length === 0) {
     return (
       <div className="panel-card empty-panel">
@@ -57,6 +71,13 @@ export default function FindingsPanel({ findings, onHighlightNodes }) {
       </div>
     );
   }
+
+  const handleCopy = (e, text) => {
+    e.stopPropagation();
+    navigator.clipboard?.writeText(text);
+    setCopiedTx(text);
+    setTimeout(() => setCopiedTx(null), 1800);
+  };
 
   // Sort by severity: high first, then medium, then low
   const sortedFindings = [...findings].sort((a, b) => {
@@ -69,10 +90,12 @@ export default function FindingsPanel({ findings, onHighlightNodes }) {
     <div className="panel-card">
       <div className="panel-header">
         <div className="panel-title-group">
-          <h3>Forensic &amp; Adversarial Findings</h3>
-          <span className="panel-subtitle">Sorted by severity • Adversarial layer active</span>
+          <h3>Forensic Intelligence &amp; Pattern Detection</h3>
+          <span className="panel-subtitle">
+            Heuristic rules, adversarial detection &amp; peel-chain analysis
+          </span>
         </div>
-        <span className="count-badge count-findings">{findings.length} alerts</span>
+        <span className="count-badge count-findings">{findings.length} detections</span>
       </div>
 
       <div className="findings-grid">
@@ -84,6 +107,7 @@ export default function FindingsPanel({ findings, onHighlightNodes }) {
             color: '#64748b',
           };
           const severity = (finding.severity || 'medium').toLowerCase();
+          const confidencePct = finding.confidence ? Math.round(finding.confidence * 100) : null;
 
           return (
             <div
@@ -100,9 +124,17 @@ export default function FindingsPanel({ findings, onHighlightNodes }) {
                   <span className="finding-icon">{config.icon}</span>
                   <strong>{config.title}</strong>
                 </span>
-                <span className={`severity-tag severity-${severity}`}>
-                  {severity.toUpperCase()}
-                </span>
+
+                <div className="finding-badges-right">
+                  {confidencePct !== null && (
+                    <span className="confidence-pill" title="Heuristic detection confidence">
+                      Conf: {confidencePct}%
+                    </span>
+                  )}
+                  <span className={`severity-tag severity-${severity}`}>
+                    {severity.toUpperCase()}
+                  </span>
+                </div>
               </div>
 
               <div className="finding-body">
@@ -110,12 +142,78 @@ export default function FindingsPanel({ findings, onHighlightNodes }) {
                 <p className="finding-rule-hint">{config.desc}</p>
               </div>
 
+              {/* Peel Chain Details */}
+              {finding.type === 'PEEL_CHAIN' && finding.steps && (
+                <div className="finding-extra-details peel-details">
+                  <div className="peel-metric-row">
+                    <span className="peel-metric-label">Suspected Peel Steps:</span>
+                    <span className="peel-metric-value">{finding.steps} Sequential Hops</span>
+                  </div>
+                  {finding.path && finding.path.length > 0 && (
+                    <div className="peel-path-strip">
+                      <span className="peel-strip-label">Chain Path:</span>
+                      <div className="peel-hop-flow">
+                        {finding.path.map((addr, pIdx) => (
+                          <React.Fragment key={pIdx}>
+                            <span className="peel-hop-node code-font" title={addr}>
+                              {addr.slice(0, 6)}...{addr.slice(-4)}
+                            </span>
+                            {pIdx < finding.path.length - 1 && (
+                              <ChevronRight size={12} className="peel-flow-arrow" />
+                            )}
+                          </React.Fragment>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Mixer Warning Notice */}
+              {finding.type === 'MIXER_PATTERN' && (
+                <div className="mixer-warning-notice">
+                  <AlertTriangle size={14} className="mixer-warning-icon" />
+                  <span>
+                    <strong>Forensic Notice:</strong> Mixer interaction indicates obfuscation attempt, but alone does NOT prove criminal guilt or establish deterministic source-to-destination link.
+                  </span>
+                </div>
+              )}
+
+              {/* Supporting Transaction Hashes */}
+              {finding.supporting_txs && finding.supporting_txs.length > 0 && (
+                <div className="finding-supporting-txs">
+                  <span className="txs-header">Supporting Transaction Citations:</span>
+                  <div className="tx-chips-flow">
+                    {finding.supporting_txs.slice(0, 4).map((txid) => (
+                      <button
+                        key={txid}
+                        type="button"
+                        className="btn-finding-tx code-font"
+                        onClick={(e) => handleCopy(e, txid)}
+                        title={`Copy tx: ${txid}`}
+                      >
+                        <span>{txid.slice(0, 8)}...{txid.slice(-4)}</span>
+                        {copiedTx === txid ? <Check size={11} className="text-success" /> : <Copy size={11} />}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Disclaimers if any */}
+              {finding.disclaimer && (
+                <div className="finding-disclaimer-subtext">
+                  <Info size={11} />
+                  <span>{finding.disclaimer}</span>
+                </div>
+              )}
+
               {finding.nodes && finding.nodes.length > 0 && (
                 <div className="finding-footer">
                   <span className="affected-count">
-                    {finding.nodes.length} affected {finding.nodes.length === 1 ? 'node' : 'nodes'}
+                    {finding.nodes.length} affected {finding.nodes.length === 1 ? 'cluster node' : 'cluster nodes'}
                   </span>
-                  <span className="action-hint">Click card to highlight</span>
+                  <span className="action-hint">Click card to highlight nodes on graph</span>
                 </div>
               )}
             </div>

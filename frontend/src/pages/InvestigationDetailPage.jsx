@@ -16,6 +16,7 @@ import {
   RefreshCw,
   ExternalLink,
   Plus,
+  Calculator,
 } from 'lucide-react';
 import GraphView from '../components/GraphView';
 import RankedTable from '../components/RankedTable';
@@ -23,6 +24,9 @@ import FindingsPanel from '../components/FindingsPanel';
 import AuditPanel from '../components/AuditPanel';
 import WalletDetailsDrawer from '../components/WalletDetailsDrawer';
 import TransactionDetailsModal from '../components/TransactionDetailsModal';
+import AIBriefingCard from '../components/AIBriefingCard';
+import TimelineView from '../components/TimelineView';
+import RiskBreakdownModal from '../components/RiskBreakdownModal';
 
 export default function InvestigationDetailPage({ onOpenNewInvestigation }) {
   const { id } = useParams();
@@ -33,10 +37,11 @@ export default function InvestigationDetailPage({ onOpenNewInvestigation }) {
   const [error, setError] = useState(null);
 
   // Active workspace state
-  const [activeTab, setActiveTab] = useState('ranked'); // 'ranked' | 'findings' | 'security' | 'audit' | 'notes'
+  const [activeTab, setActiveTab] = useState('ranked'); // 'ranked' | 'timeline' | 'findings' | 'audit' | 'notes'
   const [highlightedPath, setHighlightedPath] = useState([]);
   const [selectedNodeData, setSelectedNodeData] = useState(null);
   const [selectedEdgeData, setSelectedEdgeData] = useState(null);
+  const [isRiskModalOpen, setIsRiskModalOpen] = useState(false);
 
   // Notes editing state
   const [isEditingNotes, setIsEditingNotes] = useState(false);
@@ -158,6 +163,9 @@ export default function InvestigationDetailPage({ onOpenNewInvestigation }) {
   const graphData = results.graph || { nodes: [], edges: [] };
   const rankedReceivers = results.ranked || [];
   const findings = results.findings || [];
+  const timeline = results.timeline || [];
+  const aiSummary = results.ai_summary || null;
+  const compositeRisk = results.composite_risk || null;
   const riskScore = investigation.risk_score || 0;
 
   const getRiskClass = (score) => {
@@ -228,9 +236,15 @@ export default function InvestigationDetailPage({ onOpenNewInvestigation }) {
         <div className="banner-stats-column">
           <div className="banner-stat-box">
             <span className="stat-label">Composite Risk</span>
-            <span className={`risk-pill large ${getRiskClass(riskScore)}`}>
-              {riskScore}/100
-            </span>
+            <button
+              type="button"
+              className={`risk-pill large ${getRiskClass(riskScore)} btn-risk-clickable`}
+              onClick={() => setIsRiskModalOpen(true)}
+              title="Click to view mathematical formula and indicator breakdown"
+            >
+              <span>{riskScore}/100</span>
+              <Calculator size={13} className="ml-1" />
+            </button>
           </div>
           <div className="banner-stat-box">
             <span className="stat-label">Graph Entities</span>
@@ -242,6 +256,11 @@ export default function InvestigationDetailPage({ onOpenNewInvestigation }) {
           </div>
         </div>
       </div>
+
+      {/* AI Forensic Executive Briefing Card (Phase 2 Feature) */}
+      {aiSummary && (
+        <AIBriefingCard aiSummary={aiSummary} investigation={investigation} />
+      )}
 
       {/* Main Forensic Workspace: Graph on Top, Tabs Below */}
       <div className="forensic-workspace-layout">
@@ -266,6 +285,15 @@ export default function InvestigationDetailPage({ onOpenNewInvestigation }) {
             >
               <span>Ranked End-Receivers</span>
               <span className="tab-badge">{rankedReceivers.length}</span>
+            </button>
+
+            <button
+              type="button"
+              className={`workspace-tab-btn ${activeTab === 'timeline' ? 'active' : ''}`}
+              onClick={() => setActiveTab('timeline')}
+            >
+              <span>Forensic Timeline</span>
+              <span className="tab-badge">{timeline.length}</span>
             </button>
 
             <button
@@ -300,6 +328,16 @@ export default function InvestigationDetailPage({ onOpenNewInvestigation }) {
                 ranked={rankedReceivers}
                 onHighlightPath={handleHighlightPath}
                 selectedAddress={selectedNodeData?.id}
+              />
+            )}
+
+            {activeTab === 'timeline' && (
+              <TimelineView
+                timeline={timeline}
+                onSelectTx={(txid) => {
+                  const edge = graphData.edges?.find((e) => e.txid === txid);
+                  if (edge) setSelectedEdgeData(edge);
+                }}
               />
             )}
 
@@ -392,6 +430,14 @@ export default function InvestigationDetailPage({ onOpenNewInvestigation }) {
           onInspectWallet={handleSelectNode}
         />
       )}
+
+      {/* Risk Breakdown Modal */}
+      <RiskBreakdownModal
+        isOpen={isRiskModalOpen}
+        onClose={() => setIsRiskModalOpen(false)}
+        compositeRisk={compositeRisk}
+        riskScore={riskScore}
+      />
     </div>
   );
 }

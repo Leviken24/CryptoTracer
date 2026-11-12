@@ -214,6 +214,12 @@ def detect_peel_chains(graph: nx.MultiDiGraph, labels: Dict[str, Any] | None = N
                 "severity": "high",
                 "text": f"Peel chain of {len(chain_txs)} hops detected",
                 "nodes": sorted(list(chain_nodes)),
+                "chain_path": [ctx["inputs"][0]["address"] for ctx in chain_txs] + [chain_cont_addrs[-1]],
+                "steps": len(chain_txs),
+                "txids": [ctx["txid"] for ctx in chain_txs],
+                "confidence": round(min(0.95, 0.65 + 0.06 * len(chain_txs)), 2),
+                "reason": "Sequential transactions where wallet sends majority to continuation and minor amount to peeled change across consecutive hops.",
+                "warning": "Peel-chains can also represent automated merchant payment batching or hot-wallet rebalancing. Off-chain corroboration required.",
             })
 
     return findings
@@ -328,6 +334,13 @@ def detect_mixer_patterns(graph: nx.MultiDiGraph) -> List[Dict[str, Any]]:
                 "severity": "high",
                 "text": f"Mixer pattern: {len(matched_indices)} outputs with near-equal values (~{values_sorted[0]:.4f} BTC)",
                 "nodes": matched_nodes,
+                "txids": [txid],
+                "incoming_count": len(tx.get("inputs", [])),
+                "outgoing_count": len(outputs),
+                "equal_outputs": len(matched_indices),
+                "confidence": 0.88,
+                "reason": f"Transaction structured with {len(matched_indices)} equal-denomination outputs within 1% value variance.",
+                "warning": "LEGAL FORENSIC WARNING: Mixer exposure indicates fund obfuscation, but mixer interaction alone does not prove criminal activity or establish a direct source-to-destination link.",
             })
 
     return findings
