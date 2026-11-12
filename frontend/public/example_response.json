@@ -1,0 +1,102 @@
+{
+  "graph": {
+    "nodes": [
+      {
+        "id": "bc1qsrc0000000000000000000000000000000000",
+        "type": "address",
+        "label": "Reported ransom wallet",
+        "cluster": "c1",
+        "tags": [],
+        "risk": 70,
+        "taint": 1.0
+      },
+      {
+        "id": "bc1qmix1111111111111111111111111111111111",
+        "type": "address",
+        "label": "",
+        "cluster": "c2",
+        "tags": ["FAN_OUT"],
+        "risk": 60,
+        "taint": 0.12
+      },
+      {
+        "id": "bc1qpeel222222222222222222222222222222222",
+        "type": "address",
+        "label": "",
+        "cluster": "c3",
+        "tags": ["PEEL_CHAIN"],
+        "risk": 66,
+        "taint": 0.45
+      },
+      {
+        "id": "bc1qexch333333333333333333333333333333333",
+        "type": "address",
+        "label": "ExchangeX Deposit",
+        "cluster": "c4",
+        "tags": ["EXCHANGE"],
+        "risk": 88,
+        "taint": 0.47
+      }
+    ],
+    "edges": [
+      {
+        "from": "bc1qsrc0000000000000000000000000000000000",
+        "to": "bc1qmix1111111111111111111111111111111111",
+        "txid": "aa11aa11aa11aa11aa11aa11aa11aa11aa11aa11aa11aa11aa11aa11aa11aa11",
+        "value": 0.5,
+        "ts": 1700000000,
+        "tags": ["FAN_OUT"]
+      },
+      {
+        "from": "bc1qmix1111111111111111111111111111111111",
+        "to": "bc1qpeel222222222222222222222222222222222",
+        "txid": "bb22bb22bb22bb22bb22bb22bb22bb22bb22bb22bb22bb22bb22bb22bb22bb22",
+        "value": 0.45,
+        "ts": 1700000600,
+        "tags": ["PEEL_CONTINUATION"]
+      },
+      {
+        "from": "bc1qpeel222222222222222222222222222222222",
+        "to": "bc1qexch333333333333333333333333333333333",
+        "txid": "cc33cc33cc33cc33cc33cc33cc33cc33cc33cc33",
+        "value": 0.4,
+        "ts": 1700001200,
+        "tags": ["PEEL_CONTINUATION"]
+      }
+    ]
+  },
+  "findings": [
+    {
+      "type": "PEEL_CHAIN",
+      "severity": "high",
+      "text": "Peel chain of 5 hops detected",
+      "nodes": ["bc1qpeel222222222222222222222222222222222"]
+    },
+    {
+      "type": "DUSTING",
+      "severity": "medium",
+      "text": "15 outputs of 546 sats",
+      "nodes": []
+    }
+  ],
+  "ranked": [
+    {
+      "address": "bc1qexch333333333333333333333333333333333",
+      "confidence": 0.87,
+      "risk": 91,
+      "reasoning": [
+        "Receives 47% of the tainted value",
+        "Labeled as an exchange deposit address",
+        "End of a 5-hop peel chain"
+      ],
+      "risk_breakdown": {
+        "mixer": 0.8,
+        "sanction": 0.0,
+        "ransomware": 0.6,
+        "peel_depth": 1.0,
+        "adversarial": 0.3
+      }
+    }
+  ],
+  "audit_head": "9f3c1d0e5a7b2c4d6e8f0a1b3c5d7e9f1a2b4c6d8e0f1a3b5c7d9e1f2a4b6c8d"
+}
