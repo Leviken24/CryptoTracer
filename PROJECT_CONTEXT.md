@@ -95,7 +95,7 @@ Example response (also saved as backend/data/example_response.json by P1):
       {"from": "bc1qmix1111111111111111111111111111111111", "to": "bc1qpeel222222222222222222222222222222222",
        "txid": "bb22bb22bb22bb22bb22bb22bb22bb22bb22bb22bb22bb22bb22bb22bb22bb22", "value": 0.45, "ts": 1700000600, "tags": ["PEEL_CONTINUATION"]},
       {"from": "bc1qpeel222222222222222222222222222222222", "to": "bc1qexch333333333333333333333333333333333",
-       "txid": "cc33cc33cc33cc33cc33cc33cc33cc33cc33cc33", "value": 0.4, "ts": 1700001200, "tags": ["PEEL_CONTINUATION"]}
+       "txid": "cc33cc33cc33cc33cc33cc33cc33cc33cc33cc33cc33cc33cc33cc33cc33cc33", "value": 0.4, "ts": 1700001200, "tags": ["PEEL_CONTINUATION"]}
     ]
   },
   "findings": [
@@ -144,7 +144,7 @@ get_address_txs(address) -> list[dict]; get_tx(txid) -> dict; get_tx_second_sour
 | Fan-out / fan-in | 1 input to 8 or more outputs, or 8 or more inputs to 1 output (use 6 or more for the fan-in in the sample) | FAN_OUT / FAN_IN |
 | Mixer-like | 5 or more outputs within 1% of the same value | MIXER_PATTERN |
 | Structuring | Many similar outputs kept just under a round threshold | STRUCTURING |
-| Label match | Address found in labels.json: exchange, mixer, sanctioned, ransomware. | LABEL |
+| Label match | Address found in labels.json (EXCHANGE, MIXER, SANCTIONED, RANSOMWARE) | LABEL |
 | Dusting | One tx sends 0.00001 BTC or less to 10 or more addresses | DUSTING |
 | Address poisoning | Two different addresses whose body (address without the "bc1q" prefix, or without the first character for legacy) shares the same first 4 and last 4 characters | LOOKALIKE |
 | Decoy edge | Edge value under 0.1% of the largest edge value, not part of a dusting finding. Pruned from ranking, still shown and flagged | DECOY |
