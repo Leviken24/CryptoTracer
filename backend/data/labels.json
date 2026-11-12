@@ -2,5 +2,9 @@
   "bc1qexch333333333333333333333333333333333": {
     "label": "ExchangeX Deposit",
     "type": "EXCHANGE"
+  },
+  "bc1qsanc000000000000000000000000000000000": {
+    "label": "OFAC Sanctioned Entity",
+    "type": "SANCTIONED"
   }
 }
