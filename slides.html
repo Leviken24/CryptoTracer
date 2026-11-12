@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CryptoTrace - Pitch Deck</title>
+  <style>
+    :root {
+      --bg: #070a12;
+      --card-bg: #111827;
+      --panel-bg: #162032;
+      --border: #243247;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #38bdf8;
+      --primary: #3b82f6;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --success: #10b981;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    header {
+      padding: 18px 36px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      background: rgba(17, 24, 39, 0.7);
+      backdrop-filter: blur(8px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      width: 34px;
+      height: 34px;
+      background: linear-gradient(135deg, #2563eb, #06b6d4);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      color: white;
+      font-size: 19px;
+      box-shadow: 0 0 12px rgba(37, 99, 235, 0.5);
+    }
+
+    .brand h2 {
+      font-size: 19px;
+      font-weight: 700;
+      background: linear-gradient(90deg, #60a5fa, #38bdf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .slide-counter {
+      font-size: 13px;
+      color: var(--text-muted);
+      background: var(--panel-bg);
+      border: 1px solid var(--border);
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+
+    /* Slide Container */
+    .slides-wrapper {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+      position: relative;
+    }
+
+    .slide {
+      display: none;
+      width: 100%;
+      max-width: 960px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 48px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+      animation: fadeIn 0.3s ease;
+    }
+
+    .slide.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .slide-tag {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--accent);
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      padding: 4px 12px;
+      border-radius: 6px;
+      margin-bottom: 16px;
+    }
+
+    .slide h1 {
+      font-size: 34px;
+      font-weight: 800;
+      line-height: 1.25;
+      margin-bottom: 28px;
+      color: #fff;
+    }
+
+    .bullets {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      margin-bottom: 32px;
+    }
+
+    .bullet-card {
+      background: var(--panel-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      transition: border-color 0.2s ease;
+    }
+
+    .bullet-card:hover {
+      border-color: var(--accent);
+    }
+
+    .bullet-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      margin-top: 6px;
+      flex-shrink: 0;
+      box-shadow: 0 0 8px var(--accent);
+    }
+
+    .bullet-text strong {
+      font-size: 16px;
+      color: #fff;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .bullet-text p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Speaker Notes */
+    .speaker-notes-box {
+      background: rgba(15, 23, 42, 0.6);
+      border-left: 3px solid var(--primary);
+      padding: 12px 16px;
+      border-radius: 0 8px 8px 0;
+      font-size: 13px;
+      color: #cbd5e1;
+      font-style: italic;
+      line-height: 1.4;
+    }
+
+    .speaker-notes-box strong {
+      color: var(--accent);
+      font-style: normal;
+      margin-right: 6px;
+    }
+
+    /* Navigation Footer */
+    footer {
+      padding: 16px 36px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--border);
+      background: rgba(17, 24, 39, 0.7);
+    }
+
+    .hint {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .btn-nav-group {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-slide-nav {
+      background: var(--panel-bg);
+      border: 1px solid var(--border);
+      color: #fff;
+      padding: 8px 18px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-slide-nav:hover:not(:disabled) {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .btn-slide-nav:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <div class="brand-logo">₿</div>
+      <h2>CryptoTrace</h2>
+    </div>
+    <div class="slide-counter" id="counter">Slide 1 of 6</div>
+  </header>
+
+  <main class="slides-wrapper">
+    <!-- Slide 1 -->
+    <section class="slide active">
+      <span class="slide-tag">Slide 1 • The Problem</span>
+      <h1>Illicit Crypto Laundering at Machine Speed</h1>
+      <div class="bullets">
+        <div class="bullet-card">
+          <div class="bullet-dot" style="background: #ef4444; box-shadow: 0 0 8px #ef4444;"></div>
+          <div class="bullet-text">
+            <strong>Ransomware &amp; Darknet Surges</strong>
+            <p>Billions in illicit Bitcoin are extracted annually through extortion, ransomware, and high-profile DeFi exploits.</p>
+          </div>
+        </div>
+        <div class="bullet-card">
+          <div class="bullet-dot" style="background: #f97316; box-shadow: 0 0 8px #f97316;"></div>
+          <div class="bullet-text">
+            <strong>Obfuscation by Design</strong>
+            <p>Illicit actors immediately route funds across multi-hop peel chains, mixers, and adversarial decoys to hide cash-out destinations.</p>
+          </div>
+        </div>
+        <div class="bullet-card">
+          <div class="bullet-dot" style="background: #eab308; box-shadow: 0 0 8px #eab308;"></div>
+          <div class="bullet-text">
+            <strong>Investigation Bottlenecks</strong>
+            <p>Compliance teams and cybercrime investigators drown in thousands of raw transactions without actionable prioritization.</p>
+          </div>
+        </div>
+      </div>
+      <div class="speaker-notes-box">
+        <strong>Speaker Notes (P4):</strong> "Ransomware victims watch stolen funds vanish across hundreds of micro-transactions. Manual inspection across 5+ hops is impossible under time-sensitive asset-freeze windows."
+      </div>
+    </section>
+
+    <!-- Slide 2 -->
+    <section class="slide">
+      <span class="slide-tag">Slide 2 • The Gap</span>
+      <h1>The Blinding Flaw in Traditional Explorers</h1>
+      <div class="bullets">
+        <div class="bullet-card">
+          <div class="bullet-dot"></div>
+          <div class="bullet-text">
+            <strong>Explorers Show Data, Not Intelligence</strong>
+            <p>Existing tools display endless raw hex inputs and outputs without attribution heuristics or end-receiver rankings.</p>
+          </div>
+        </div>
+        <div class="bullet-card">
+          <div class="bullet-dot" style="background: #ec4899; box-shadow: 0 0 8px #ec4899;"></div>
+          <div class="bullet-text">
+            <strong>Vulnerable to Adversarial Poisoning</strong>
+            <p>Conventional tools are easily fooled by dusting attacks, lookalike addresses, and decoy low-value noise edges.</p>
+          </div>
+        </div>
+        <div class="bullet-card">
+          <div class="bullet-dot" style="background: #8b5cf6; box-shadow: 0 0 8px #8b5cf6;"></div>
+          <div class="bullet-text">
+            <strong>Inadmissible in Court</strong>
+            <p>Lack of cryptographic tamper-evidence means investigative exports frequently fail chain-of-custody evidentiary standards.</p>
+          </div>
+        </div>
+      </div>
+      <div class="speaker-notes-box">
+        <strong>Speaker Notes (P4):</strong> "Explorers show the ledger, not the answer. When you have 50 outputs, which one is the cash-out point? And worse, adversaries deliberately poison graphs to break investigative tools."
+      </div>
+    </section>
+
+    <!-- Slide 3 -->
+    <section class="slide">
+      <span class="slide-tag">Slide 3 • Architecture</span>
+      <h1>Multi-Hop Forensic Graph &amp; Risk Engine</h1>
+      <div class="bullets">
+        <div class="bullet-card">
+          <div class="bullet-dot" style="background: #3b82f6; box-shadow: 0 0 8px #3b82f6;"></div>
+          <div class="bullet-text">
+            <strong>Dual-Source API Ingestion</strong>
+            <p>Resilient multi-hop ingestion from Blockstream &amp; Mempool with caching, backoff, and strict value conservation.</p>
+          </div>
+        </div>
+        <div class="bullet-card">
+          <div class="bullet-dot" style="background: #10b981; box-shadow: 0 0 8px #10b981;"></div>
+          <div class="bullet-text">
+            <strong>Topological Heuristic Detectors</strong>
+            <p>Union-find clustering, peel-chain sequence recognition, and mathematical proportional taint propagation.</p>
+          </div>
+        </div>
+        <div class="bullet-card">
+          <div class="bullet-dot" style="background: #f59e0b; box-shadow: 0 0 8px #f59e0b;"></div>
+          <div class="bullet-text">
+            <strong>Explainable Cyber-Risk Scoring</strong>
+            <p>Composite 0-100 cyber risk score weighing mixer exposure, sanctions proximity, peel depth, and adversarial noise.</p>
+          </div>
+        </div>
+      </div>
+      <div class="speaker-notes-box">
+        <strong>Speaker Notes (P1 / P2):</strong> "Our pipeline builds a directed multi-graph, applies proportional taint mathematics, and isolates structured peel chains down to the terminating custodial exchange deposit."
+      </div>
+    </section>
+
+    <!-- Slide 4 -->
+    <section class="slide">
+      <span class="slide-tag">Slide 4 • Live Demo</span>
+      <h1>Forensic Intelligence in Action</h1>
+      <div class="bullets">
+        <div class="bullet-card">
+          <div class="bullet-dot" style="background: #38bdf8; box-shadow: 0 0 8px #38bdf8;"></div>
+          <div class="bullet-text">
+            <strong>1-Click Multi-Hop Visualization</strong>
+            <p>Interactive vis-network canvas highlighting tainted capital flows with physics layout across 5+ hops.</p>
+          </div>
+        </div>
+        <div class="bullet-card">
+          <div class="bullet-dot" style="background: #10b981; box-shadow: 0 0 8px #10b981;"></div>
+          <div class="bullet-text">
+            <strong>Ranked Probable End-Receivers</strong>
+            <p>Attribution confidence percentages accompanied by 3 human-readable reasoning bullets for non-technical prosecutors.</p>
+          </div>
+        </div>
+        <div class="bullet-card">
+          <div class="bullet-dot" style="background: #f59e0b; box-shadow: 0 0 8px #f59e0b;"></div>
+          <div class="bullet-text">
+            <strong>Instant Golden Trail Highlighting</strong>
+            <p>Click any ranked candidate wallet to instantly illuminate the end-to-end critical money trail while dimming noise.</p>
+          </div>
+        </div>
+      </div>
+      <div class="speaker-notes-box">
+        <strong>Speaker Notes (P2 / P4):</strong> "Notice how cleanly the chaotic graph is parsed: orange for mixer pools, blue for the Exchange deposit, and red for sanctions. Analysts pinpoint the wallet holding 47% of dirty funds in seconds."
+      </div>
+    </section>
+
+    <!-- Slide 5 -->
+    <section class="slide">
+      <span class="slide-tag">Slide 5 • Security &amp; Chain-of-Custody</span>
+      <h1>Adversarial Resilience &amp; Cryptographic Audit</h1>
+      <div class="bullets">
+        <div class="bullet-card">
+          <div class="bullet-dot" style="background: #ef4444; box-shadow: 0 0 8px #ef4444;"></div>
+          <div class="bullet-text">
+            <strong>Active Adversarial Detector Suite</strong>
+            <p>Automated detection of dusting attacks (546 sats), address poisoning lookalikes (E1X), and decoy edges.</p>
+          </div>
+        </div>
+        <div class="bullet-card">
+          <div class="bullet-dot" style="background: #10b981; box-shadow: 0 0 8px #10b981;"></div>
+          <div class="bullet-text">
+            <strong>SHA-256 Hash Chained Provenance</strong>
+            <p>Every raw transaction, detector run, and heuristic score is chained to an immutable audit ledger.</p>
+          </div>
+        </div>
+        <div class="bullet-card">
+          <div class="bullet-dot" style="background: #eab308; box-shadow: 0 0 8px #eab308;"></div>
+          <div class="bullet-text">
+            <strong>Instant Live Verification &amp; Tamper Demo</strong>
+            <p>One-click audit verification that provably catches memory or database tampering, turning red immediately.</p>
+          </div>
+        </div>
+      </div>
+      <div class="speaker-notes-box">
+        <strong>Speaker Notes (P3):</strong> "Every investigative action is sealed into a SHA-256 chain. If someone tampers with evidence in memory, our verification turns red immediately and identifies the exact broken index."
+      </div>
+    </section>
+
+    <!-- Slide 6 -->
+    <section class="slide">
+      <span class="slide-tag">Slide 6 • Impact &amp; Roadmap</span>
+      <h1>Transforming Cryptocurrency Compliance</h1>
+      <div class="bullets">
+        <div class="bullet-card">
+          <div class="bullet-dot" style="background: #38bdf8; box-shadow: 0 0 8px #38bdf8;"></div>
+          <div class="bullet-text">
+            <strong>Court-Admissible Dossier Export</strong>
+            <p>One-click printable reports containing summary statistics, ranked targets, adversarial alerts, and audit hashes.</p>
+          </div>
+        </div>
+        <div class="bullet-card">
+          <div class="bullet-dot" style="background: #8b5cf6; box-shadow: 0 0 8px #8b5cf6;"></div>
+          <div class="bullet-text">
+            <strong>Multi-Chain &amp; Bridge Tracking</strong>
+            <p>Expanding across Ethereum, Tron (ERC-20/TRC-20 USDT), cross-chain bridges, and Neo4j graph databases.</p>
+          </div>
+        </div>
+        <div class="bullet-card">
+          <div class="bullet-dot" style="background: #10b981; box-shadow: 0 0 8px #10b981;"></div>
+          <div class="bullet-text">
+            <strong>Machine Learning Anomaly Clustering</strong>
+            <p>Deploying semi-supervised graph neural networks (GNNs) for automated zero-day laundering classification.</p>
+          </div>
+        </div>
+      </div>
+      <div class="speaker-notes-box">
+        <strong>Speaker Notes (P4):</strong> "CryptoTrace turns days of tedious forensic tracing into a 4-minute decision cycle. We empower analysts to freeze dirty crypto before it hits cash off-ramps. Thank you!"
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="hint">Use ← and → arrow keys, Spacebar, or buttons to navigate</div>
+    <div class="btn-nav-group">
+      <button class="btn-slide-nav" id="btn-prev" onclick="prevSlide()">← Previous</button>
+      <button class="btn-slide-nav" id="btn-next" onclick="nextSlide()">Next →</button>
+    </div>
+  </footer>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const counter = document.getElementById('counter');
+    const btnPrev = document.getElementById('btn-prev');
+    const btnNext = document.getElementById('btn-next');
+    let currentSlide = 0;
+
+    function updateSlide() {
+      slides.forEach((s, idx) => {
+        s.classList.toggle('active', idx === currentSlide);
+      });
+      counter.textContent = `Slide ${currentSlide + 1} of ${slides.length}`;
+      btnPrev.disabled = currentSlide === 0;
+      btnNext.disabled = currentSlide === slides.length - 1;
+    }
+
+    function nextSlide() {
+      if (currentSlide < slides.length - 1) {
+        currentSlide++;
+        updateSlide();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        updateSlide();
+      }
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        prevSlide();
+      }
+    });
+
+    updateSlide();
+  </script>
+</body>
+</html>
