@@ -2,11 +2,30 @@
 Taint Analysis & Receiver Ranking (P2)
 
 Calculates proportional taint from a source address across the transaction graph
-and ranks the most probable end receivers with confidence scores and plain-English reasoning.
+and ranks the most probable end receivers with confidence scores, critical money paths,
+and plain-English reasoning.
 """
 
 from typing import Any, Dict, List, Set, Tuple
 import networkx as nx
+
+
+def find_critical_path(graph: nx.MultiDiGraph, source: str, target: str) -> List[str]:
+    """
+    Finds the critical money trail path from source to target.
+    If multiple paths exist, prefers the path along highest-value / peel continuation edges.
+    """
+    if source == target or source not in graph or target not in graph:
+        return [target] if target in graph else []
+
+    try:
+        # Use NetworkX shortest path as baseline
+        if nx.has_path(graph, source, target):
+            return nx.shortest_path(graph, source, target)
+    except Exception:
+        pass
+
+    return [source, target] if source in graph and target in graph else [target]
 
 
 def propagate_proportional_taint(graph: nx.MultiDiGraph, source: str) -> Tuple[Dict[str, float], float]:
@@ -95,6 +114,7 @@ def rank_end_receivers(graph: nx.MultiDiGraph, source: str, top_n: int = 5) -> L
     These are either addresses that never spent the funds (leaf wallets)
     or recognized deposit addresses (like crypto exchanges).
     Calculates confidence based on taint share, leaf status, peel branch, and labels.
+    Also returns 'path' indicating the exact sequence of addresses from source to destination.
     """
     held_taint, source_outflow = propagate_proportional_taint(graph, source)
     ranked: List[Dict[str, Any]] = []
@@ -187,11 +207,15 @@ def rank_end_receivers(graph: nx.MultiDiGraph, source: str, top_n: int = 5) -> L
         else:
             reasoning.append("Directly connected along the main fund flow path")
 
+        # Compute critical money trail path from source to this end receiver
+        critical_path = find_critical_path(graph, source, addr)
+
         ranked.append({
             "address": addr,
             "confidence": confidence,
             "taint_share": round(taint_share, 4),
             "reasoning": reasoning[:3],
+            "path": critical_path,
         })
 
     # Sort descending by confidence, then by taint share

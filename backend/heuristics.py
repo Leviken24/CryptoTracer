@@ -8,6 +8,7 @@ Implements core blockchain forensics heuristics:
 4. Fan-out and fan-in detection (FAN_OUT, FAN_IN)
 5. Equal-value mixer pattern detection (MIXER_PATTERN)
 6. Structuring detection (STRUCTURING)
+7. Threat Profile synthesis (THREAT_PROFILE)
 """
 
 from typing import Any, Dict, List, Set, Tuple
@@ -303,7 +304,6 @@ def detect_mixer_patterns(graph: nx.MultiDiGraph) -> List[Dict[str, Any]]:
         if len(values) < 5:
             continue
 
-        # Check for cluster of >= 5 equal values within 1%
         values_sorted = sorted(values)
         matched_indices: Set[int] = set()
 
@@ -350,7 +350,6 @@ def detect_structuring(graph: nx.MultiDiGraph) -> List[Dict[str, Any]]:
     for u, v, data in graph.edges(data=True):
         val = data.get("value", 0.0)
         for thresh in round_thresholds:
-            # Between 95% and 99.9% of a round threshold
             if 0.95 * thresh <= val < thresh:
                 structured_nodes.add(v)
                 if "STRUCTURING" not in graph.nodes[v].setdefault("tags", []):
@@ -368,6 +367,35 @@ def detect_structuring(graph: nx.MultiDiGraph) -> List[Dict[str, Any]]:
     return findings
 
 
+def synthesize_threat_profile(graph: nx.MultiDiGraph, findings: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """
+    Synthesizes executive threat intelligence by correlating multiple laundering techniques.
+    Produces an actionable THREAT_PROFILE finding for investigators.
+    """
+    extra_findings: List[Dict[str, Any]] = []
+    finding_types = {f.get("type") for f in findings}
+
+    has_peel = "PEEL_CHAIN" in finding_types
+    has_mixer = bool({"MIXER_PATTERN", "FAN_OUT", "FAN_IN"} & finding_types)
+    source = graph.graph.get("source", "")
+    source_label = graph.nodes.get(source, {}).get("label", "")
+    is_ransomware = "ransom" in source_label.lower()
+
+    if has_peel and has_mixer:
+        mo_desc = "Multi-stage layering detected: High-entropy mixer consolidation followed by an active peel chain designed to evade exchange deposit heuristics."
+        if is_ransomware:
+            mo_desc = "Ransomware extortion cash-out: Extorted funds routed through mixer obfuscation and a peel chain before final exchange liquidation."
+
+        extra_findings.append({
+            "type": "THREAT_PROFILE",
+            "severity": "high",
+            "text": mo_desc,
+            "nodes": [source] if source else [],
+        })
+
+    return extra_findings
+
+
 def run(graph: nx.MultiDiGraph, labels: Dict[str, Any]) -> Tuple[nx.MultiDiGraph, List[Dict[str, Any]]]:
     """
     Main heuristics pipeline:
@@ -378,6 +406,7 @@ def run(graph: nx.MultiDiGraph, labels: Dict[str, Any]) -> Tuple[nx.MultiDiGraph
     5. Fan-out / Fan-in detection
     6. Mixer-like pattern detection
     7. Structuring detection
+    8. Threat Profile synthesis
     Returns (graph, findings).
     """
     findings: List[Dict[str, Any]] = []
@@ -411,5 +440,8 @@ def run(graph: nx.MultiDiGraph, labels: Dict[str, Any]) -> Tuple[nx.MultiDiGraph
 
     # 7. Structuring detection
     findings.extend(detect_structuring(graph))
+
+    # 8. Threat profile synthesis
+    findings.extend(synthesize_threat_profile(graph, findings))
 
     return graph, findings
