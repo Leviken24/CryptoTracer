@@ -4,6 +4,9 @@ import GraphView from './components/GraphView';
 import RankedTable from './components/RankedTable';
 import FindingsPanel from './components/FindingsPanel';
 import AuditPanel from './components/AuditPanel';
+import AddressDossier from './components/AddressDossier';
+import TaintTracker from './components/TaintTracker';
+import ReportView from './components/ReportView';
 import './App.css';
 
 export default function App() {
@@ -15,8 +18,10 @@ export default function App() {
   const [statusMessage, setStatusMessage] = useState(null);
   const [statusType, setStatusType] = useState('info'); // 'live' | 'fallback' | 'error'
   const [highlightedPath, setHighlightedPath] = useState([]);
+  const [selectedNodeData, setSelectedNodeData] = useState(null);
   const [selectedAddress, setSelectedAddress] = useState(null);
-  const [activeTab, setActiveTab] = useState('ranked'); // 'ranked' | 'findings' | 'audit'
+  const [activeTab, setActiveTab] = useState('ranked'); // 'ranked' | 'findings' | 'audit' | 'dossier'
+  const [showReport, setShowReport] = useState(false);
 
   // Load offline scenario on initial mount
   useEffect(() => {
@@ -34,7 +39,6 @@ export default function App() {
     };
 
     try {
-      // Fast timeout to avoid hanging if backend is not yet started by teammate P1
       const res = await axios.post('http://localhost:8000/trace', payload, {
         timeout: 2000,
         headers: { 'Content-Type': 'application/json' },
@@ -44,11 +48,12 @@ export default function App() {
       setStatusType('live');
       setStatusMessage('Live Trace Complete • Connected to FastAPI Backend (http://localhost:8000)');
 
-      if (isDemo && res.data?.ranked?.[0]) {
+      if (res.data?.ranked?.[0]) {
         const top = res.data.ranked[0];
         setHighlightedPath(top.critical_path || [top.address]);
         setSelectedAddress(top.address);
-        setActiveTab('ranked');
+        const matchNode = res.data.graph?.nodes?.find((n) => n.id === top.address);
+        setSelectedNodeData(matchNode || null);
       }
     } catch {
       // Fallback seamlessly to local offline example
@@ -64,11 +69,12 @@ export default function App() {
             setStatusMessage('Backend offline at http://localhost:8000. Fallback data active — Demo fully operational.');
           }
 
-          if (isDemo && data.ranked?.[0]) {
+          if (data.ranked?.[0]) {
             const top = data.ranked[0];
             setHighlightedPath(top.critical_path || [top.address]);
             setSelectedAddress(top.address);
-            setActiveTab('ranked');
+            const matchNode = data.graph?.nodes?.find((n) => n.id === top.address);
+            setSelectedNodeData(matchNode || null);
           }
         }
       } catch (err) {
@@ -99,13 +105,11 @@ export default function App() {
     URL.revokeObjectURL(url);
   };
 
-  const handlePrintReport = () => {
-    window.print();
-  };
-
   const handleHighlightPath = (pathNodes, targetAddress) => {
     setHighlightedPath(pathNodes || []);
     setSelectedAddress(targetAddress || null);
+    const matchNode = traceData?.graph?.nodes?.find((n) => n.id === targetAddress);
+    setSelectedNodeData(matchNode || null);
   };
 
   const handleHighlightNodes = (nodes) => {
@@ -116,6 +120,8 @@ export default function App() {
     setHighlightedPath([]);
     setSelectedAddress(null);
   };
+
+  const currentRankedMatch = traceData?.ranked?.find((r) => r.address === selectedAddress);
 
   return (
     <div className="app-root">
@@ -136,7 +142,7 @@ export default function App() {
           <button type="button" className="btn-nav-outline" onClick={handleExportJSON} disabled={!traceData}>
             📥 Export JSON
           </button>
-          <button type="button" className="btn-nav-outline" onClick={handlePrintReport}>
+          <button type="button" className="btn-nav-outline" onClick={() => setShowReport(true)}>
             🖨️ Print Report
           </button>
         </div>
@@ -208,24 +214,28 @@ export default function App() {
 
       {/* Main Workspace Grid */}
       <main className="dashboard-grid">
-        {/* Left Column: Interactive Graph */}
+        {/* Left Column: Interactive Graph + Taint Tracker */}
         <div className="graph-column">
           <GraphView
             graphData={traceData?.graph}
             highlightedPath={highlightedPath}
             onSelectNode={(nodeId) => {
               setSelectedAddress(nodeId);
-              // Find if this node is in ranked
+              const node = traceData?.graph?.nodes?.find((n) => n.id === nodeId);
+              setSelectedNodeData(node || null);
+
               const rankedMatch = traceData?.ranked?.find((r) => r.address === nodeId);
               if (rankedMatch) {
                 setHighlightedPath(rankedMatch.critical_path || [nodeId]);
-                setActiveTab('ranked');
               } else {
                 setHighlightedPath([nodeId]);
               }
             }}
             onResetHighlight={handleResetHighlight}
           />
+
+          {/* Illustrative Taint Tracking Component (Images 1 & 2) */}
+          <TaintTracker sourceTaint={100} intermediateTaint={60} endReceiverTaint={47} />
         </div>
 
         {/* Right Column: Intelligence Panels */}
@@ -240,10 +250,17 @@ export default function App() {
             </button>
             <button
               type="button"
+              className={`tab-btn ${activeTab === 'dossier' ? 'active' : ''}`}
+              onClick={() => setActiveTab('dossier')}
+            >
+              📑 Wallet Dossier
+            </button>
+            <button
+              type="button"
               className={`tab-btn ${activeTab === 'findings' ? 'active' : ''}`}
               onClick={() => setActiveTab('findings')}
             >
-              ⚠️ Forensic Findings ({traceData?.findings?.length || 0})
+              ⚠️ Findings ({traceData?.findings?.length || 0})
             </button>
             <button
               type="button"
@@ -263,6 +280,21 @@ export default function App() {
               />
             )}
 
+            {activeTab === 'dossier' && (
+              <AddressDossier
+                nodeData={selectedNodeData}
+                rankedItem={currentRankedMatch}
+                onHighlightTrail={() => {
+                  if (currentRankedMatch?.critical_path) {
+                    setHighlightedPath(currentRankedMatch.critical_path);
+                  } else if (selectedAddress) {
+                    setHighlightedPath([selectedAddress]);
+                  }
+                }}
+                onPrintReport={() => setShowReport(true)}
+              />
+            )}
+
             {activeTab === 'findings' && (
               <FindingsPanel
                 findings={traceData?.findings || []}
@@ -274,6 +306,11 @@ export default function App() {
           </div>
         </div>
       </main>
+
+      {/* Printable Report Modal View (Image 10) */}
+      {showReport && (
+        <ReportView traceData={traceData} onClose={() => setShowReport(false)} />
+      )}
     </div>
   );
 }
